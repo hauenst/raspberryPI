@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Killing previous tries to read
+toKill=$(ps aux | grep "ttyUSB$1" | grep "sed" | grep -v "grep" | awk '{print $1}' | tr "\n" " ")
+if [ -n "$toKill" ]; then
+  for myKill in $toKill;
+  do
+    echo "Killing: $myKill"
+    kill $myKill
+  done
+fi
+
+# Updating the log of laser commands
+echo "$(date): \"$2\"" >> runLaser.log
+echo "$(tail --lines=420 runLaser.log)" > runLaser.log
+
+# Start serial reading on background
+while read -n1 c; do
+  if [ "$c" == ">" ]; then 
+    break
+  else 
+    if [ -z "$c" ]; then
+      echo -ne " "
+    else
+      echo -ne "$c"
+    fi
+  fi
+done < /dev/ttyUSB$1 &
+sleep 0.05
+
+# Sending the command
+echo -ne "$2" > /dev/ttyUSB$1

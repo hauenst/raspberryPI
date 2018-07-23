@@ -1,0 +1,55 @@
+.my_label {
+  text-align:     left;
+  width:          150px;
+  padding-left:   10px;
+}
+.my_input {
+  width:          100px;
+  text-align:     right;
+}
+.my_unit {
+  width:          50px;
+  text-align:     left;
+}
+.my_button {
+  width:          100px;
+}
+.my_report {
+  font-family:    courier new;
+  width:          299px;
+  background:     #D2D2D2;
+  padding:        12px;
+  margin:         auto;
+  overflow:       scroll;
+  height:         150px;
+  position:       absolute;
+  bottom:         13px;
+  border:         1px solid black;
+}
+.my_title {
+  text-align:     center;
+  padding-top:    0.4em;
+  vertical-align: top;
+  height:         2.2em;
+}
+.my_frame {
+  overflow:       hidden;
+  height:         856px;
+  width:          350px;
+  position:       inline-block;
+  border:         1px solid black;
+  padding:        0px;
+  margin:         2px;
+}
+.my_mainDiv {
+  position:       inline-block;
+  width:          1068px;
+  margin:         auto;
+}
+.center {
+  text-align:     center;
+}
+form {
+  margin: 0px;
+}
+

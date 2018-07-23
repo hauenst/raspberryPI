@@ -1,8 +1,0 @@
-#!/bin/bash
-
-echo "$(date): \"$3\"" >> runSerial.log
-echo "$(tail --lines=42 runSerial.log)" > runSerial.log
-sed '/Done/q' /dev/ttyUSB$2 &
-sleep 1
-echo -ne "$3" > /dev/ttyUSB$2
-sleep $1
