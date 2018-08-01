@@ -79,7 +79,7 @@
     </tr>';
   }
 
-  function print_input($label, $name, $default, $unit, $disabled=false, $center=false){
+  function print_input($label, $name, $default, $unit, $disabled=false, $center=false, $alert=""){
     $default = session($name, $default);
     return '              
     <tr>
@@ -87,7 +87,7 @@
         '.$label.'
       </td>
       <td>
-        <input class="my_input'.(($center)?' center':'').'" type="text" name="'.$name.'" value="'.$default.'"'.(($disabled)?" readonly":"").'>
+        <input class="my_input'.(($center)?' center':'').'" type="text" name="'.$name.'" value="'.$default.'"'.(($disabled)?" readonly":"").(($alert!="")?" onclick=\"alert('$alert');\"":"").'>
       </td>
       <td class="my_unit">'.
         (($unit != "")?"[$unit]":"").

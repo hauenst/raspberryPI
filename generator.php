@@ -16,12 +16,13 @@
     $request = $_POST["req"];
     switch ($request) {
       case "gen_ch1_act_get":
-        execute_command($log, "C1:OUTPut?",  "Generator STATUS");
-        execute_command($log, "C1:BSWV?",    "Generator wave information");
+	execute_command($log, "C1:BSWV WVTP,PULSE", "Set generator wave");
+        execute_command($log, "C1:OUTPut?",         "Generator STATUS");
+        execute_command($log, "C1:BSWV?",           "Generator wave information");
 	break;
       case "gen_ch1_act_def":
 	$_SESSION['gen_ch1_par_wav'] = "PULSE";
-	$_SESSION['gen_ch1_par_amp'] = 2.5;
+	$_SESSION['gen_ch1_par_amp'] = 5.0;
 	$_SESSION['gen_ch1_par_ofs'] = 2.5;
 	$_SESSION['gen_ch1_par_frq'] = 1000;
 	$_SESSION['gen_ch1_par_dut'] = 0.1;
@@ -72,12 +73,13 @@
         execute_command($log, "C1:BSWV?",    "Generator wave information");
 	break;
       case "gen_ch2_act_get":
-        execute_command($log, "C2:OUTPut?",  "Generator STATUS");
-        execute_command($log, "C2:BSWV?",    "Generator wave information");
+	execute_command($log, "C2:BSWV WVTP,PULSE", "Set generator wave");
+        execute_command($log, "C2:OUTPut?",         "Generator STATUS");
+        execute_command($log, "C2:BSWV?",           "Generator wave information");
 	break;
       case "gen_ch2_act_def":
 	$_SESSION['gen_ch2_par_wav'] = "PULSE";
-	$_SESSION['gen_ch2_par_amp'] = 2.5;
+	$_SESSION['gen_ch2_par_amp'] = 5.0;
 	$_SESSION['gen_ch2_par_ofs'] = 2.5;
 	$_SESSION['gen_ch2_par_frq'] = 1000;
 	$_SESSION['gen_ch2_par_dut'] = 0.1;
@@ -126,6 +128,14 @@
         execute_command($log, "C2:OUTP OFF", "Generator OFF");
         execute_command($log, "C2:OUTPut?",  "Generator STATUS");
         execute_command($log, "C2:BSWV?",    "Generator wave information");
+	break;
+      case "gen_act_all":
+	execute_command($log, "C1:BSWV WVTP,PULSE", "Set generator wave");
+        execute_command($log, "C1:OUTPut?",         "Generator STATUS");
+        execute_command($log, "C1:BSWV?",           "Generator wave information");
+	execute_command($log, "C2:BSWV WVTP,PULSE", "Set generator wave");
+        execute_command($log, "C2:OUTPut?",         "Generator STATUS");
+        execute_command($log, "C2:BSWV?",           "Generator wave information");
 	break;
       default:
         $log = $log."<br>Non recognized request received";
@@ -202,6 +212,7 @@
           print_title("Signal Generator").
           print_gen_ch1_current().
           print_gen_ch2_current().
+          print_gen_all().
           print_report($log))))));
   }
 
@@ -240,4 +251,11 @@
         print_button(               "gen_ch2_act_onn",      "Turn ON").
         print_button(               "gen_ch2_act_off",      "Turn OFF"));
   }
+
+  function print_gen_all() {
+    return
+    print_actionForm(
+      print_button("gen_act_all", "Update all"));
+  }
+
 ?>

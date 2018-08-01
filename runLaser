@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Killing previous tries to read
-toKill=$(ps aux | grep "ttyUSB$1" | grep "sed" | grep -v "grep" | awk '{print $1}' | tr "\n" " ")
-if [ -n "$toKill" ]; then
-  for myKill in $toKill;
-  do
-    echo "Killing: $myKill"
-    kill $myKill
-  done
-fi
+#toKill=$(ps aux | grep "runLaser" | grep "/bin/bash" | grep -v "grep" | awk '{print $1}' | tr "\n" " ")
+#if [ -n "$toKill" ]; then
+#  for myKill in $toKill;
+#  do
+#    echo "Killing: $myKill"
+#    kill $myKill
+#  done
+#fi
 
 # Updating the log of laser commands
 echo "$(date): \"$2\"" >> runLaser.log
