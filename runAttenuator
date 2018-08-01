@@ -20,3 +20,5 @@ sleep 0.05
 
 # Sending the command
 echo -e "$2" > /dev/ttyUSB$1
+
+#
