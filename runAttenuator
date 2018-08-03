@@ -1,7 +1,11 @@
 #!/bin/bash
 
-# Killing previous tries to read
-toKill=$(ps aux | grep "ttyUSB$1" | grep "sed" | grep -v "grep" | awk '{print $2}' | tr "\n" " ")
+# Device
+device="/dev/serial/by-path/platform-3f980000.usb-usb-0:1.5:1.0-port0"
+stty -F $device 9600 -oddp -cstopb -crtscts
+
+# Preventing duplicated write/read
+toKill=$(ps -o pid,cmd | grep "sed /Done/q $device" | grep -v "grep" | awk '{print $1}' | tr "\n" " ")
 if [ -n "$toKill" ]; then
   for myKill in $toKill;
   do
@@ -11,14 +15,12 @@ if [ -n "$toKill" ]; then
 fi
 
 # Logging command
-echo "$(date): \"$2\"" >> runAttenuator.log
+echo "$(date): \"$1\"" >> runAttenuator.log
 echo "$(tail --lines=42 runAttenuator.log)" > runAttenuator.log
 
 # Opening reading stream
-sed '/Done/q' /dev/ttyUSB$1 &
+sed '/Done/q' $device &
 sleep 0.05
 
 # Sending the command
-echo -e "$2" > /dev/ttyUSB$1
-
-#
+echo -en "$1\r" > $device
