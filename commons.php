@@ -21,10 +21,19 @@
   function print_body($options, $content) {
     return "
     <body $options>
+
       $content
     </body>";
   }
 
+  function print_loading() {
+    return '
+      <div class="my_overLayer" id="loading">
+        <div class="my_overLayerContent">
+	  <img src="images/loading.svg" />
+        </div>
+      </div>';
+  }
   function print_center($options, $content) {
     return "
     <center $options>
@@ -70,7 +79,7 @@
   function print_actionForm($content){
     return '<tr>
       <td align="center"> 
-        <form method="post">
+        <form method="post" onsubmit="document.getElementById(\'loading\').style.visibility=\'visible\';">
 	  <table style="border: 1px solid black;">'.
             $content.
          '</table>

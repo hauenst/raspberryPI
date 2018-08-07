@@ -120,6 +120,7 @@
       print_head("",
         print_style()).	   
       print_body("",
+        print_loading().
         print_center("",
           print_table("",             
             print_title("Laser").

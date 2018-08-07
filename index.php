@@ -14,7 +14,7 @@
   </head>
   </body>
     <div class="my_mainDiv">
-      <iframe src="attenuator.php" class="my_frame"></iframe><iframe src="generator.php" class="my_frame"></iframe><iframe src="laser.php" class="my_frame"></iframe>
+      <iframe src="laser.php" class="my_iframe"></iframe><iframe src="generator.php" class="my_iframe"></iframe><iframe src="attenuator.php" class="my_iframe"></iframe>
     </div>
     <center>
       <form method="POST">

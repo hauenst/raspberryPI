@@ -65,7 +65,7 @@
   /////////////////////////////////////////////////////////////////////////////////
   // Printing page
   /////////////////////////////////////////////////////////////////////////////////
-  
+
   print_page($log);
 
   function print_page($log) {
@@ -74,8 +74,9 @@
       print_head("",
         print_style()).	   
       print_body("",
+        print_loading().
         print_center("",
-          print_table("border=0",             
+          print_table("border=0",
             print_title("Attenuator").
 	    print_att_current().
             print_report($log)))));

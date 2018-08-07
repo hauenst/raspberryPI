@@ -207,6 +207,7 @@
       print_head("",
         print_style().   
       print_body("",
+        print_loading().
         print_center("",
           print_table("border=0",             
           print_title("Signal Generator").
