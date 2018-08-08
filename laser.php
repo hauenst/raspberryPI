@@ -118,7 +118,8 @@
     echo 
     print_html("",
       print_head("",
-        print_style()).	   
+        print_style()
+      ).	   
       print_body("",
         print_loading().
         print_center("",
@@ -128,8 +129,12 @@
 	    print_las_temperatures().
 	    print_las_errorStatus().
 	    print_las_emittingStatus().
-	    print_las_all().
-            print_report($log)))));
+	    print_las_all()
+          )
+        ).
+	print_report($log)
+      )
+    );
   }
 
   function print_las_emittingTime() {
@@ -159,12 +164,12 @@
     return
     print_actionForm(
       print_actionFormTitle("Error Report").
-      print_input("Error Reg. 1",       "las_par_er1", "?", "", true, true, print_tab_err1()).
-      print_input("Error Reg. 2",       "las_par_er2", "?", "", true, true).
-      print_input("Error Reg. 3",       "las_par_er3", "?", "", true, true).
-      print_input("Information Reg. 1", "las_par_er4", "?", "", true, true).
-      print_input("Information Reg. 2", "las_par_er5", "?", "", true, true).
-      print_input("Information Reg. 3", "las_par_er6", "?", "", true, true).
+      print_input("Error Reg. 1",       "las_par_er1", "?", "info", true, true, print_tab_err1()).
+      print_input("Error Reg. 2",       "las_par_er2", "?", "info", true, true, print_tab_err2()).
+      print_input("Error Reg. 3",       "las_par_er3", "?", "info", true, true, print_tab_err3()).
+      print_input("Information Reg. 1", "las_par_er4", "?", "info", true, true, print_tab_inf1()).
+      print_input("Information Reg. 2", "las_par_er5", "?", "info", true, true, print_tab_inf2()).
+      print_input("Information Reg. 3", "las_par_er6", "?", "info", true, true, print_tab_inf3()).
       print_button(                     "las_act_err",      "Get current"));
   }
 
@@ -185,18 +190,27 @@
   }
 
   function print_tab_err1() {
-    return '
-    <table>
-      <tr><td>1</td><td>Heatsink or PCB too hot</td></tr>
-      <tr><td>2</td><td>+12V DC Voltage too low (<10V)</td></tr>
-      <tr><td>3</td><td>Interlock connector removed or interlock contact opened</td></tr>
-      <tr><td>4</td><td>Laser head too hot</td></tr>
-      <tr><td>5</td><td>Laser diode temperature too low</td></tr>
-      <tr><td>6</td><td>Laser diode temperature too high</td></tr>
-      <tr><td>7</td><td>Crystal temperature too low</td></tr>
-      <tr><td>8</td><td>Cristal temperature too high</td></tr>
-    </table>';
+    return '0\tNo error\n1\tHeatsink or PCB too hot\n2\t+12V DC Voltage too low (<10V)\n3\tInterlock connector removed or interlock contact opened\n4\tLaser head too hot\n5\tLaser diode temperature too low\n6\tLaser diode temperature too high\n7\tCrystal temperature too low\n8\tCristal temperature too high';
   }
 
+  function print_tab_err2() {
+    return '9\tTEC cooler overload for 1 minute\n10\tWrong data read from the laser head\n11\tDiode temperature out of boundaries\n12\t+12 DC voltage too high (>14V)\n13\tTEC diode open circuit\n14\tTEC diode short circuit\n15\tTEC crystal open circuit\n16\tTEC crystal short circuit';
+  }
+
+  function print_tab_err3() { 
+    return '17\tLaser diode open circuit\n18\tLaser diode short circuit\n19\tFailure on emission lamp\n20\tCrossed laser head cables\n22\tWrong hardware configuration:\n\tOption laser head with no option driver or reverse\n23\tCommunication error with laser head\n24\tCrystal temperature out of boundaries';
+  }
+
+  function print_tab_inf1(){
+    return '1\tN/A\n2\tDiode current not within +-50mA to the spec\n3\tDiode temperature is OK\n4\tCrystal temperature is OK\n5\tDiode temperature higher than setting: TEC is cooling down\n6\tDiode temperature lower than setting: TEC is heating up\n7\tCrystal temperature higher than setting: TEC is cooling down\n8\tCrystal temperature lower than setting: TEC is heating up';
+  }
+
+  function print_tab_inf2(){
+    return '9\tLaser diode current is ON\n10\tLaser diode emission stoped due to an error\n11\tTemperature regulation is OK - laser is ready for emission\n12\tChanging settings is authorized\n13\tLaser in autostart mode\n14\tLaser in internal mode\n15\tLaser in free running mode\n16\tLaser has two TECs';
+  }
+
+  function print_tab_inf3(){
+    return '17\tTEC diode is operating\n18\tTEC crystal is operating\n19\tDiode temperature regulation is activated\n20\tCrystal temperature regulation is activated\n21\tN/A\n22\tN/A\n23\tN/A\n24\tN/A';
+  }
 
 ?>

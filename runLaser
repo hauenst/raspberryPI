@@ -2,21 +2,25 @@
 
 # Device
 device="/dev/serial/by-path/platform-3f980000.usb-usb-0:1.4:1.0-port0"
+if [ -f $device ]; then
+  echo "Laser not accesible (unnconnected or turned off)"
+  exit 1
+fi
 stty -F $device 19200 -oddp -cstopb -crtscts 
 
 # Preventing duplicated write/read
-toKill=$(ps -o pid,ppid,cmd | grep "./runLaser" | grep -v "grep" | grep -v $$ | awk '{print $1}' | tr "\n" " ")
-if [ -n "$toKill" ]; then
-  for myKill in $toKill;
-  do
-    echo "Killing: $myKill"
-    kill $myKill
-  done
-fi
+#toKill=$(ps -o pid,ppid,cmd | grep "./runLaser" | grep -v "./runLaserTemps" | grep -v "grep" | grep -v $$ | awk '{print $1}' | tr "\n" " ")
+#if [ -n "$toKill" ]; then
+#  for myKill in $toKill;
+#  do
+#    echo "Killing: $myKill"
+#    kill $myKill
+#  done
+#fi
 
 # Updating the log of laser commands
-echo "$(date): \"$1\"" >> runLaser.log
-echo "$(tail --lines=420 runLaser.log)" > runLaser.log
+echo "$(date): \"$1\"" >> /var/www/html/runLaser.log
+echo "$(tail --lines=420 /var/www/html/runLaser.log)" > /var/www/html/runLaser.log
 
 # Start serial reading on background
 while read -n1 c; do
@@ -34,3 +38,4 @@ sleep 0.05
 
 # Sending the command
 echo -ne "$1\r" > $device
+exit 0

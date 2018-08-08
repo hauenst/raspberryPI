@@ -25,7 +25,7 @@
 	$_SESSION['gen_ch1_par_amp'] = 5.0;
 	$_SESSION['gen_ch1_par_ofs'] = 2.5;
 	$_SESSION['gen_ch1_par_frq'] = 1000;
-	$_SESSION['gen_ch1_par_dut'] = 0.1;
+	$_SESSION['gen_ch1_par_dut'] = 10;
 	$_SESSION['gen_ch1_par_red'] = 20;
         break;
       case "gen_ch1_act_set":
@@ -205,16 +205,21 @@
     echo 
     print_html("",
       print_head("",
-        print_style().   
+        print_style()
+      ).
       print_body("",
         print_loading().
         print_center("",
           print_table("border=0",             
-          print_title("Signal Generator").
-          print_gen_ch1_current().
-          print_gen_ch2_current().
-          print_gen_all().
-          print_report($log))))));
+            print_title("Signal Generator").
+            print_gen_ch1_current().
+            print_gen_ch2_current().
+            print_gen_all()
+          )
+        ).
+	print_report($log)
+      )
+    );
   }
 
   function print_gen_ch1_current(){

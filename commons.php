@@ -88,6 +88,20 @@
     </tr>';
   }
 
+  function print_image($image, $title){
+    return '
+    <tr>
+      <td class="my_title">
+        '.$title.'
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="images/'.$image.'"/> 
+      </td>
+    </tr>';
+  }
+
   function print_input($label, $name, $default, $unit, $disabled=false, $center=false, $alert=""){
     $default = session($name, $default);
     return '              
@@ -96,25 +110,39 @@
         '.$label.'
       </td>
       <td>
-        <input class="my_input'.(($center)?' center':'').'" type="text" name="'.$name.'" value="'.$default.'"'.(($disabled)?" readonly":"").(($alert!="")?" onclick=\"alert('$alert');\"":"").'>
+        <input class="my_input'.(($center)?' center':'').'" type="text" name="'.$name.'" value="'.$default.'"'.(($disabled)?" readonly":"").'>
       </td>
-      <td class="my_unit">'.
+      <td class="my_unit'.(($alert!="")?" my_info":"").'"'.(($alert!="")?" onclick=\"alert('$alert');\"":"").'>'.
         (($unit != "")?"[$unit]":"").
       '</td>
     </tr>';
   }
 
-  function print_button($action, $text){
-    return'
-    <tr>
-      <td class="my_label">
-      </td>
-      <td>
-        <button class="my_button" type="submit" name="req" value="'.$action.'">'.$text.'</button>
-      </td>
-      <td class="my_unit">
-      </td>
-    </tr>';
+  function print_button($action, $text, $action2="", $text2="") {
+    if ($action2=="") {
+      return'
+      <tr>
+        <td class="my_label">
+        </td>
+        <td>
+          <button class="my_button" type="submit" name="req" value="'.$action.'">'.$text.'</button>
+        </td>
+        <td class="my_unit">
+        </td>
+      </tr>';
+    } else {
+      return'
+      <tr>
+        <td class="my_label">
+        </td>
+        <td>
+          <button class="my_buttonHalf" type="submit" name="req" value="'.$action.'">'.$text.'</button>
+          <button class="my_buttonHalf" type="submit" name="req" value="'.$action2.'">'.$text2.'</button>
+        </td>
+        <td class="my_unit">
+        </td>
+      </tr>';
+    }
   }
 
   function session($att, $def) {
