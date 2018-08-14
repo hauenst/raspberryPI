@@ -1,18 +1,13 @@
 #!/bin/bash
 
-# Killing pending tries
-toKill=$(ps aux | grep "lxi" | grep -v "grep" | awk '{print $2}' | tr "\n" " ")
-if [ -n "$toKill" ]; then
-  for myKill in $toKill;
-  do
-    echo "Killing: $myKill"
-    kill $myKill
-  done
-fi
-
 # Logging command
 echo "$(date): \"$2\"" >> runGenerator.log
-echo "$(tail --lines=42 runGenerator.log)" > runGenerator.log
+echo "$(tail --lines=420 runGenerator.log)" > runGenerator.log
 
 # Executing the command
-sudo -u pi /snap/bin/lxi scpi -a $1 "$2"
+/snap/bin/lxi scpi -a $1 "$2" &
+commandPid=$!
+
+/var/www/html/runTimeout 1 $commandPid &
+
+exit 0

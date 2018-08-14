@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# $1 timeout
+# $2 pid
+
+steps=$((10 * $1))
+count=0
+while [ $count -lt $steps ]
+do
+  # Sleeping the specified timeout time
+  sleep 0.1
+
+  # Checking if process still alive
+  kill -0 $2 > /dev/null 2>&1
+  killAck=$?
+
+  # If process dead then end
+  if [ "$killAck" -ne "0" ]; then
+    count=$steps
+  fi
+  count=$((count+1))
+done
+
+# Starting the killing
+kill $2 > /dev/null 2>&1
+killAck=$?
+
+# Printing the timeout if corresponds (there was a kill)
+if [ "$killAck" -eq "0" ]; then
+  echo -n "TIMEOUT"
+fi

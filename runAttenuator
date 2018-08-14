@@ -20,7 +20,10 @@ echo "$(tail --lines=42 runAttenuator.log)" > runAttenuator.log
 
 # Opening reading stream
 sed '/Done/q' $device &
+commandPid=$!
 sleep 0.05
 
 # Sending the command
 echo -en "$1\r" > $device
+
+/var/www/html/runTimeout 1 $commandPid &

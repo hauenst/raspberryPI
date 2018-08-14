@@ -29,6 +29,15 @@
   bottom:         5px;
   border:         1px solid black;
 }
+.my_ON {
+  background:     #AAFFAA;
+}
+.my_OFF {
+  background:     #FFAAAA;
+}
+.my_WARN {
+  background:     #FFFFAA;
+}
 .my_title {
   text-align:     center;
   padding-top:    0.4em;
@@ -65,7 +74,6 @@
   visibility:     hidden;
 }
 .my_info {
-  text-decoration: underline;
   color:           #800000;
   cursor:          pointer;
 }

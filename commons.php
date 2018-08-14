@@ -21,7 +21,6 @@
   function print_body($options, $content) {
     return "
     <body $options>
-
       $content
     </body>";
   }
@@ -30,7 +29,7 @@
     return '
       <div class="my_overLayer" id="loading">
         <div class="my_overLayerContent">
-	  <img src="images/loading.svg" />
+	  <img src="images/loading.svg"/>
         </div>
       </div>';
   }
@@ -97,7 +96,7 @@
     </tr>
     <tr>
       <td align="center">
-        <img src="images/'.$image.'"/> 
+        <img style="cursor: pointer;" src="images/'.$image.'" onclick="document.getElementById(\'loading\').style.visibility=\'visible\';this.src=\'images/'.$image.'\'+\'?\'+new Date().getTime();function delay() {document.getElementById(\'loading\').style.visibility=\'hidden\';}; setTimeout(delay,200);">
       </td>
     </tr>';
   }
@@ -110,7 +109,7 @@
         '.$label.'
       </td>
       <td>
-        <input class="my_input'.(($center)?' center':'').'" type="text" name="'.$name.'" value="'.$default.'"'.(($disabled)?" readonly":"").'>
+        <input class="my_input'.((!strcmp($default, "OFF"))?" my_OFF":((!strcmp($default, "ON"))?" my_ON":((!strcmp($default, "?"))?" my_WARN":""))).(($center)?' center':'').'" type="text" name="'.$name.'" value="'.$default.'"'.(($disabled)?" readonly":"").'>
       </td>
       <td class="my_unit'.(($alert!="")?" my_info":"").'"'.(($alert!="")?" onclick=\"alert('$alert');\"":"").'>'.
         (($unit != "")?"[$unit]":"").

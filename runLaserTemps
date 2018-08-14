@@ -1,10 +1,15 @@
 #!/bin/bash
 
 # Getting the temperatures
-temps=$(/var/www/html/runLaser GMTE | awk '{"date +%s"|getline tmp; printf "%d,%.2f,%.2f,%.2f,%.2f", tmp, $2/100, $3/100, $4, $5}')
+temps=$(/var/www/html/runLaser GMTE)
+if [ "$temps" == "TIMEOUT" ]; then
+  temps="GMTE 0000 0000 00 00"
+fi
+
+temps=$(echo $temps | awk '{"date +%s"|getline tmp; printf "%d,%.2f,%.2f,%.2f,%.2f", tmp, $2/100, $3/100, $4, $5}')
 
 # Updating temps file
 echo "$temps" >> /var/www/html/runLaserTemps.csv
-echo "$(tail --lines=21600 /var/www/html/runLaserTemps.csv)" > /var/www/html/runLaserTemps.csv
+echo "$(tail --lines=1000 /var/www/html/runLaserTemps.csv)" > /var/www/html/runLaserTemps.csv
 
 /var/www/html/runLaserTemps.py

@@ -8,16 +8,6 @@ if [ -f $device ]; then
 fi
 stty -F $device 19200 -oddp -cstopb -crtscts 
 
-# Preventing duplicated write/read
-#toKill=$(ps -o pid,ppid,cmd | grep "./runLaser" | grep -v "./runLaserTemps" | grep -v "grep" | grep -v $$ | awk '{print $1}' | tr "\n" " ")
-#if [ -n "$toKill" ]; then
-#  for myKill in $toKill;
-#  do
-#    echo "Killing: $myKill"
-#    kill $myKill
-#  done
-#fi
-
 # Updating the log of laser commands
 echo "$(date): \"$1\"" >> /var/www/html/runLaser.log
 echo "$(tail --lines=420 /var/www/html/runLaser.log)" > /var/www/html/runLaser.log
@@ -34,8 +24,11 @@ while read -n1 c; do
     fi
   fi
 done < $device &
-sleep 0.05
+readingLoop=$!
 
 # Sending the command
 echo -ne "$1\r" > $device
+
+/var/www/html/runTimeout 1 $readingLoop &
+
 exit 0

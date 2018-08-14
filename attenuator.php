@@ -1,5 +1,9 @@
 <?php
   
+  /////////////////////////////////////////////////////////////////////////////////
+  // Retrieving global session, loading common functions
+  /////////////////////////////////////////////////////////////////////////////////
+
   header('P3P: CP="CAO PSA OUR"');
   session_start();
   include "commons.php";
@@ -8,19 +12,8 @@
   // Processing requests
   /////////////////////////////////////////////////////////////////////////////////
 
-  function execute_command(&$log, $command, $label){
-      $log = $log."\nReceived:\n$label\n\n";
-      exec("sudo -u pi /var/www/html/runAttenuator \"$command\" 2>&1", $result);
-      $log = $log."Result:\n";
-      for ($i=0; $i<count($result); $i++){
-        if (strlen($result[$i]) != 0) {
-          $log = $log.$result[$i]."\n";
-        }
-      }
-      $log = $log."\nFinished:\n$label\n";
-  }
-
   $log = "";
+  $alert = "";
   if (isset($_POST["req"])) {
     $log = "= Execution ===================\n\n";
     $log = $log."Request: ${_POST['req']}\n";
@@ -102,19 +95,42 @@
       default:
         $log = $log."\nNon recognized request received\n";
     }
-    log_scraping($log);
+    log_scraping($log, $alert);
   }
 
-  function log_scraping($log) {
+  /////////////////////////////////////////////////////////////////////////////////
+  // Printing page
+  /////////////////////////////////////////////////////////////////////////////////
+
+  print_page($log, $alert);
+
+  /////////////////////////////////////////////////////////////////////////////////
+  // Functions
+  /////////////////////////////////////////////////////////////////////////////////
+  
+  function execute_command(&$log, $command, $label){
+      $log = $log."\nReceived:\n$label\n\n";
+      exec("sudo -u pi /var/www/html/runAttenuator \"$command\" 2>&1", $result);
+      $log = $log."Result:\n";
+      for ($i=0; $i<count($result); $i++){
+        if (strlen($result[$i]) != 0) {
+          $log = $log.$result[$i]."\n";
+        }
+      }
+      $log = $log."\nFinished:\n$label\n";
+  }
+
+  function log_scraping($log, &$alert) {
     $log = preg_split("/\r\n|\n|\r/", $log);
     foreach ($log as $line) {
       if ($line == "") {
         continue;
       } else {
-        if (substr($line, 0, strlen("dPos:")) === "dPos:") {
+        if (trim($line) === "TIMEOUT") {
+          $alert = "TIMEOUT received, keeping old values. Please check the log";
+	} elseif (substr($line, 0, strlen("dPos:")) === "dPos:") {
           $_SESSION['att_par_stp'] = substr($line, strlen("dPos:"));
-        }
-        if (substr($line, 0, strlen("ATTEN:")) === "ATTEN:") {
+        } elseif (substr($line, 0, strlen("ATTEN:")) === "ATTEN:") {
           $_SESSION['att_par_ndb'] = substr($line, strlen("ATTEN:"));
           $_SESSION['att_par_idb'] = substr($line, strlen("ATTEN:"));
         }
@@ -122,19 +138,13 @@
     }
   }
 
-  /////////////////////////////////////////////////////////////////////////////////
-  // Printing page
-  /////////////////////////////////////////////////////////////////////////////////
-
-  print_page($log);
-
-  function print_page($log) {
+  function print_page($log, $alert) {
     echo 
     print_html("",
       print_head("",
         print_style()
       ).	   
-      print_body("",
+      print_body(($alert != "")?"onload=\"alert('$alert');\"":"",
         print_loading().
         print_center("",
           print_table("border=0",
@@ -143,6 +153,9 @@
           ).
 	  print_table("boder=0 style=\"border: 1px solid black; position: absolute; left:13px; bottom: 193px;\"",
 	    print_image("laserTemps.png", "Laser Temperatures")
+	  ).
+	  print_table("boder=0 style=\"border: 1px solid black; position: absolute; left:13px; bottom: 434px;\"",
+	    print_image("laserTempsLastHour.png", "Laser Temperatures")
 	  )
         ).
 	print_report($log)
@@ -160,7 +173,6 @@
       print_button(                   "att_act_m010", "-0.10", "att_act_p010", "+0.10").
       print_button(                   "att_act_m100", "-1.00", "att_act_p100", "+1.00").
       print_button(                   "att_act_get",      "Get current"));
-
   }
 
 ?>

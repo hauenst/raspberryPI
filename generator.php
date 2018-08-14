@@ -1,5 +1,10 @@
 <?php
 
+
+  /////////////////////////////////////////////////////////////////////////////////
+  // Retrieving global session, loading common functions
+  /////////////////////////////////////////////////////////////////////////////////
+
   header('P3P: CP="CAO PSA OUR"');
   session_start();
   include "commons.php";
@@ -9,6 +14,7 @@
   /////////////////////////////////////////////////////////////////////////////////
 
   $log = "";
+  $alert = "";
   if (isset($_POST["req"])) {
     $log = "= Execution ===================<br>";
     $log = $log."<br>Request: ${_POST['req']}";
@@ -82,7 +88,7 @@
 	$_SESSION['gen_ch2_par_amp'] = 5.0;
 	$_SESSION['gen_ch2_par_ofs'] = 2.5;
 	$_SESSION['gen_ch2_par_frq'] = 1000;
-	$_SESSION['gen_ch2_par_dut'] = 0.1;
+	$_SESSION['gen_ch2_par_dut'] = 10;
 	$_SESSION['gen_ch2_par_red'] = 20;
         break;
       case "gen_ch2_act_set":
@@ -140,7 +146,18 @@
       default:
         $log = $log."<br>Non recognized request received";
     }
+    log_scraping($log, $alert);
   }
+
+  /////////////////////////////////////////////////////////////////////////////////
+  // Printing page
+  /////////////////////////////////////////////////////////////////////////////////
+  
+  print_page($log, $alert);
+
+  /////////////////////////////////////////////////////////////////////////////////
+  // Printing page
+  /////////////////////////////////////////////////////////////////////////////////
 
   function execute_command(&$log, $command, $label){
     $log = $log."\nReceived:\n$label\n";
@@ -152,21 +169,22 @@
       }
     }
     $log = $log."\n\nFinished:\n$label\n";
-    log_scraping($log);
   }
 
-  function log_scraping($log) {
+  function log_scraping($log, &$alert) {
     $log = preg_split("/\r\n|\n|\r/", $log);
+    $alert = "";
     foreach ($log as $line) {
       if ($line == "") {
         continue;
       } else {
-        if (substr($line, 0, strlen("C1:OUTP")) === "C1:OUTP") {
+	if (trim($line) === "TIMEOUT") {
+          $alert = "TIMEOUT received, keeping old values. Please check the log";
+	} elseif (substr($line, 0, strlen("C1:OUTP")) === "C1:OUTP") {
           $tmp = substr($line, strlen("C1:OUTP"));
           $tmp = explode(",", $tmp);
-	  $_SESSION['gen_ch1_par_sta'] = $tmp[0];
-        }
-        if (substr($line, 0, strlen("C1:BSWV")) === "C1:BSWV") {
+	  $_SESSION['gen_ch1_par_sta'] = trim($tmp[0]);
+        } elseif (substr($line, 0, strlen("C1:BSWV")) === "C1:BSWV") {
           $tmp = substr($line, strlen("C1:BSWV"));
           $tmp = explode(",", $tmp);
 	  $_SESSION['gen_ch1_par_wav'] =        $tmp[1];
@@ -175,13 +193,11 @@
 	  $_SESSION['gen_ch1_par_frq'] = substr($tmp[3] , 0, -2);
 	  $_SESSION['gen_ch1_par_dut'] = ((float)$tmp[17]);
 	  $_SESSION['gen_ch1_par_red'] = ((float)substr($tmp[21], 0, -1))*1000000000;
-        }
-        if (substr($line, 0, strlen("C2:OUTP")) === "C2:OUTP") {
+        } elseif (substr($line, 0, strlen("C2:OUTP")) === "C2:OUTP") {
           $tmp = substr($line, strlen("C2:OUTP"));
           $tmp = explode(",", $tmp);
-	  $_SESSION['gen_ch2_par_sta'] = $tmp[0];
-        }
-        if (substr($line, 0, strlen("C2:BSWV")) === "C2:BSWV") {
+	  $_SESSION['gen_ch2_par_sta'] = trim($tmp[0]);
+        } elseif (substr($line, 0, strlen("C2:BSWV")) === "C2:BSWV") {
           $tmp = substr($line, strlen("C2:BSWV"));
           $tmp = explode(",", $tmp);
 	  $_SESSION['gen_ch2_par_wav'] =        $tmp[1];
@@ -195,19 +211,13 @@
     }
   }
 
-  /////////////////////////////////////////////////////////////////////////////////
-  // Printing page
-  /////////////////////////////////////////////////////////////////////////////////
-  
-  print_page($log);
-
-  function print_page($log) {
+  function print_page($log, $alert) {
     echo 
     print_html("",
       print_head("",
         print_style()
       ).
-      print_body("",
+      print_body(($alert != "")?"onload=\"alert('$alert');\"":"",
         print_loading().
         print_center("",
           print_table("border=0",             
