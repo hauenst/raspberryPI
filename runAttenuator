@@ -26,4 +26,4 @@ sleep 0.05
 # Sending the command
 echo -en "$1\r" > $device
 
-/var/www/html/runTimeout 1 $commandPid &
+/var/www/html/runTimeout 20 $commandPid &
