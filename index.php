@@ -14,7 +14,7 @@
   </head>
   </body>
     <div class="my_mainDiv">
-      <iframe id="laser" src="laser.php" class="my_iframe"></iframe><iframe id="generator" src="generator.php" class="my_iframe"></iframe><iframe id="attenuator" src="attenuator.php" class="my_iframe"></iframe>
+      <iframe id="laser" src="laser.php" class="my_iframe"></iframe><iframe id="laserPlots" src="laserPlots.php" class="my_iframe"></iframe><iframe id="generator" src="generator.php" class="my_iframe"></iframe><iframe id="attenuator" src="attenuator.php" class="my_iframe"></iframe>
     </div>
     <center>
       <form method="POST">

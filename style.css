@@ -55,7 +55,8 @@
 }
 .my_mainDiv {
   position:       inline-block;
-  width:          1068px;
+  text-align:     center;
+  width:          1424px;
   margin:         auto;
 }
 .center {
