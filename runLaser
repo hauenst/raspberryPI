@@ -29,6 +29,6 @@ readingLoop=$!
 # Sending the command
 echo -ne "$1\r" > $device
 
-/var/www/html/runTimeout 1 $readingLoop &
+/var/www/html/runTimeout 2 $readingLoop &
 
 exit 0

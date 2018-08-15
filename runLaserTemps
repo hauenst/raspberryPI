@@ -3,7 +3,7 @@
 # Getting the temperatures
 temps=$(/var/www/html/runLaser GMTE)
 if [ "$temps" == "TIMEOUT" ]; then
-  temps="GMTE 0000 0000 00 00"
+  exit 1
 fi
 
 temps=$(echo $temps | awk '{"date +%s"|getline tmp; printf "%d,%.2f,%.2f,%.2f,%.2f", tmp, $2/100, $3/100, $4, $5}')
