@@ -214,7 +214,10 @@
     $toReturn = "";
     for ($i=1; $i<9; $i++) {
       if ($errt & (0x1 << ($i-1))) {
-        $toReturn = $toReturn.'\nE'.$i.'\t'.$err1[$i] ;
+        if (strlen($toReturn) > 0) {
+          $toReturn = $toReturn.'\n';
+	}
+        $toReturn = $toReturn.'E'.$i.'\t'.$err1[$i] ;
       }
     }
     if (strlen($toReturn) == 0) {
@@ -240,7 +243,10 @@
     $toReturn = "";
     for ($i=9; $i<17; $i++) {
       if ($errt & (0x1 << ($i-9))) {
-        $toReturn = $toReturn.'\nE'.$i.'\t'.$err1[$i] ;
+        if (strlen($toReturn) > 0) {
+          $toReturn = $toReturn.'\n';
+	}
+        $toReturn = $toReturn.'E'.$i.'\t'.$err1[$i] ;
       }
     }
     if (strlen($toReturn) == 0) {
@@ -265,7 +271,10 @@
     $toReturn = "";
     for ($i=17; $i<25; $i++) {
       if ($errt & (0x1 << ($i-17))) {
-        $toReturn = $toReturn.'\nE'.$i.'\t'.$err3[$i] ;
+        if (strlen($toReturn) > 0) {
+          $toReturn = $toReturn.'\n';
+	}
+        $toReturn = $toReturn.'E'.$i.'\t'.$err3[$i] ;
       }
     }
     if (strlen($toReturn) == 0) {
@@ -291,7 +300,10 @@
     $toReturn = "";
     for ($i=1; $i<9; $i++) {
       if ($inft & (0x1 << ($i-1))) {
-        $toReturn = $toReturn.'\nI'.$i.'\t'.$inf1[$i] ;
+        if (strlen($toReturn) > 0) {
+          $toReturn = $toReturn.'\n';
+	}
+        $toReturn = $toReturn.'I'.$i.'\t'.$inf1[$i] ;
       }
     }
     if (strlen($toReturn) == 0) {
@@ -317,7 +329,10 @@
     $toReturn = "";
     for ($i=9; $i<17; $i++) {
       if ($inft & (0x1 << ($i-9))) {
-        $toReturn = $toReturn.'\nI'.$i.'\t'.$inf2[$i] ;
+        if (strlen($toReturn) > 0) {
+          $toReturn = $toReturn.'\n';
+	}
+        $toReturn = $toReturn.'I'.$i.'\t'.$inf2[$i] ;
       }
     }
     if (strlen($toReturn) == 0) {
@@ -343,7 +358,10 @@
     $toReturn = "";
     for ($i=17; $i<25; $i++) {
       if ($inft & (0x1 << ($i-17))) {
-        $toReturn = $toReturn.'\nI'.$i.'\t'.$inf3[$i] ;
+        if (strlen($toReturn) > 0) {
+          $toReturn = $toReturn.'\n';
+	}
+        $toReturn = $toReturn.'I'.$i.'\t'.$inf3[$i] ;
       }
     }
     if (strlen($toReturn) == 0) {
