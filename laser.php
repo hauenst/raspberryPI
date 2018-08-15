@@ -132,7 +132,7 @@
         print_loading().
         print_center("",
           print_table("",             
-            print_title("Laser").
+            print_title('<div style="display: inline-block;position:relative;top:-5.5px;">Laser <a title="Laser Controller Manual" href="docs/MLC03A-xR1-UserManual.pdf" target="_BLANK"><img src="images/manual.svg" style="height:20px;position:relative;top:+5px;"/></a></div>').
 	    print_las_emittingTime().
 	    print_las_temperatures().
 	    print_las_errorStatus().
