@@ -81,7 +81,7 @@ plt.savefig('/var/www/html/images/laserTemps_sin_m01.png')
 plt.figure(num=None, figsize=(4.88, height), dpi=65)
 plt.plot(times_12, temp3_12, label="Electronic Sink")
 plt.plot(times_12, temp4_12, label="Heat Sink")
-xmin = -1*int(math.ceil(min(times_12)/1))
+xmin = -1*int(math.ceil(-min(times_12)))
 if (xmin == 0):
     xmin = -1
 plt.xlim((xmin, max(times_12)))
