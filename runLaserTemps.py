@@ -36,9 +36,9 @@ times_12 = times[times >= -12]
 # Plotting diode data (last hour)
 plt.figure(num=None, figsize=(4.88, height), dpi=65)
 plt.plot(times_01, temp1_01, 'r', label="Diode")
-xmin = int(0.5*round(min(times_01)/0.5))
+xmin = 0.25*int(round(min(times_01)/0.25))
 if (xmin == 0):
-    xmin = -0.5
+    xmin = -0.25
 plt.xlim((xmin, max(times_01)))
 plt.xlabel("Time [hours]")
 #plt.ylabel("Temp [$^\circ$C]")
@@ -50,9 +50,9 @@ plt.savefig('/var/www/html/images/laserTemps_dio_m01.png')
 # Plotting crystal data (last hour)
 plt.figure(num=None, figsize=(4.88, height), dpi=65)
 plt.plot(times_01, temp2_01, 'b', label="Crystal")
-xmin = int(0.5*round(min(times_01)/0.5))
+xmin = 0.25*int(round(min(times_01)/0.25))
 if (xmin == 0):
-    xmin = -0.5
+    xmin = -0.25
 plt.xlim((xmin, max(times_01)))
 plt.xlabel("Time [hours]")
 #plt.ylabel("Temp [$^\circ$C]")
@@ -65,9 +65,9 @@ plt.savefig('/var/www/html/images/laserTemps_cry_m01.png')
 plt.figure(num=None, figsize=(4.88, height), dpi=65)
 plt.plot(times_01, temp3_01, label="Electronic Sink")
 plt.plot(times_01, temp4_01, label="Heat Sink")
-xmin = int(0.5*round(min(times_01)/0.5))
+xmin = 0.25*int(round(min(times_01)/0.25))
 if (xmin == 0):
-    xmin = -0.5
+    xmin = -0.25
 plt.xlim((xmin, max(times_01)))
 plt.xlabel("Time [hours]")
 plt.ylabel("Temp [$^\circ$C]")
@@ -80,9 +80,9 @@ plt.savefig('/var/www/html/images/laserTemps_sin_m01.png')
 plt.figure(num=None, figsize=(4.88, height), dpi=65)
 plt.plot(times_12, temp3_12, label="Electronic Sink")
 plt.plot(times_12, temp4_12, label="Heat Sink")
-xmin = int(0.5*round(min(times_12)/0.5))
+xmin = int(1*round(min(times_12)/1))
 if (xmin == 0):
-    xmin = -0.5
+    xmin = -1
 plt.xlim((xmin, max(times_12)))
 plt.xlabel("Time [hours]")
 plt.ylabel("Temp [$^\circ$C]")
