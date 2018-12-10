@@ -68,7 +68,7 @@
   
   function execute_command(&$log, $command, $label){
       $log = $log."\nReceived:\n$label\n\n";
-      exec("sudo -u pi /var/www/html/runLaser \"$command\" 2>&1", $result);
+      exec("sudo -u pi /var/www/html/runLaser.py \"$command\" 2>&1", $result);
       $log = $log."Result:\n";
       for ($i=0; $i<count($result); $i++){
         if (strlen($result[$i]) != 0) {
