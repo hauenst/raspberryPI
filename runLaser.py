@@ -22,6 +22,6 @@ print(response)
 
 att.close()
 
-log = open("runAttenuator.log", "a+")
+log = open("runLaser.log", "a+")
 log.write(str(datetime.datetime.now().strftime("%a %b %d %H:%M:%S UTC %Y")) + ": \"" + sys.argv[1] + "\"\n")
 log.close
