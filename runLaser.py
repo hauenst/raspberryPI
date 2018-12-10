@@ -17,7 +17,7 @@ att.dsrdtr   = False
 att.open()
 
 att.write(sys.argv[1] + "\r")
-response = att.read(1024)
+response = att.read(1024).split('\n', 1)[0]
 print(response)
 
 att.close()

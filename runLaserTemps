@@ -10,6 +10,6 @@ temps=$(echo $temps | awk '{"date +%s"|getline tmp; printf "%d,%.2f,%.2f,%.2f,%.
 
 # Updating temps file
 echo "$temps" >> /var/www/html/runLaserTemps.csv
-echo "$(tail --lines=1000 /var/www/html/runLaserTemps.csv)" > /var/www/html/runLaserTemps.csv
+echo "$(tail --lines=100000 /var/www/html/runLaserTemps.csv)" > /var/www/html/runLaserTemps.csv
 
 /var/www/html/runLaserTemps.py
