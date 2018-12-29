@@ -28,13 +28,14 @@ def client_disconnect(soc):
 def client_send(soc, message):
     try:
         soc.sendall(message.encode("utf8"))
-        try:
-            soc.recv(4096).decode("utf8")
-        except:
-            sys.exit("Error sending message")
+        print("Sending : " + message)
     except:
         sys.exit("Error sending message")
+    try:
+        server_response = soc.recv(4096).decode("utf8")
+        print("Received: " + server_response.rstrip())
+    except:
+        sys.exit("Error receiving response")
 
 # Main ============================================================================
 client()
-
