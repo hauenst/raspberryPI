@@ -3,3 +3,5 @@ runGenerator.log
 runLaser.log
 runLaserTemps.clog
 runLaserTemps.csv
+*/laserServer_config.py
+*/__pycache__

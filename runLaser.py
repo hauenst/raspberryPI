@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import serial
 import sys
@@ -16,8 +16,9 @@ att.dsrdtr   = False
 
 att.open()
 
-att.write(sys.argv[1] + "\r")
-response = att.read(1024).split('\n', 1)[0]
+att.write(str.encode(sys.argv[1] + "\r"))
+response = att.read(1024)
+response = response.decode("utf-8").split('\n', 1)[0]
 print(response)
 
 att.close()

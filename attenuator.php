@@ -134,18 +134,18 @@
       } else {
         if (trim($line) === "TIMEOUT") {
           $alert = "TIMEOUT received, keeping old values. Please check the log";
-	} elseif (substr($line, 0, strlen("dPos:")) === "dPos:") {
+	    } elseif (substr($line, 0, strlen("dPos:")) === "dPos:") {
           $_SESSION['att_par_stp'] = substr($line, strlen("dPos:"));
-	} elseif (substr($line, 0, strlen("a")) === "a") {
+	    } elseif (substr($line, 0, strlen("a")) === "a") {
           $_SESSION['att_par_lst'] = false;
-        } elseif (substr($line, 0, strlen("s")) === "s") {
+      } elseif (substr($line, 0, strlen("s")) === "s") {
           $_SESSION['att_par_lst'] = true;
-	} elseif (substr($line, 0, strlen("ATTEN:")) === "ATTEN:") {
+	    } elseif (substr($line, 0, strlen("ATTEN:")) === "ATTEN:") {
           if ($_SESSION['att_par_lst']) {
             $_SESSION['att_par_ndb'] = "?";
           } else {
             $_SESSION['att_par_ndb'] = substr($line, strlen("ATTEN:"));
-	  }
+	        }
         }
       }
     }
