@@ -22,17 +22,17 @@
     $request = $_POST["req"];
     switch ($request) {
       case "gen_ch1_act_get":
-	execute_command($log, "C1:BSWV WVTP,PULSE", "Set generator wave");
+	      execute_command($log, "C1:BSWV WVTP,PULSE", "Set generator wave");
         execute_command($log, "C1:OUTPut?",         "Generator STATUS");
         execute_command($log, "C1:BSWV?",           "Generator wave information");
-	break;
+	      break;
       case "gen_ch1_act_def":
-	$_SESSION['gen_ch1_par_wav'] = "PULSE";
-	$_SESSION['gen_ch1_par_amp'] = 5.0;
-	$_SESSION['gen_ch1_par_ofs'] = 2.5;
-	$_SESSION['gen_ch1_par_frq'] = 1000;
-	$_SESSION['gen_ch1_par_dut'] = 10;
-	$_SESSION['gen_ch1_par_red'] = 20;
+	      $_SESSION['gen_ch1_par_wav'] = "PULSE";
+      	$_SESSION['gen_ch1_par_amp'] = 5.0;
+	      $_SESSION['gen_ch1_par_ofs'] = 2.5;
+      	$_SESSION['gen_ch1_par_frq'] = 1000;
+      	$_SESSION['gen_ch1_par_dut'] = 10;
+      	$_SESSION['gen_ch1_par_red'] = 20;
         break;
       case "gen_ch1_act_set":
         if (isset($_POST['gen_ch1_par_wav']) &&
@@ -47,49 +47,49 @@
           $frq = $_POST['gen_ch1_par_frq'];
           $dut = $_POST['gen_ch1_par_dut'];
           $red = $_POST['gen_ch1_par_red'];
-	  if (is_numeric($amp) &&
+	        if (is_numeric($amp) &&
               is_numeric($ofs) &&
               is_numeric($frq) &&
               is_numeric($dut) &&
-	      is_numeric($red)) {
-	    execute_command($log, "C1:BSWV WVTP,".$wav, "Set generator wave");
-	    execute_command($log, "C1:BSWV AMP,".$amp."V", "Set generator amplitude");
-	    execute_command($log, "C1:BSWV OFST,".$ofs."V", "Set generator offset");
-	    execute_command($log, "C1:BSWV FRQ,".$frq."HZ", "Set generator frequency");
-	    execute_command($log, "C1:BSWV DUTY,".$dut."%", "Set generator duty");
-	    execute_command($log, "C1:BSWV RISE,".(((float)$red)/1000000000)."S", "Set generator rise");
-	    execute_command($log, "C1:BSWV FALL,".(((float)$red)/1000000000)."S", "Set generator fall");
+	            is_numeric($red)) {
+	          execute_command($log, "C1:BSWV WVTP,".$wav, "Set generator wave");
+	          execute_command($log, "C1:BSWV AMP,".$amp."V", "Set generator amplitude");
+	          execute_command($log, "C1:BSWV OFST,".$ofs."V", "Set generator offset");
+	          execute_command($log, "C1:BSWV FRQ,".$frq."HZ", "Set generator frequency");
+	          execute_command($log, "C1:BSWV DUTY,".$dut."%", "Set generator duty");
+	          execute_command($log, "C1:BSWV RISE,".(((float)$red)/1000000000)."S", "Set generator rise");
+	          execute_command($log, "C1:BSWV FALL,".(((float)$red)/1000000000)."S", "Set generator fall");
           } else {
             $log = $log."\nUnexpected not numeric input. Aborting";
-	  }
-	} else {
+	        }
+	      } else {
           $log = $log."\nUnexpected missing parameter";
-	}
+	      }
         execute_command($log, "C1:OUTPut?",  "Generator STATUS");
         execute_command($log, "C1:BSWV?",    "Generator wave information");
-	break;
+	      break;
       case "gen_ch1_act_onn":
         execute_command($log, "C1:OUTP ON",  "Generator ON");
         execute_command($log, "C1:OUTPut?",  "Generator STATUS");
         execute_command($log, "C1:BSWV?",    "Generator wave information");
-	break;
+	      break;
       case "gen_ch1_act_off":
         execute_command($log, "C1:OUTP OFF", "Generator OFF");
         execute_command($log, "C1:OUTPut?",  "Generator STATUS");
         execute_command($log, "C1:BSWV?",    "Generator wave information");
-	break;
+	      break;
       case "gen_ch2_act_get":
-	execute_command($log, "C2:BSWV WVTP,PULSE", "Set generator wave");
+      	execute_command($log, "C2:BSWV WVTP,PULSE", "Set generator wave");
         execute_command($log, "C2:OUTPut?",         "Generator STATUS");
         execute_command($log, "C2:BSWV?",           "Generator wave information");
-	break;
+	      break;
       case "gen_ch2_act_def":
-	$_SESSION['gen_ch2_par_wav'] = "PULSE";
-	$_SESSION['gen_ch2_par_amp'] = 5.0;
-	$_SESSION['gen_ch2_par_ofs'] = 2.5;
-	$_SESSION['gen_ch2_par_frq'] = 1000;
-	$_SESSION['gen_ch2_par_dut'] = 10;
-	$_SESSION['gen_ch2_par_red'] = 20;
+        $_SESSION['gen_ch2_par_wav'] = "PULSE";
+        $_SESSION['gen_ch2_par_amp'] = 5.0;
+        $_SESSION['gen_ch2_par_ofs'] = 2.5;
+        $_SESSION['gen_ch2_par_frq'] = 1000;
+        $_SESSION['gen_ch2_par_dut'] = 10;
+        $_SESSION['gen_ch2_par_red'] = 20;
         break;
       case "gen_ch2_act_set":
         if (isset($_POST['gen_ch2_par_wav']) &&
@@ -104,45 +104,45 @@
           $frq = $_POST['gen_ch2_par_frq'];
           $dut = $_POST['gen_ch2_par_dut'];
           $red = $_POST['gen_ch2_par_red'];
-	  if (is_numeric($amp) &&
-              is_numeric($ofs) &&
-              is_numeric($frq) &&
-              is_numeric($dut) &&
-	      is_numeric($red)) {
-	    execute_command($log, "C2:BSWV WVTP,".$wav, "Set generator wave");
-	    execute_command($log, "C2:BSWV AMP,".$amp."V", "Set generator amplitude");
-	    execute_command($log, "C2:BSWV OFST,".$ofs."V", "Set generator offset");
-	    execute_command($log, "C2:BSWV FRQ,".$frq."HZ", "Set generator frequency");
-	    execute_command($log, "C2:BSWV DUTY,".$dut."%", "Set generator duty");
-	    execute_command($log, "C2:BSWV RISE,".(((float)$red)/1000000000)."S", "Set generator rise");
-	    execute_command($log, "C2:BSWV FALL,".(((float)$red)/1000000000)."S", "Set generator fall");
-          } else {
-            $log = $log."\nUnexpected not numeric input. Aborting";
-	  }
-	} else {
-          $log = $log."\nUnexpected missing parameter";
-	}
+          if (is_numeric($amp) &&
+                    is_numeric($ofs) &&
+                    is_numeric($frq) &&
+                    is_numeric($dut) &&
+              is_numeric($red)) {
+            execute_command($log, "C2:BSWV WVTP,".$wav, "Set generator wave");
+            execute_command($log, "C2:BSWV AMP,".$amp."V", "Set generator amplitude");
+            execute_command($log, "C2:BSWV OFST,".$ofs."V", "Set generator offset");
+            execute_command($log, "C2:BSWV FRQ,".$frq."HZ", "Set generator frequency");
+            execute_command($log, "C2:BSWV DUTY,".$dut."%", "Set generator duty");
+            execute_command($log, "C2:BSWV RISE,".(((float)$red)/1000000000)."S", "Set generator rise");
+            execute_command($log, "C2:BSWV FALL,".(((float)$red)/1000000000)."S", "Set generator fall");
+                } else {
+                  $log = $log."\nUnexpected not numeric input. Aborting";
+          }
+        } else {
+                $log = $log."\nUnexpected missing parameter";
+        }
         execute_command($log, "C2:OUTPut?",  "Generator STATUS");
         execute_command($log, "C2:BSWV?",    "Generator wave information");
-	break;
+	      break;
       case "gen_ch2_act_onn":
         execute_command($log, "C2:OUTP ON",  "Generator ON");
         execute_command($log, "C2:OUTPut?",  "Generator STATUS");
         execute_command($log, "C2:BSWV?",    "Generator wave information");
-	break;
+      	break;
       case "gen_ch2_act_off":
         execute_command($log, "C2:OUTP OFF", "Generator OFF");
         execute_command($log, "C2:OUTPut?",  "Generator STATUS");
         execute_command($log, "C2:BSWV?",    "Generator wave information");
-	break;
+	      break;
       case "gen_act_all":
-	execute_command($log, "C1:BSWV WVTP,PULSE", "Set generator wave");
+	      execute_command($log, "C1:BSWV WVTP,PULSE", "Set generator wave");
         execute_command($log, "C1:OUTPut?",         "Generator STATUS");
         execute_command($log, "C1:BSWV?",           "Generator wave information");
-	execute_command($log, "C2:BSWV WVTP,PULSE", "Set generator wave");
+	      execute_command($log, "C2:BSWV WVTP,PULSE", "Set generator wave");
         execute_command($log, "C2:OUTPut?",         "Generator STATUS");
         execute_command($log, "C2:BSWV?",           "Generator wave information");
-	break;
+      	break;
       default:
         $log = $log."<br>Non recognized request received";
     }
