@@ -178,34 +178,34 @@
       if ($line == "") {
         continue;
       } else {
-	if (trim($line) === "TIMEOUT") {
+        if (trim($line) === "TIMEOUT") {
           $alert = "TIMEOUT received, keeping old values. Please check the log";
-	} elseif (substr($line, 0, strlen("C1:OUTP")) === "C1:OUTP") {
+        } elseif (substr($line, 0, strlen("C1:OUTP")) === "C1:OUTP") {
           $tmp = substr($line, strlen("C1:OUTP"));
           $tmp = explode(",", $tmp);
-	  $_SESSION['gen_ch1_par_sta'] = trim($tmp[0]);
+          $_SESSION['gen_ch1_par_sta'] = trim($tmp[0]);
         } elseif (substr($line, 0, strlen("C1:BSWV")) === "C1:BSWV") {
           $tmp = substr($line, strlen("C1:BSWV"));
           $tmp = explode(",", $tmp);
-	  $_SESSION['gen_ch1_par_wav'] =        $tmp[1];
-	  $_SESSION['gen_ch1_par_amp'] = substr($tmp[7] , 0, -1);
-	  $_SESSION['gen_ch1_par_ofs'] = substr($tmp[11], 0, -1);
-	  $_SESSION['gen_ch1_par_frq'] = substr($tmp[3] , 0, -2);
-	  $_SESSION['gen_ch1_par_dut'] = ((float)$tmp[17]);
-	  $_SESSION['gen_ch1_par_red'] = ((float)substr($tmp[21], 0, -1))*1000000000;
+          $_SESSION['gen_ch1_par_wav'] =        $tmp[1];
+          $_SESSION['gen_ch1_par_amp'] = substr($tmp[7] , 0, -1);
+          $_SESSION['gen_ch1_par_ofs'] = substr($tmp[11], 0, -1);
+          $_SESSION['gen_ch1_par_frq'] = substr($tmp[3] , 0, -2);
+          $_SESSION['gen_ch1_par_dut'] = ((float)$tmp[17]);
+          $_SESSION['gen_ch1_par_red'] = ((float)substr($tmp[21], 0, -1))*1000000000;
         } elseif (substr($line, 0, strlen("C2:OUTP")) === "C2:OUTP") {
           $tmp = substr($line, strlen("C2:OUTP"));
           $tmp = explode(",", $tmp);
-	  $_SESSION['gen_ch2_par_sta'] = trim($tmp[0]);
+          $_SESSION['gen_ch2_par_sta'] = trim($tmp[0]);
         } elseif (substr($line, 0, strlen("C2:BSWV")) === "C2:BSWV") {
           $tmp = substr($line, strlen("C2:BSWV"));
           $tmp = explode(",", $tmp);
-	  $_SESSION['gen_ch2_par_wav'] =        $tmp[1];
-	  $_SESSION['gen_ch2_par_amp'] = substr($tmp[7] , 0, -1);
-	  $_SESSION['gen_ch2_par_ofs'] = substr($tmp[11], 0, -1);
-	  $_SESSION['gen_ch2_par_frq'] = substr($tmp[3] , 0, -2);
-	  $_SESSION['gen_ch2_par_dut'] = ((float)$tmp[17])*1000;
-	  $_SESSION['gen_ch2_par_red'] = ((float)substr($tmp[21], 0, -1))*1000000000;
+          $_SESSION['gen_ch2_par_wav'] =        $tmp[1];
+          $_SESSION['gen_ch2_par_amp'] = substr($tmp[7] , 0, -1);
+          $_SESSION['gen_ch2_par_ofs'] = substr($tmp[11], 0, -1);
+          $_SESSION['gen_ch2_par_frq'] = substr($tmp[3] , 0, -2);
+          $_SESSION['gen_ch2_par_dut'] = ((float)$tmp[17])*1000;
+          $_SESSION['gen_ch2_par_red'] = ((float)substr($tmp[21], 0, -1))*1000000000;
         }
       }
     }
