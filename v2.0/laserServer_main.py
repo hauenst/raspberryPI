@@ -3,10 +3,12 @@
 from threading import Thread
 import socket
 import sys
+import signal
 
 # Local Imports
 import laserTools          as Tools
 import laserServer_message as Message
+import laserServer_devices as Devices
 
 # ===============================================================================
 # Socket management =============================================================
@@ -23,13 +25,15 @@ def create_socket():
     try:
         soc.bind((host, port))
     except:
-        sys.exit("Bind failed. Error: " + str(sys.exc_info()))
+        print("Bind failed. Error: " + str(sys.exc_info()))
+        return None
     # Return Socket
     return soc
 
 def terminate_socket(soc):
-    soc.shutdown(socket.SHUT_RDWR)
-    soc.close()
+    if (soc != None):
+        soc.shutdown(socket.SHUT_RDWR)
+        soc.close()
 
 # ===============================================================================
 # Server management =============================================================
@@ -42,13 +46,8 @@ def server_management(events):
         if message == "":
             pass
         elif message == "exit":
-            events["laser_end"].set()
-            events["gener_end"].set()
-            events["atten_end"].set()
-            events["laser"].set()
-            events["atten"].set()
-            events["gener"].set()
             exit = True
+            return True
         else:
             print("   " + message)
 
@@ -86,3 +85,39 @@ def receive_input(connection, events, queue, max_buffer_size = 4096):
     # Process message
     message = Message.process(client_input.decode("utf8").rstrip(), events, queue)
     connection.sendall(message.encode("utf8"))
+
+def thread_end_check(thread):
+    if (thread != None):
+        thread.join(None)
+        if thread.isAlive():
+            print("Management thread alive!")
+
+# ===============================================================================
+# Signal handler ================================================================
+# ===============================================================================
+
+def signal_handler(soc, events, devices_threads, devices, client_management, success, signal_number, frame):
+    print("Signal \"" + signal.Signals(signal_number).name + "\" received, terminating")
+    terminate(soc, events, devices_threads, devices, client_management, True)
+    sys.exit()
+
+# ===============================================================================
+# Termination procedure =========================================================
+# ===============================================================================
+
+def terminate(soc, events, devices_threads, devices, client_management, success):
+    # Closing socket
+    terminate_socket(soc)
+    # Cleaning threads
+    Devices.terminate_threads(events)
+    # Checking devices threads termination
+    Devices.threads_end_check(devices_threads)
+    # Checking management thread for termination
+    thread_end_check(client_management)
+    # Closing devices
+    Devices.close_communication(devices)
+    # Print final message
+    if (success):
+        print("   Good Bye!")
+    else:
+        print("Error on execution")

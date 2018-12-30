@@ -1,51 +1,93 @@
 #!/usr/bin/python3
 
+# System Imports
+import signal
+from functools import partial
+
 # Local Imports
 import laserServer_devices  as Devices
 import laserServer_main     as Main
 import laserServer_database as Database
 
-# ===========================================================================
-# Setting up database communication =========================================
-# ===========================================================================
-db = Database.connect()
+success = False
 
-# ==========================================================================
-# Setting up devices =======================================================
-# ==========================================================================
-# Initialize devices communication
-devices = Devices.initialize()
-# Creating threads
-events = Devices.create_events()
-queues = Devices.create_queues()
-devices_threads = Devices.create_threads(devices, queues, events, db)
-# Devices threads start
-Devices.threads_start(devices_threads)
+while True:
+    # ===========================================================================
+    # Setting up database communication =========================================
+    # ===========================================================================
+    db = Database.connect()
 
-# ===========================================================================
-# Setting up server communication ===========================================
-# ===========================================================================
-soc = Main.create_socket()
+    # ===========================================================================
+    # Setting up devices ========================================================
+    # ===========================================================================
+    # Initializing variables
+    devices = None
+    events = None
+    queues = None
+    devices_threads = None
+    soc = None
+    client_management = None
+    # Initialize devices communication
+    devices = Devices.initialize()
+    if (devices == None):
+        break
+    # Creating thread communication events
+    events = Devices.create_events()
+    if (events == None):
+        break
+    # Create device queues
+    queues = Devices.create_queues()
+    if (events == None):
+        break
+    # Creating device queues handling threads
+    devices_threads = Devices.create_threads(devices, 
+                                             queues, 
+                                             events, 
+                                             db)
+    if (devices_threads == None):
+        break
+    # Devices threads start
+    status = Devices.threads_start(devices_threads)
+    if (status == None):
+        break
 
-# ===========================================================================
-# Setting up client management ==============================================
-# ===========================================================================
-client_management = Main.client_management(soc, events, queues)
+    # ===========================================================================
+    # Setting up server communication ===========================================
+    # ===========================================================================
+    soc = Main.create_socket()
+    if (soc == None):
+        break
 
-# ===========================================================================
-# Setting up server management ==============================================
-# ===========================================================================
-Main.server_management(events)
+    # ===========================================================================
+    # Setting up client management ==============================================
+    # ===========================================================================
+    client_management = Main.client_management(soc,
+                                               events,
+                                               queues)
 
-# ===========================================================================
-# Termination procedures ====================================================
-# ===========================================================================
-# Closing socket
-Main.terminate_socket(soc)
-# Closing devices
-Devices.close(devices)
+    # ===========================================================================
+    # Setting signal catching ===================================================
+    # ===========================================================================
+    signal.signal(signal.SIGTERM, partial(Main.signal_handler,
+                                          soc,
+                                          events,
+                                          devices_threads,
+                                          devices,
+                                          client_management,
+                                          success))
 
-# ===========================================================================
-# Termination verbosing= ====================================================
-# ===========================================================================
-print("   Good Bye!")
+    # ===========================================================================
+    # Setting up server management ==============================================
+    # ===========================================================================
+    success = Main.server_management(events)
+    break
+
+# ===============================================================================
+# Termination procedure =========================================================
+# ===============================================================================
+Main.terminate(soc,
+               events,
+               devices_threads, 
+               devices,
+               client_management,
+               success)

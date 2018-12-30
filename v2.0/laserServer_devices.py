@@ -13,57 +13,104 @@ import laserServer_devices_gener as gener
 # Devices functions =============================================================
 # ===============================================================================
 
+def initialize():
+    device = {}
+    try:
+        device["laser"] = laser.start()
+        device["atten"] = atten.start()
+        device["gener"] = gener.start()
+    except:
+        return None
+    return device
+
 def create_events():
     events = {}
-    events["laser"] = Event()
-    events["atten"] = Event()
-    events["gener"] = Event()
-    events["laser_end"] = Event()
-    events["gener_end"] = Event()
-    events["atten_end"] = Event()
+    try:
+        events["laser"] = Event()
+        events["atten"] = Event()
+        events["gener"] = Event()
+        events["laser_end"] = Event()
+        events["gener_end"] = Event()
+        events["atten_end"] = Event()
+    except:
+        return None
     return events
 
 def create_queues():
     queue = {}
-    queue["laser"] = []
-    queue["atten"] = []
-    queue["gener"] = []
+    try:
+        queue["laser"] = []
+        queue["atten"] = []
+        queue["gener"] = []
+    except:
+        return None
     return queue
-
-def initialize():
-    device = {}
-    device["laser"] = laser.start()
-    device["atten"] = atten.start()
-    device["gener"] = gener.start()
-    return device
-
-def close(devices):
-    devices["laser"].close()
-    devices["atten"].close()
 
 def create_threads(devices, queue, triggers, db):
     threads = {}
-    try:
-        threads["laser"] = Thread(target=laser.queue_handler, args=(devices["laser"], queue["laser"], triggers["laser"],triggers["laser_end"], db))
-    except:
-        sys.exit("Error starting the Laser device thread. Error: " + str(sys.exc_info()))
-    try:
-        threads["atten"] = Thread(target=atten.queue_handler, args=(devices["atten"], queue["atten"], triggers["atten"],triggers["atten_end"], db))
-    except:
-        sys.exit("Error starting the Attenuator device thread. Error: " + str(sys.exc_info()))
-    try:
-        threads["gener"] = Thread(target=gener.queue_handler, args=(devices["gener"], queue["gener"], triggers["gener"],triggers["gener_end"], db))
-    except:
-        sys.exit("Error starting the Generator device thread. Error: " + str(sys.exc_info()))
-    return threads
+    while True:
+        try:
+            threads["laser"] = Thread(target=laser.queue_handler, args=(devices["laser"], queue["laser"], triggers["laser"], triggers["laser_end"], db))
+        except:
+            print("Error starting the Laser device thread. Error: " + str(sys.exc_info()))
+            break
+        try:
+            threads["atten"] = Thread(target=atten.queue_handler, args=(devices["atten"], queue["atten"], triggers["atten"], triggers["atten_end"], db))
+        except:
+            print("Error starting the Attenuator device thread. Error: " + str(sys.exc_info()))
+            break
+        try:
+            threads["gener"] = Thread(target=gener.queue_handler, args=(devices["gener"], queue["gener"], triggers["gener"], triggers["gener_end"], db))
+        except:
+            print("Error starting the Generator device thread. Error: " + str(sys.exc_info()))
+            break
+        return threads
+    # Cleaning up on error
+    triggers["laser_end"].set()
+    triggers["gener_end"].set()
+    triggers["atten_end"].set()
+    triggers["laser"].set()
+    triggers["atten"].set()
+    triggers["gener"].set()
+    return None
 
 def threads_start(devices):
-    devices["laser"].start()
-    devices["atten"].start()
-    devices["gener"].start()
+    try:
+        devices["laser"].start()
+        devices["atten"].start()
+        devices["gener"].start()
+    except:
+        print("Error starting devices threads")
+        return None
+    return True
 
-def threads_end(threads):
-    for thread in threads:
-        thread.join()
-        if thread.isAlive():
-            sys.exit("Device thread alive, forcing termination")
+def terminate_threads(events):
+    if (events != None):
+        try:
+            events["laser_end"].set()
+            events["gener_end"].set()
+            events["atten_end"].set()
+            events["laser"].set()
+            events["atten"].set()
+            events["gener"].set()
+        except:
+            print("Error setting termination events for threads")
+
+def threads_end_check(threads):
+    if (threads != None):
+        for name, thread in threads.items():
+            thread.join(None)
+            if thread.isAlive():
+                print("Device thread \"%s\" alive!" % name)
+
+def close_communication(devices):
+    if (devices != None):
+        try:
+            devices["laser"].close()
+        except:
+            print("Error clossing Laser serial commmunication")
+        try:
+            devices["atten"].close()
+        except:
+            print("Error clossing Attenuator communication")
+        
