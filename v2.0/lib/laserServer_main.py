@@ -8,9 +8,9 @@ import signal
 import os
 
 # Local Imports
-import laserTools          as Tools
-import laserServer_message as Message
-import laserServer_devices as Devices
+from lib import laserTools          as Tools
+from lib import laserServer_message as Message
+from lib import laserServer_devices as Devices
 
 # ===============================================================================
 # Socket management =============================================================

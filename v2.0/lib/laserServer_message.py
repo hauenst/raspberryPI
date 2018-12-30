@@ -4,8 +4,8 @@ import sys
 import re
 
 # Local Imports
-import laserTools       as Tools
-import laserServer_main as Main
+from lib import laserTools       as Tools
+from lib import laserServer_main as Main
 
 # ===============================================================================
 # Client message processing =====================================================

@@ -5,7 +5,7 @@ import socket
 import sys
 
 # Local Imports
-import laserTools as Tools
+from lib import laserTools as Tools
 
 # ===============================================================================
 # Client functions parameters ===================================================

@@ -4,7 +4,7 @@ import sys
 from mysql.connector import errorcode
 
 # Local Imports
-import laserServer_config as Config
+from lib import laserServer_config as Config
 
 # ===============================================================================
 # Database interactions =========================================================

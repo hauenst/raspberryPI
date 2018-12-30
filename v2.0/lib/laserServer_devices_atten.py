@@ -6,9 +6,9 @@ import time
 import re
 
 # Local Imports
-import laserTools           as Tools
-import laserServer_message  as Message
-import laserServer_database as Db
+from lib import laserTools           as Tools
+from lib import laserServer_message  as Message
+from lib import laserServer_database as Db
 
 # ===============================================================================
 # Attenuator functions ==========================================================
