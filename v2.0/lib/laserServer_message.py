@@ -43,8 +43,8 @@ def process(input_str, events, queue):
 # ===============================================================================
 
 def parse(command, response, db):
-    #print(repr(command))
-    #print("   " + repr(response))
+    Tools.verbose(repr(command), level=2)
+    Tools.verbose(repr(response), level=2)
     # Initilizing variables
     try:
         cursor = db.cursor()
@@ -57,13 +57,14 @@ def parse(command, response, db):
     # matching regular expressions
     response_match = True
     while True:
-        # GEN BSWV Commands do not send response information
-        m = re.match("^GEN C.:BSWV ", command)
-        if (m):
-            break
-        m = re.match("^GEN C.:OUTP ", command)
-        if (m):
-            break
+        # For empty response
+        if (response == ""):
+            m = re.match("^GEN C.:BSWV ", command)
+            if (m):
+                break
+            m = re.match("^GEN C.:OUTP ", command)
+            if (m):
+                break
         # Processing responses
         m = re.match("^GEMT ([0-9]{5}) ([0-9]{2}) ([0-9]{5}) ([0-9]{2})", response)
         if (m):
@@ -194,13 +195,11 @@ def parse(command, response, db):
         print("ERROR: Command not recognized")
     # Excuting queries
     for query in queries:
+        Tools.verbose(query, level=2)
         cursor.execute(query)
     # Clossing db cursor
     db.commit()
     cursor.close()
-    # Printing prompt
-    print("-> ", end = "")
-    sys.stdout.flush()
     return True
 
 def query_current(name, value):
