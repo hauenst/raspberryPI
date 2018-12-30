@@ -1,0 +1,17 @@
+[Unit]
+Description=laserServer
+After=network.target
+
+[Service]
+ExecStart=/var/www/html/v2.0/laserServer.py
+WorkingDirectory=/var/www/html/v2.0
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
+
+# This file needs to be linked with:
+# sudo ln -s laserServer.service /etc/systemd/system/laserServer.service

@@ -1,10 +1,15 @@
 
+# System Imports
+import mysql.connector
+
 # ===============================================================================
 # Configuration parameters ======================================================
 # ===============================================================================
 
-# Database
-user     = ""
-password = ""
-host     = ""
-database = ""
+db = mysql.connector.connect(user = '',
+                             password = '',
+                             host = '',
+                             database = '')
+
+# You should copy this file as laserServer_config.py on this same folder after
+# completing the database access parameters

@@ -1,9 +1,11 @@
 
 # System Imports
 from threading import Thread
+from threading import Event
 import socket
 import sys
 import signal
+import os
 
 # Local Imports
 import laserTools          as Tools
@@ -25,7 +27,7 @@ def create_socket():
     try:
         soc.bind((host, port))
     except:
-        print("Bind failed. Error: " + str(sys.exc_info()))
+        print("ERROR: Bind failed. Error: " + str(sys.exc_info()))
         return None
     # Return Socket
     return soc
@@ -40,16 +42,15 @@ def terminate_socket(soc):
 # ===============================================================================
 
 def server_management(events):
-    exit = False
-    while not exit:
-        message = input("-> ")
-        if message == "":
-            pass
-        elif message == "exit":
-            exit = True
-            return True
-        else:
-            print("   " + message)
+    events["server_management"].wait()
+    return True
+
+def add_management_event(events):
+    try:
+        events["server_management"] = Event()
+        return events
+    except:
+        return None
 
 # ===============================================================================
 # Client management =============================================================
@@ -63,7 +64,7 @@ def client_management(soc, events, queue):
         thread = Thread(target=client_listening_loop, args=(soc, events, queue))
         thread.start()
     except:
-        sys.exit("Error creating the client thread loop: " + str(sys.exc_info()))
+        sys.exit("ERROR: Not possible to create the client thread loop: " + str(sys.exc_info()))
     return thread
 
 def client_listening_loop(soc, events, queue):
@@ -90,7 +91,7 @@ def thread_end_check(thread):
     if (thread != None):
         thread.join(None)
         if thread.isAlive():
-            print("Management thread alive!")
+            print("ERROR: Management thread alive!")
 
 # ===============================================================================
 # Signal handler ================================================================
@@ -118,6 +119,19 @@ def terminate(soc, events, devices_threads, devices, client_management, success)
     Devices.close_communication(devices)
     # Print final message
     if (success):
-        print("   Good Bye!")
+        print("Good Bye!")
     else:
-        print("Error on execution")
+        print("ERROR: Unexpected termination")
+
+# ===============================================================================
+# Status reporting ==============================================================
+# ===============================================================================
+
+def message_handler(message, events):
+    if (message == ""):
+        return ("OK - laserServer is alive! (PID %d)" % os.getpid())
+    elif (message == "exit"):
+        events["server_management"].set()
+        return "exit"
+    else:
+        return ""

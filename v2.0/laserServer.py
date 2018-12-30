@@ -15,11 +15,13 @@ while True:
     # ===========================================================================
     # Setting up database communication =========================================
     # ===========================================================================
+
     db = Database.connect()
 
     # ===========================================================================
     # Setting up devices ========================================================
     # ===========================================================================
+
     # Initializing variables
     devices = None
     events = None
@@ -33,6 +35,10 @@ while True:
         break
     # Creating thread communication events
     events = Devices.create_events()
+    if (events == None):
+        break
+    # Creating event for controlling management exit
+    events = Main.add_management_event(events)
     if (events == None):
         break
     # Create device queues

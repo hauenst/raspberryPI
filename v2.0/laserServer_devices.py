@@ -52,17 +52,17 @@ def create_threads(devices, queue, triggers, db):
         try:
             threads["laser"] = Thread(target=laser.queue_handler, args=(devices["laser"], queue["laser"], triggers["laser"], triggers["laser_end"], db))
         except:
-            print("Error starting the Laser device thread. Error: " + str(sys.exc_info()))
+            print("ERROR: Not possible to start the Laser device thread. Error: " + str(sys.exc_info()))
             break
         try:
             threads["atten"] = Thread(target=atten.queue_handler, args=(devices["atten"], queue["atten"], triggers["atten"], triggers["atten_end"], db))
         except:
-            print("Error starting the Attenuator device thread. Error: " + str(sys.exc_info()))
+            print("ERROR: Not possible to start the Attenuator device thread. Error: " + str(sys.exc_info()))
             break
         try:
             threads["gener"] = Thread(target=gener.queue_handler, args=(devices["gener"], queue["gener"], triggers["gener"], triggers["gener_end"], db))
         except:
-            print("Error starting the Generator device thread. Error: " + str(sys.exc_info()))
+            print("ERROR: Not possible to startthe Generator device thread. Error: " + str(sys.exc_info()))
             break
         return threads
     # Cleaning up on error
@@ -80,7 +80,7 @@ def threads_start(devices):
         devices["atten"].start()
         devices["gener"].start()
     except:
-        print("Error starting devices threads")
+        print("ERROR: Not possible to start the devices threads")
         return None
     return True
 
@@ -94,23 +94,22 @@ def terminate_threads(events):
             events["atten"].set()
             events["gener"].set()
         except:
-            print("Error setting termination events for threads")
+            print("ERROR: Not possible to set termination events for threads")
 
 def threads_end_check(threads):
     if (threads != None):
         for name, thread in threads.items():
             thread.join(None)
             if thread.isAlive():
-                print("Device thread \"%s\" alive!" % name)
+                print("ERROR: Device thread \"%s\" alive!" % name)
 
 def close_communication(devices):
     if (devices != None):
         try:
             devices["laser"].close()
         except:
-            print("Error clossing Laser serial commmunication")
+            print("ERROR: Not possible to close Laser serial commmunication")
         try:
             devices["atten"].close()
         except:
-            print("Error clossing Attenuator communication")
-        
+            print("ERROR: Not possible to close Attenuator communication")

@@ -33,8 +33,12 @@ def queue_handler(device, queue, trigger, end, db):
         while (len(queue)>0):
             command = queue[0]
             response = run_command(device, command)
-            Message.parse("ATT " + command, response, db)
-            Tools.print_interaction(command, response)
+            parse_result = Message.parse("ATT " + command, response, db)
+            if (parse_result != None):
+                Tools.print_interaction(command, response)
+            #else:
+            #    print("-> ", end = "")
+            #    sys.stdout.flush()
             queue.pop(0)
         trigger.clear()
         trigger.wait()
@@ -47,8 +51,8 @@ def run_command(device, command):
     return response
 
 def movement_pause(command):
-    current = float(Db.rescue_current("ATT_DB", "0"))
     match = re.match("^[aA]([0-9]+(\.[0-9]+)?)", command)
     if (match):
+        current = float(Db.rescue_current("ATT_DB", "0"))
         to_sleep = abs(float(match.group(1))-current)/10 + 0.25
         time.sleep(to_sleep)

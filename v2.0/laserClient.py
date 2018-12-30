@@ -1,18 +1,24 @@
 #!/usr/bin/python3
 
+# System Imports
 import socket
 import sys
 
-def client():
+# Local Imports
+import laserTools as Tools
 
-    # Set connection parameters
+def client():
+    # Creating socket
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # Configuring socket
     host = '127.0.0.1'
     port = 64845
+    # Connecting to server
     client_connect(soc, host, port)
+    # Sending message
     client_send(soc, sys.argv[1])
+    # Disconecting socket
     client_disconnect(soc)
-    sys.exit()
 
 def client_connect(soc, host, port):
     try:
@@ -29,12 +35,13 @@ def client_disconnect(soc):
 def client_send(soc, message):
     try:
         soc.sendall(message.encode("utf8"))
-        print("Sending : " + message)
+        Tools.verbose("Sent: " + message)
     except:
         sys.exit("Error sending message")
     try:
-        server_response = soc.recv(4096).decode("utf8")
-        print("Received: " + server_response.rstrip())
+        server_response = soc.recv(4096).decode("utf8").rstrip()
+        Tools.verbose("Resp: " + server_response)
+        print(server_response)
     except:
         sys.exit("Error receiving response")
 
