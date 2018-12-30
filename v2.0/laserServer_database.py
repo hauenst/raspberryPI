@@ -22,3 +22,17 @@ def connect():
         else:
             sys.exit(err)                        
     return db
+
+def rescue_current(parameter, default):
+    db = connect()
+    cursor = db.cursor()
+    query = "SELECT `value` FROM `current` WHERE `name` = '%s';" % parameter
+    cursor.execute(query)
+    result = cursor.fetchone()
+    cursor.close()
+    db.close()
+    if (result != None):
+        return result[0]
+    return default
+        
+    

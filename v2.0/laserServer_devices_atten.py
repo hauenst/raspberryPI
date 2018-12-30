@@ -2,10 +2,13 @@
 # System Imports
 import sys
 import serial
+import time
+import re
 
 # Local Imports
-import laserTools          as Tools
-import laserServer_message as Message
+import laserTools           as Tools
+import laserServer_message  as Message
+import laserServer_database as Db
 
 # ===============================================================================
 # Attenuator functions ==========================================================
@@ -28,16 +31,24 @@ def queue_handler(device, queue, trigger, end, db):
     trigger.wait()
     while not end.is_set():
         while (len(queue)>0):
-            message = queue[0]
-            response = run_command(device, message)
-            Message.parse(response, db)
-            Tools.print_interaction(message, response)
+            command = queue[0]
+            response = run_command(device, command)
+            Message.parse("ATT " + command, response, db)
+            Tools.print_interaction(command, response)
             queue.pop(0)
         trigger.clear()
         trigger.wait()
 
 def run_command(device, command):
     device.write(str.encode(command + "\r"))
+    movement_pause(command) # Sleep pause for attenuator movement
     response = device.read(1024)
     response = response.decode("utf-8")
     return response
+
+def movement_pause(command):
+    current = float(Db.rescue_current("ATT_DB", "0"))
+    match = re.match("^[aA]([0-9]+(\.[0-9]+)?)", command)
+    if (match):
+        to_sleep = abs(float(match.group(1))-current)/10 + 0.25
+        time.sleep(to_sleep)
