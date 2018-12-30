@@ -2,15 +2,14 @@
 # System Imports
 import sys
 
-# Local Imports
-from lib import laserServer_config as Config
-
 # ===============================================================================
 # Verbosing management ==========================================================
 # ===============================================================================
 
+verbosity = 1
+
 def verbose(message, terminator="\n", level=1):
-    if (level > Config.verbosity):
+    if (level > verbosity):
         print(message, end = terminator)
         sys.stdout.flush()
 

@@ -11,7 +11,5 @@ db = mysql.connector.connect(user = '',
                              host = '',
                              database = '')
 
-verbosity = 0
-
 # You should copy this file as laserServer_config.py on this same folder after
 # completing the database access parameters
