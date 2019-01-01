@@ -4,8 +4,8 @@ import sys
 import vxi11
 
 # Local Imports
-from lib import laserTools          as Tools
-from lib import laserServer_message as Message
+import laserTools          as Tools
+import laserServer_message as Message
 
 # ===============================================================================
 # Generator functions ===========================================================

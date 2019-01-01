@@ -1,14 +1,14 @@
 
 # System Imports
-import sys
-import serial
-import time
 import re
+import sys
+import time
+import serial
 
 # Local Imports
-from lib import laserTools           as Tools
-from lib import laserServer_message  as Message
-from lib import laserServer_database as Db
+import laserServer_database as Db
+import laserTools           as Tools
+import laserServer_message  as Message
 
 # ===============================================================================
 # Attenuator functions ==========================================================

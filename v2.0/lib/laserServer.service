@@ -3,7 +3,7 @@ Description=laserServer
 After=network.target
 
 [Service]
-ExecStart=/var/www/html/v2.0/laserServer.py
+ExecStart=/var/www/html/v2.0/lib/laserServer.py
 WorkingDirectory=/var/www/html/v2.0
 StandardOutput=inherit
 StandardError=inherit

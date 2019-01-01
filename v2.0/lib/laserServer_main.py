@@ -1,16 +1,16 @@
 
 # System Imports
-from threading import Thread
-from threading import Event
-import socket
-import sys
-import signal
 import os
+import sys
+import socket
+import signal
+from threading import Event
+from threading import Thread
 
 # Local Imports
-from lib import laserTools          as Tools
-from lib import laserServer_message as Message
-from lib import laserServer_devices as Devices
+import laserTools          as Tools
+import laserServer_message as Message
+import laserServer_devices as Devices
 
 # ===============================================================================
 # Socket management =============================================================

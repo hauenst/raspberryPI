@@ -1,11 +1,11 @@
 
 # System Imports
-import sys
 import re
+import sys
 
 # Local Imports
-from lib import laserTools       as Tools
-from lib import laserServer_main as Main
+import laserServer_main as Main
+import laserTools       as Tools
 
 # ===============================================================================
 # Client message processing =====================================================
@@ -87,6 +87,8 @@ def parse(command, response, db):
             queries.append(query_history("LAS_GMTE_CRYSTAL",        "%.2f" % (float(m.group(2))/100)))
             queries.append(query_history("LAS_GMTE_ELECTRONICSINK", "%.2f" % float(m.group(3))))
             queries.append(query_history("LAS_GMTE_HEATSINK",       "%.2f" % float(m.group(4))))
+            # temperatures
+            queries.append(query_temperature(m.group(1), m.group(2), m.group(3), m.group(4)))
             break
         m = re.match("^GTCO ([0-9])", response)
         if (m):
@@ -207,3 +209,6 @@ def query_current(name, value):
 
 def query_history(name, value):
     return ('INSERT INTO `history` (`id`, `timestamp`, `name`, `value`) VALUES (NULL, CURRENT_TIMESTAMP, \'%s\', \'%s\');' % (name, value))
+
+def query_temperature(diode, crystal, electronicsink, heatsink):
+    return ('INSERT INTO `temperatures` (`id`, `timestamp`, `diode`, `crystal`, `electronicsink`, `heatsink`) VALUES (NULL, CURRENT_TIMESTAMP, \'%f\', \'%f\', \'%f\', \'%f\');' % (float(diode)/100, float(crystal)/100, float(electronicsink), float(heatsink)))

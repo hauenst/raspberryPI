@@ -5,9 +5,9 @@ import signal
 from functools import partial
 
 # Local Imports
-from lib import laserServer_devices  as Devices
-from lib import laserServer_main     as Main
-from lib import laserServer_database as Database
+import laserServer_main     as Main
+import laserServer_devices  as Devices
+import laserServer_database as Database
 
 success = False
 

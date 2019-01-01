@@ -1,13 +1,13 @@
 
 # System Imports
+import sys
 from threading import Event
 from threading import Thread
-import sys
 
 # Local Imports
-from lib import laserServer_devices_laser as laser
-from lib import laserServer_devices_atten as atten
-from lib import laserServer_devices_gener as gener
+import laserServer_devices_laser as laser
+import laserServer_devices_atten as atten
+import laserServer_devices_gener as gener
 
 # ===============================================================================
 # Devices functions =============================================================

@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 
 # System Imports
-import socket
 import sys
+import socket
 
 # Local Imports
-from lib import laserTools as Tools
+import laserTools as Tools
 
 # ===============================================================================
 # Client functions parameters ===================================================
