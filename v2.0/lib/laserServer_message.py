@@ -82,11 +82,6 @@ def parse(command, response, db):
             queries.append(query_current("LAS_GMTE_CRYSTAL",        "%.2f" % (float(m.group(2))/100)))
             queries.append(query_current("LAS_GMTE_ELECTRONICSINK", "%.2f" % float(m.group(3))))
             queries.append(query_current("LAS_GMTE_HEATSINK",       "%.2f" % float(m.group(4))))
-            # History
-            queries.append(query_history("LAS_GMTE_DIODE",          "%.2f" % (float(m.group(1))/100)))
-            queries.append(query_history("LAS_GMTE_CRYSTAL",        "%.2f" % (float(m.group(2))/100)))
-            queries.append(query_history("LAS_GMTE_ELECTRONICSINK", "%.2f" % float(m.group(3))))
-            queries.append(query_history("LAS_GMTE_HEATSINK",       "%.2f" % float(m.group(4))))
             # temperatures
             queries.append(query_temperature(m.group(1), m.group(2), m.group(3), m.group(4)))
             break
