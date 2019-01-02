@@ -1,0 +1,398 @@
+body {
+    font-family: system-ui;
+    font-size:   11px;
+}
+
+/* ----------------------------------- */
+/* Diagramation ---------------------- */
+/* ----------------------------------- */
+
+/* Level 0 --------------------------- */
+#container {
+    background: blue;
+    width:      100%;
+    text-align: center;
+}
+
+/* Level 1 --------------------------- */
+#panel {
+    display:    inline-block;
+    position:   relative;
+    background: red;
+    border:     1px solid black;
+    padding:    0px;
+    margin:     10px;
+    width:      1200px;
+    height:     900px;
+}
+
+/* Level 2 --------------------------- */
+div.panel_section {
+    display:    block;
+    position:   absolute;
+    padding:    0px;
+    margin:     0px;
+}
+
+#canvas {
+    top:        0%;
+    left:       0%;
+    width:      50%;
+    height:     50%;
+    background: #AAA;
+}
+
+#operationalcontrol {
+    top:        0%;
+    left:       50%;
+    width:      25%;
+    height:     50%;
+    background: #BBB;
+}
+
+#queue {
+    top:        0%;
+    left:       75%;
+    width:      25%;
+    height:     50%;
+    background: #CCC;
+}
+
+#laser {
+    top:        50%;
+    left:       0%;
+    width:      50%;
+    height:     50%;
+    background: #DDD;
+}
+
+#generator {
+    top:        50%;
+    left:       50%;
+    width:      25%;
+    height:     50%;
+    background: #EEE;
+}
+
+#attenuator {
+    top:        50%;
+    left:       75%;
+    width:      25%;
+    height:     50%;
+    background: #FFF;
+}
+
+/* Level 3 --------------------------- */
+
+div.title {
+    position:   relative;
+    display:    block;
+    top:        0%;
+    left:       0%;
+    width:      100%;
+    height:     25px;
+    background: #FAA;
+}
+
+div.title_table {
+    display:  table;
+    position: relative;
+    top:      0%;
+    left:     0%;
+    width:    100%;
+    height:   100%;
+}
+
+div.title_table_cell {
+    display:        table-cell;
+    vertical-align: middle;
+    text-align:     center;
+    font-weight:    bold;
+    font-size:      12px;
+    height:         100%;
+}
+
+div.content {
+    position: absolute;
+    top:      25px;
+    bottom:   0%;
+    width:    100%;
+}
+
+div.content_table {
+    display:  table;
+    position: relative;
+    top:      0%;
+    left:     0%;
+    width:    100%;
+    height:   100%;
+}
+
+div.content_table_cell {
+    display:        table-cell;
+    vertical-align: middle;
+    height:         100%;
+}
+
+/* Canvas ---------------------------- */
+
+div.canvas_menu {
+    position: absolute;
+    height: 26px;
+    left: 0%;
+    right: 0%;
+    bottom: 0%;
+    padding: 7px;
+}
+
+div.canvas_menu_right {
+    text-align: right;
+}
+
+/* Diagram --------------------------- */
+
+#canvas_diagram {
+    display:    block;
+    position:   absolute;
+    top:        0%;
+    left:       0%;
+    height:     100%;
+    width:      100%;
+    background: #99F;
+    z-index:    200;
+}
+
+#diagram_drawing {
+    position: absolute;
+    top:      0%;
+    left:     0%;
+    right:    0%;
+    bottom:   40px;
+    padding:  20px 25px 0px 25px;
+}
+
+/* Temperature Plot ------------------ */
+
+#canvas_plot {
+    display:    block;
+    position:   absolute;
+    top:        0%;
+    left:       0%;
+    height:     100%;
+    width:      100%;
+    background: #FFF;
+    z-index:    100;
+}
+
+#plot_drawing {
+    position: absolute;
+    top:      0%;
+    left:     0%;
+    right:    0%;
+    bottom:   40px;
+    padding:  20px 25px 0px 25px;
+}
+
+/* Elements -------------------------- */
+
+button {
+    border:      none;
+    width:       82px;
+    line-height: 26px;
+    height:      26px;
+    margin:      1px;
+    text-align:  center;
+    background:coral;
+    padding:     0px;
+    outline:     none;
+}
+
+button:active {
+    background: green;
+}
+
+button.button_40 {
+    width: 40px;
+}
+
+button.button_init {
+    margin-left: 0px;
+}
+
+button.button_end {
+    margin-right: 0px;
+}
+
+/*
+#panel_row {
+    display:    table-row;
+    position:   relative;
+    background: green;
+    height:     100%;
+}
+
+
+
+#canvas_diagram {
+    display:    table;
+    position:   absolute;
+    top:        0px;
+    left:       0px;
+    background: burlywood;
+    width:      100%;
+    height:     50%;
+    z-index:    100;
+}
+
+#canvas_diagram_row {
+    display: table-row;
+}
+
+#canvas_diagram_selector {
+    display: table-cell;
+    padding: 10px;
+}
+
+#canvas_diagram_plot {
+    display: table-cell;
+    height: 100%;
+}
+
+#canvas_diagram_menu {
+    display: table-cell;
+    padding: 10px;
+}
+
+#canvas_plot {
+    display:    table;
+    position:   absolute;
+    top:        0px;
+    left:       0px;
+    background: white;
+    width:      100%;
+    height:     50%;
+    z-index:    90;
+}
+
+#canvas_plot_row {
+    display: table-row;
+}
+
+#canvas_plot_selector {
+    display: table-cell;
+    padding: 10px;
+}
+
+#canvas_plot_plot {
+    display: table-cell;
+}
+
+#canvas_plot_menu {
+    display: table-cell;
+    padding: 10px;
+}
+
+
+
+
+
+
+
+#laser_content {
+    display:  table;
+    position: relative;
+    top:      0px;
+    left:     0px;
+    width:    100%;
+    height:   100%;
+}
+
+#laser_content_row {
+    display: table-row;
+    width:   100%;
+    padding: 0px;
+    height:  100%-27px;
+}
+
+#content_title {
+    display:        table-caption;
+    height:         27px;
+    line-height:    27px;
+    width:          100%;
+    vertical-align: middle;
+    font-weight:    bold;
+}
+
+#laser_content_group {
+    display: table-row-group;
+    height: 100%;
+}
+
+#laser_content_cell_left {
+    display:        table-cell;
+    width:          50%;
+    text-align:     center;
+    background:   white;
+    vertical-align: middle;
+    padding:        0px;
+}
+
+#laser_content_cell_right {
+    display:    table-cell;
+    width:      50%;
+    text-align: center;
+    background: red;
+}
+
+
+
+ Elements 
+
+
+
+.button_1_5 {
+    width: 137;
+}
+
+span.label_title {
+    display:     inline-block;
+    width:       230px;
+    text-align:  center;
+    font-weight: bold;
+    line-height: 28px;
+}
+
+span.label {
+    display:     inline-block;
+    width:       100px;
+    text-align:  left;
+    line-height: 21px;
+}
+
+span.unit{
+    display:      inline-block;
+    width:        30px;
+    text-align:   left;
+    line-height:  21px;
+    padding-left: 2px;
+}
+
+input.info {
+    width:      100px;
+    margin:     1px;
+    text-align: right;
+}
+
+ul {
+    list-style-type: none;
+    padding:         0px;
+    margin:          0px;
+}
+
+button.server_action {
+    width: 200px;
+}
+
+input.center {
+    text-align: center;
+}*/
