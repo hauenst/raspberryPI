@@ -45,7 +45,7 @@ def queue_handler(device, queue, trigger, end, db):
 
 def run_command(device, command):
     device.write(str.encode(command + "\r"))
-    movement_pause(command) # Sleep pause for attenuator movement
+    movement_pause(command) # Sleep pause for attenuator movement Lothar: Pending delay for steps
     response = device.read(1024)
     response = response.decode("utf-8")
     return response

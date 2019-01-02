@@ -143,6 +143,13 @@ def parse(command, response, db):
             queries.append(query_history("ATT_DB"  , m.group(1)))
             queries.append(query_history("ATT_POS" , m.group(3)))
             break
+        m = re.match("^[sS]([0-9])\r\nPos:([0-9]+)", response)
+        if (m):
+            # Current
+            queries.append(query_current("ATT_POS" , m.group(2)))
+            # History
+            queries.append(query_history("ATT_POS" , m.group(2)))
+            break
         m = re.match("^C([12]):OUTP (ON|OFF),LOAD,(HZ|[0-9]+),PLRT,(NOR|INVT)", response)
         if (m):
             # Current

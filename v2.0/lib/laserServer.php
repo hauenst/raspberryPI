@@ -64,6 +64,7 @@
             } else {
                 break;
             }
+            usleep(100000);
         }
     }
     // Retreiving database values

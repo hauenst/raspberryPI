@@ -3,24 +3,80 @@
 // Setting environment variables ////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 
-// Default list of variables to load at ready
-var json_request_values = '{"values" : [' +
-    //'"GEN_C2_OUT",' +
-    '"LAS_GEMT_SUPPLY",' +
-    '"LAS_GEMT_EMITING",' +
-    '"LAS_GMTE_DIODE",' +
-    '"LAS_GMTE_CRYSTAL",' +
-    '"LAS_GMTE_ELECTRONICSINK",' +
-    '"LAS_GMTE_HEATSINK",' +
-    '"LAS_TEC1",' +
-    '"LAS_TEC2",' +
-    '"LAS_GSER_ERROR1",' +
-    '"LAS_GSER_ERROR2",' +
-    '"LAS_GSER_ERROR3",' +
-    '"LAS_GSER_INFO1",' +
-    '"LAS_GSER_INFO2",' +
-    '"LAS_GSER_INFO3"' +
-    ']}';
+// Default list of commands and variables for startup
+var startup_commands = '"LAS GEMT",' +
+                       '"LAS GMTE",' +
+                       '"LAS GTCO",' +
+                       '"LAS GSER",' +
+                       '"GEN C1:OUTP?",' +
+                       '"GEN C1:BSWV?",' +
+                       '"GEN C2:OUTP?",' +
+                       '"GEN C2:BSWV?",' +
+                       '"ATT D"';
+//var startup_commands = ''
+var startup_values = '"LAS_GEMT_SUPPLY",' +
+                     '"LAS_GEMT_EMITING",' +
+                     '"LAS_GMTE_DIODE",' +
+                     '"LAS_GMTE_CRYSTAL",' +
+                     '"LAS_GMTE_ELECTRONICSINK",' +
+                     '"LAS_GMTE_HEATSINK",' +
+                     '"LAS_TEC1",' +
+                     '"LAS_TEC2",' +
+                     '"LAS_GSER_ERROR1",' +
+                     '"LAS_GSER_ERROR2",' +
+                     '"LAS_GSER_ERROR3",' +
+                     '"LAS_GSER_INFO1",' +
+                     '"LAS_GSER_INFO2",' +
+                     '"LAS_GSER_INFO3",' +
+                     '"LAS_D",' +
+                     '"GEN_C1_WVTP",' +
+                     '"GEN_C1_AMP",' +
+                     '"GEN_C1_OFST",' +
+                     '"GEN_C1_FRQ",' +
+                     '"GEN_C1_DUTY",' +
+                     '"GEN_C1_WIDTH",' +
+                     '"GEN_C1_RISE",' +
+                     '"GEN_C1_FALL",' +
+                     '"GEN_C1_OUT",' +
+                     '"GEN_C2_WVTP",' +
+                     '"GEN_C2_AMP",' +
+                     '"GEN_C2_OFST",' +
+                     '"GEN_C2_FRQ",' +
+                     '"GEN_C2_DUTY",' +
+                     '"GEN_C2_WIDTH",' +
+                     '"GEN_C2_RISE",' +
+                     '"GEN_C2_FALL",' +
+                     '"GEN_C2_OUT",' +
+                     '"ATT_DB",' +
+                     //'"ATT_PERCENT",' +
+                     '"ATT_POS"';
+
+// List of units for specific parameters
+var units = {
+    LAS_GEMT_SUPPLY:         "[H:M]",
+    LAS_GEMT_EMITING:        "[H:M]",
+    LAS_GMTE_DIODE:          "[°C]",
+    LAS_GMTE_CRYSTAL:        "[°C]",
+    LAS_GMTE_ELECTRONICSINK: "[°C]",
+    LAS_GMTE_HEATSINK:       "[°C]",
+    GEN_C1_AMP:              "[V]",
+    GEN_C1_OFST:             "[V]",
+    GEN_C1_FRQ:              "[Hz]",
+    GEN_C1_DUTY:             "[%]",
+    GEN_C1_WIDTH:            "[S]",
+    GEN_C1_RISE:             "[S]",
+    GEN_C1_FALL:             "[S]",
+    GEN_C2_AMP:              "[V]",
+    GEN_C2_OFST:             "[V]",
+    GEN_C2_FRQ:              "[Hz]",
+    GEN_C2_DUTY:             "[%]",
+    GEN_C2_WIDTH:            "[S]",
+    GEN_C2_RISE:             "[S]",
+    GEN_C2_FALL:             "[S]",
+    ATT_DB:                  "[dB]",
+    //ATT_PERCENT:             "[%]",
+    ATT_POS:                 "[Step]"
+}
 
 // Variable to reference the temperature plot
 var temp_1;
@@ -32,6 +88,8 @@ var temp_crystal        = [];
 var temp_electronicsink = [];
 var temp_heatsink       = [];
 var temp_times          = [];
+// Variable to store the advanced view display
+var advanced = false;
 
 /////////////////////////////////////////////////////////////////////////////////
 // Information management functions /////////////////////////////////////////////
@@ -40,9 +98,18 @@ var temp_times          = [];
 function update_points(points){
     $.each(points,
         function(i, point) {
-            $('#' + point["name"]).val(point["value"]);
+            var unit = get_unit(point["name"]);
+            $('#' + point["name"]).val(point["value"] + unit);
         }
     );
+}
+
+function get_unit(point) {
+    if (point in units) {
+        return " " + units[point];
+    } else {
+        return "";
+    }
 }
 
 function update_temperatures(data) {
@@ -66,10 +133,27 @@ function update_info(data, status){
     update_temperatures(response["temperatures"])
 }
 
-function laserServer(request_parameter, callback) {
+function laserServer(req_cmd, req_val, req_tim, callback) {
+    req = "{";
+    if (req_cmd != "") {
+        req = req + '"commands":[' + req_cmd + ']';
+    }
+    if (req_val != "") {
+        if (req != "{") {
+            req = req + ',';
+        }
+        req = req + '"values":[' + req_val + ']';
+    }
+    if (req_tim != 0) {
+        if (req != "{") {
+            req = req + ',';
+        }
+        req = req + '"temps":' + req_tim;
+    }
+    req = req + "}";
     $.post("lib/laserServer.php", {
         random:  Math.random(),
-        request: request_parameter
+        request: req
     },
         function(data, status) {
             update_info(data, status);
@@ -97,7 +181,7 @@ function update_plot(chart) {
 }
 
 function update_plot_time(chart, time){
-    laserServer('{"temps": ' + time + '}',
+    laserServer("", "", time,
         function() {
             update_plot(chart);
         }
@@ -105,7 +189,7 @@ function update_plot_time(chart, time){
 }
 
 function draw_plot() {
-    laserServer('{"temps": ' + temps_seconds_default + '}',
+    laserServer("", "", temps_seconds_default,
         function() {
             let minX = Math.ceil(Math.min(...temp_times)/60/60)*60*60;
             var ctx = document.getElementById("temp_1").getContext('2d');
@@ -207,20 +291,16 @@ function draw_plot() {
 
 $(document).ready(
     function() {
-        // Load default values
-        laserServer(json_request_values);
-        // Load the temperature plot
-        draw_plot(temps_seconds_default);
         // Start listening to action buttons
         $('[id^="A_"]').click(
             function() {
-                laserServer($(this).attr("req"));
+                laserServer($(this).attr("req_cmd"), $(this).attr("req_val"), 0);
             }
         );
         // Start listening to plot buttons
         $('[id^="T_"]').click(
             function() {
-                update_plot_time(temp_1, $(this).attr("req")*60*60+60);
+                update_plot_time(temp_1, $(this).attr("req_tim")*60*60+60);
             }
         );
         $('[id="H_diagram"]').click(
@@ -235,5 +315,49 @@ $(document).ready(
                 $('#canvas_plot').show();
             }
         )
+        $('[id="H_C1"').click(
+            function() {
+                $('#generator_ch2').hide();
+                $('#generator_ch1').show();
+            }
+        )
+        $('[id="H_C2"').click(
+            function() {
+                $('#generator_ch1').hide();
+                $('#generator_ch2').show();
+            }
+        )
+        $('[id="H_advanced"').click(
+            function() {
+                if (advanced) {
+                    $('#panel_advanced').fadeOut(420,
+                        function() {
+                            $('#panel').animate({height: "452px"}, {
+                                duration: 420,
+                                done: function() {
+                                    advanced = false;
+                                }
+                            });
+                        }
+                    )
+                } else {
+                    $('#panel').animate({height: "903px"}, {
+                        duration: 420, 
+                        done: function() {
+                            advanced = true; 
+                            $('#panel_advanced').fadeIn(420);
+                        }
+                    });
+                }
+            }
+        )
+        // Load default values and remove loading page
+        laserServer(startup_commands, startup_values, 0,
+            function() {
+                draw_plot(temps_seconds_default);
+                $("#H_advanced").fadeIn(500);
+                $("#panel_loading").fadeOut(500);
+            }
+        );
     }
 );

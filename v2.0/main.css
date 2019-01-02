@@ -8,25 +8,80 @@ body {
 /* ----------------------------------- */
 
 /* Level 0 --------------------------- */
+
 #container {
-    background: blue;
     width:      100%;
     text-align: center;
 }
 
 /* Level 1 --------------------------- */
+
 #panel {
     display:    inline-block;
     position:   relative;
-    background: red;
-    border:     1px solid black;
     padding:    0px;
     margin:     10px;
-    width:      1200px;
-    height:     900px;
+    width:      1204px;
+    height:     452px;/*452px 903px;*/
+    background: gainsboro;
 }
 
-/* Level 2 --------------------------- */
+#underbar {
+    display:    inline-block;
+    position:   relative;
+    padding:    0px;
+    margin:     0px 10px 10px 10px;
+    width:      1204px;
+    text-align: right;
+}
+
+/* level 2 --------------------------- */
+
+/*
+#panel_operation {
+    display: inline-block;
+}
+*/
+
+#panel_advanced {
+    position: absolute;
+    bottom:   0px;
+    display:  none;
+}
+
+#panel_loading {
+    display:    inline-block;
+    position:   absolute;
+    padding:    0px;
+    top:        0px;
+    bottom:     0px;
+    left:       0px;
+    right:      0px;
+    background: white;
+    border:     1px solid black;
+    z-index:    130;
+}
+
+/* Level 3 --------------------------- */
+
+#loading_table {
+    display: table;
+    width:   100%;
+    height:  100%;
+}
+
+#loading_table_cell {
+    display:        table-cell;
+    width:          100%;
+    height:         100%;
+    vertical-align: middle;
+    text-align:     center;
+}
+
+#loading_table_cell.img {
+    border: none;
+}
+
 div.panel_section {
     display:    block;
     position:   absolute;
@@ -35,54 +90,81 @@ div.panel_section {
 }
 
 #canvas {
-    top:        0%;
-    left:       0%;
-    width:      50%;
-    height:     50%;
-    background: #AAA;
+    top:          0px;
+    left:         0px;
+    width:        602px;
+    height:       452px;
+    box-sizing:   border-box;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px 1px 1px 1px;
+    z-index:      100;
+    background:   gainsboro;
 }
 
 #operationalcontrol {
-    top:        0%;
-    left:       50%;
-    width:      25%;
-    height:     50%;
-    background: #BBB;
+    top:          0px;
+    left:         602px;
+    width:        301px;
+    height:       452px;
+    box-sizing:   border-box;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px 1px 1px 0px;
+    z-index:      110;
+    background:   gainsboro;
 }
 
 #queue {
-    top:        0%;
-    left:       75%;
-    width:      25%;
-    height:     50%;
-    background: #CCC;
+    top:          0px;
+    right:        0px;
+    width:        301px;
+    height:       452px;
+    box-sizing:   border-box;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px 1px 1px 0px;
+    z-index:      120;
+    background:   gainsboro;
 }
 
 #laser {
-    top:        50%;
-    left:       0%;
-    width:      50%;
-    height:     50%;
-    background: #DDD;
+    bottom:       0px;
+    left:         0px;
+    width:        602px;
+    height:       451px;
+    box-sizing:   border-box;
+    border-style: solid;
+    border-color: black;
+    border-width: 0px 1px 1px 1px;
+    z-index:      0;  
 }
 
 #generator {
-    top:        50%;
-    left:       50%;
-    width:      25%;
-    height:     50%;
-    background: #EEE;
+    bottom:       0px;
+    left:         602px;
+    width:        301px;
+    height:       451px;
+    box-sizing:   border-box;
+    border-style: solid;
+    border-color: black;
+    border-width: 0px 1px 1px 0px;
+    z-index:      10;
 }
 
 #attenuator {
-    top:        50%;
-    left:       75%;
-    width:      25%;
-    height:     50%;
-    background: #FFF;
+    bottom:       0px;
+    left:         903px;
+    width:        301px;
+    height:       451px;
+    box-sizing:   border-box;
+    border-style: solid;
+    border-color: black;
+    border-width: 0px 1px 1px 0px;
+    z-index:      20;
 }
 
-/* Level 3 --------------------------- */
+/* Level 4 --------------------------- */
 
 div.title {
     position:   relative;
@@ -91,14 +173,14 @@ div.title {
     left:       0%;
     width:      100%;
     height:     25px;
-    background: #FAA;
+    background: lightslategray;
 }
 
 div.title_table {
     display:  table;
     position: relative;
-    top:      0%;
-    left:     0%;
+    top:      0px;
+    left:     0px;
     width:    100%;
     height:   100%;
 }
@@ -113,62 +195,47 @@ div.title_table_cell {
 }
 
 div.content {
-    position: absolute;
-    top:      25px;
-    bottom:   0%;
-    width:    100%;
-}
-
-div.content_table {
-    display:  table;
-    position: relative;
-    top:      0%;
-    left:     0%;
-    width:    100%;
-    height:   100%;
-}
-
-div.content_table_cell {
-    display:        table-cell;
-    vertical-align: middle;
-    height:         100%;
+    position:    absolute;
+    top:         25px;
+    bottom:      0px;
+    width:       100%;
+    padding-top: 2px;
+    text-align:  center;
 }
 
 /* Canvas ---------------------------- */
-
-div.canvas_menu {
-    position: absolute;
-    height: 26px;
-    left: 0%;
-    right: 0%;
-    bottom: 0%;
-    padding: 7px;
-}
-
-div.canvas_menu_right {
-    text-align: right;
-}
 
 /* Diagram --------------------------- */
 
 #canvas_diagram {
     display:    block;
     position:   absolute;
-    top:        0%;
-    left:       0%;
-    height:     100%;
-    width:      100%;
-    background: #99F;
-    z-index:    200;
+    top:        0px;
+    bottom:     0px;
+    left:       0px;
+    right:      0px;
+    background: gainsboro;
+    z-index:    140;
 }
 
 #diagram_drawing {
     position: absolute;
-    top:      0%;
-    left:     0%;
-    right:    0%;
+    top:      0px;
+    bottom:   0px;
+    left:     0px;
+    right:    0px;
     bottom:   40px;
     padding:  20px 25px 0px 25px;
+}
+
+div.canvas_menu_diagram {
+    position:   absolute;
+    height:     26px;
+    left:       0px;
+    right:      0px;
+    bottom:     0px;
+    padding:    6px;
+    text-align: right;
 }
 
 /* Temperature Plot ------------------ */
@@ -180,8 +247,8 @@ div.canvas_menu_right {
     left:       0%;
     height:     100%;
     width:      100%;
-    background: #FFF;
-    z-index:    100;
+    background: white;
+    z-index:    130;
 }
 
 #plot_drawing {
@@ -193,22 +260,122 @@ div.canvas_menu_right {
     padding:  20px 25px 0px 25px;
 }
 
+div.canvas_menu_plot {
+    position:   absolute;
+    height:     26px;
+    left:       0px;
+    right:      0px;
+    bottom:     0px;
+    padding:    6px;
+}
+
+/* Laser ----------------------------- */
+
+#laser_left {
+    position:    absolute;
+    top:         0px;
+    left:        0px;
+    height:      100%;
+    width:       50%;
+}
+
+#laser_right {
+    position:    absolute;
+    top:         0px;
+    right:       0px;
+    height:      100%;
+    width:       50%;
+}
+
+/* Generator ------------------------- */
+
+#generator_ch1 {
+    display:    block;
+    position:   absolute;
+    top:        0px;
+    left:       0px;
+    height:     100%;
+    width:      100%;
+    background: gainsboro;
+    z-index:    40;
+}
+
+#generator_ch2 {
+    display:    block;
+    position:   absolute;
+    top:        0px;
+    left:       0px;
+    height:     100%;
+    width:      100%;
+    background: gainsboro;
+    z-index:    30;
+}
+
+/* Queue ----------------------------- */
+
+#script_container {
+    display:    inline-block;
+    overflow-y: auto;
+    width:      265px;
+    height:     372px;
+    box-sizing: border-box;
+    border:     1px solid lightslategray;
+}
+
+#script {
+    width:       100%;
+    font-family: system-ui;
+    font-size:   11px;
+}
+
+#script_status_reporting {
+    text-align: center;
+}
+
+#script_status {
+    font-weight: bold;
+}
+
+td.number {
+    width:      25px;
+    text-align: center;
+}
+
+tr.script_row {
+    height: 13px;
+}
+
+td.time {
+    width:      36px;
+    text-align: center;
+}
+
+td.device {
+    width:      28px;
+    text-align: center;
+}
+
+td.action {
+    text-align: Left;
+}
+
+td.icon {
+    width:      13px;
+    text-align: center;
+}
+
 /* Elements -------------------------- */
 
-button {
+button.canvas_menu {
     border:      none;
     width:       82px;
     line-height: 26px;
     height:      26px;
     margin:      1px;
     text-align:  center;
-    background:coral;
     padding:     0px;
     outline:     none;
-}
-
-button:active {
-    background: green;
+    background:  silver;
 }
 
 button.button_40 {
@@ -223,176 +390,77 @@ button.button_end {
     margin-right: 0px;
 }
 
-/*
-#panel_row {
-    display:    table-row;
-    position:   relative;
-    background: green;
-    height:     100%;
-}
-
-
-
-#canvas_diagram {
-    display:    table;
-    position:   absolute;
-    top:        0px;
-    left:       0px;
-    background: burlywood;
-    width:      100%;
-    height:     50%;
-    z-index:    100;
-}
-
-#canvas_diagram_row {
-    display: table-row;
-}
-
-#canvas_diagram_selector {
-    display: table-cell;
-    padding: 10px;
-}
-
-#canvas_diagram_plot {
-    display: table-cell;
-    height: 100%;
-}
-
-#canvas_diagram_menu {
-    display: table-cell;
-    padding: 10px;
-}
-
-#canvas_plot {
-    display:    table;
-    position:   absolute;
-    top:        0px;
-    left:       0px;
-    background: white;
-    width:      100%;
-    height:     50%;
-    z-index:    90;
-}
-
-#canvas_plot_row {
-    display: table-row;
-}
-
-#canvas_plot_selector {
-    display: table-cell;
-    padding: 10px;
-}
-
-#canvas_plot_plot {
-    display: table-cell;
-}
-
-#canvas_plot_menu {
-    display: table-cell;
-    padding: 10px;
-}
-
-
-
-
-
-
-
-#laser_content {
-    display:  table;
-    position: relative;
-    top:      0px;
-    left:     0px;
-    width:    100%;
-    height:   100%;
-}
-
-#laser_content_row {
-    display: table-row;
-    width:   100%;
-    padding: 0px;
-    height:  100%-27px;
-}
-
-#content_title {
-    display:        table-caption;
-    height:         27px;
-    line-height:    27px;
-    width:          100%;
-    vertical-align: middle;
-    font-weight:    bold;
-}
-
-#laser_content_group {
-    display: table-row-group;
-    height: 100%;
-}
-
-#laser_content_cell_left {
-    display:        table-cell;
-    width:          50%;
-    text-align:     center;
-    background:   white;
-    vertical-align: middle;
-    padding:        0px;
-}
-
-#laser_content_cell_right {
-    display:    table-cell;
-    width:      50%;
-    text-align: center;
-    background: red;
-}
-
-
-
- Elements 
-
-
-
-.button_1_5 {
-    width: 137;
-}
-
-span.label_title {
-    display:     inline-block;
-    width:       230px;
+#H_advanced {
+    border:      1px solid black;
+    width:       131px;
+    height:      25px;
+    margin:      2px 0px 2px 0px;
     text-align:  center;
-    font-weight: bold;
-    line-height: 28px;
+    padding:     0px;
+    outline:     none;
+    background:  gainsboro;
+    display:     none;
 }
 
-span.label {
-    display:     inline-block;
-    width:       100px;
-    text-align:  left;
-    line-height: 21px;
+button.device_action {
+    border:      none;
+    width:       131px;
+    line-height: 19px;
+    height:      19px;
+    margin:      2px 0px 2px 0px;
+    text-align:  center;
+    padding:     0px;
+    outline:     none;
+    background:  silver;
 }
 
-span.unit{
-    display:      inline-block;
-    width:        30px;
-    text-align:   left;
-    line-height:  21px;
-    padding-left: 2px;
+button.attenuator_action {
+    width:  64px;
+    margin: 2px 1.5px 2px 1.5px;
 }
 
-input.info {
-    width:      100px;
-    margin:     1px;
-    text-align: right;
+button.dual_left {
+    margin-right: 3px;
 }
 
-ul {
+button.dual_right {
+    margin-left: 0px;
+}
+
+button.canvas_menu:active,
+button.device_action:active,
+#H_advanced:active {
+    background: olive;
+}
+
+ul.device {
     list-style-type: none;
     padding:         0px;
     margin:          0px;
 }
 
-button.server_action {
-    width: 200px;
+li.device {
+    list-style-type: none;
+    padding:         0px;
+    margin:          0px;
 }
 
-input.center {
+li.device_title {
+    line-height: 23px;
+    height:      23px;
+    font-weight: bold;
+}
+
+span.label {
+    display:     inline-block;
+    width:       131px;
+    text-align:  left;
+    line-height: 21px;
+    margin:      0px 2px 0px 0px;
+}
+
+input.info {
+    width:      132.5px;
+    margin:     2px 0px 2px 0px;
     text-align: center;
-}*/
+}
