@@ -2,6 +2,8 @@
 # System Imports
 import re
 import sys
+import math
+from threading import Event
 
 # Local Imports
 import laserServer_main as Main
@@ -12,29 +14,32 @@ import laserTools       as Tools
 # ===============================================================================
 
 def process(input_str, events, queue):
-    Tools.verbose("   Received: " + input_str.rstrip())
+    Tools.verbose("Requested from client:\n" + input_str.rstrip())
     device = input_str[:3]
     tosend = input_str[4:]
+    lock = Event()
     if (device == "LAS") :
         # Send to Laser
-        queue["laser"].append(tosend)
+        queue["laser"].append({"tosend": tosend, "toreturn": lock})
         events["laser"].set()
-        response = "OK - Laser Queued"
+        response = "OK - Laser command completed"
     elif (device == "ATT"):
         # Send to attenuator
-        queue["atten"].append(tosend)
+        queue["atten"].append({"tosend": tosend, "toreturn": lock})
         events["atten"].set()
-        response = "OK - Attenuator Queued"
+        response = "OK - Attenuator command completed"
     elif (device == "GEN"):
         # Send to generator
-        queue["gener"].append(tosend)
+        queue["gener"].append({"tosend": tosend, "toreturn": lock})
         events["gener"].set()
-        response = "OK - Generator Queued"
+        response = "OK - Generator command completed"
     elif (device == "STA"):
         # Get server status
-        response = Main.message_handler(tosend, events)
+        response = Main.message_handler({"tosend": tosend, "toreturn": lock}, events)
     else:
         response = "KO - Command NOT Queued. Device \"" + device + "\" NOT recognized"
+    lock.wait()
+    Tools.verbose(response, level=1)
     sys.stdout.flush()
     return response
 
@@ -43,8 +48,9 @@ def process(input_str, events, queue):
 # ===============================================================================
 
 def parse(command, response, db):
-    Tools.verbose(repr(command), level=2)
-    Tools.verbose(repr(response), level=2)
+    Tools.verbose("Parsing result")
+    Tools.verbose("Command:\n" + repr(command), level=2)
+    Tools.verbose("Response:\n" + repr(response), level=2)
     # Initilizing variables
     try:
         cursor = db.cursor()
@@ -130,18 +136,22 @@ def parse(command, response, db):
             # Current
             queries.append(query_current("ATT_POS" , m.group(1)))
             queries.append(query_current("ATT_DB"  , m.group(2)))
+            queries.append(query_current("ATT_PERCENT", round(math.exp(-float(m.group(2))/4.3425121307373)*100,4)))
             # History
             queries.append(query_history("ATT_POS" , m.group(1)))
             queries.append(query_history("ATT_DB"  , m.group(2)))
+            queries.append(query_history("ATT_PERCENT", round(math.exp(-float(m.group(2))/4.3425121307373)*100,4)))
             break
         m = re.match("^[aA]([0-9]+(\.[0-9])?)\r\nPos:([0-9]+)", response)
         if (m):
             # Current
-            queries.append(query_current("ATT_DB"  , m.group(1)))
-            queries.append(query_current("ATT_POS" , m.group(3)))
+            queries.append(query_current("ATT_DB"     , m.group(1)))
+            queries.append(query_current("ATT_POS"    , m.group(3)))
+            queries.append(query_current("ATT_PERCENT", round(math.exp(-float(m.group(1))/4.3425121307373)*100,4)))
             # History
-            queries.append(query_history("ATT_DB"  , m.group(1)))
-            queries.append(query_history("ATT_POS" , m.group(3)))
+            queries.append(query_history("ATT_DB"     , m.group(1)))
+            queries.append(query_history("ATT_POS"    , m.group(3)))
+            queries.append(query_history("ATT_PERCENT", round(math.exp(-float(m.group(1))/4.3425121307373)*100,4)))
             break
         m = re.match("^[sS]([0-9])\r\nPos:([0-9]+)", response)
         if (m):
@@ -196,14 +206,16 @@ def parse(command, response, db):
         break
     # Reporting not recoginized response
     if (not response_match):
-        print("ERROR: Command not recognized")
+        print("ERROR: Command \"" + command + "\" not recognized")
     # Excuting queries
+    Tools.verbose("Running queries:", level=2)
     for query in queries:
         Tools.verbose(query, level=2)
         cursor.execute(query)
     # Clossing db cursor
     db.commit()
     cursor.close()
+    Tools.verbose("Parsing finished")
     return True
 
 def query_current(name, value):

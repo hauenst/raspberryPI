@@ -75,7 +75,7 @@ def client_listening_loop(soc, events, queue):
         except:
             return
         # Printing socket receiving message
-        Tools.verbose("\n   Reading from socket " + str(address[1]))
+        Tools.verbose("Reading from socket number:\n" + str(address[1]))
         # Processing result
         receive_input(connection, events, queue)
         connection.close()
@@ -128,10 +128,11 @@ def terminate(soc, events, devices_threads, devices, client_management, success)
 # ===============================================================================
 
 def message_handler(message, events):
-    if (message == ""):
+    if (message["tosend"] == ""):
         return ("OK - laserServer is alive! (PID %d)" % os.getpid())
-    elif (message == "exit"):
+    elif (message["tosend"] == "exit"):
         events["server_management"].set()
+        message["toreturn"].set()
         return "exit"
     else:
         return ""

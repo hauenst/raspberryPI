@@ -24,7 +24,7 @@
     function values_query($point) {
         return "SELECT `name`, `value` FROM `current` WHERE `name` = '${point}';";
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////////
     // Retrieving request /////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
@@ -47,6 +47,8 @@
     // Creating variables to return
     $ok = 0;
     $values = array();
+    $commands = "";
+    $info = "";
     $temperatures = array("times" => array(), "label" => array(), "diode" => array(), "crystal" => array(), "electronicsink" => array(), "heatsink" => array());
 
     // Executing commands
@@ -59,13 +61,13 @@
             }
             $request = "./laserClient.py \"${command}\"";
             exec($request, $result);
-            if (is_array($result) && substr($result[0], 0, 2) == "OK") {
+            if (!empty($result) && substr(end($result), 0, 2) == "OK") {
                 $ok++;
             } else {
                 break;
             }
-            usleep(100000);
         }
+        $info = $result;
     }
     // Retreiving database values
     if (isset($user["values"]) || isset($user["temps"])) {
@@ -124,7 +126,7 @@
     ///////////////////////////////////////////////////////////////////////////////
     // Returning result ///////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
-    $return = array("commands" => $ok, "values" => $values, "temperatures" => $temperatures);
+    $return = array("tried" => $commands, "commands" => $ok, "values" => $values, "temperatures" => $temperatures, "info" => $info);
     print(json_encode($return));
 
 ?>

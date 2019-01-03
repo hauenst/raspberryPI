@@ -39,13 +39,15 @@ def client_disconnect(soc):
 def client_send(soc, message):
     try:
         soc.sendall(message.encode("utf8"))
-        Tools.verbose("Sent: " + message)
+        Tools.verbose("Sent:\n" + message)
     except:
         sys.exit("Error sending message")
     try:
         server_response = soc.recv(4096).decode("utf8").rstrip()
-        Tools.verbose("Resp: " + server_response)
-        print(server_response)
+        if (Tools.verbosity > 0):
+            print(server_response)
+        else:
+            Tools.verbose("Received:\n" + server_response)
     except:
         sys.exit("Error receiving response")
 

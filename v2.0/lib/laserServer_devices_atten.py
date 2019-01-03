@@ -31,19 +31,17 @@ def queue_handler(device, queue, trigger, end, db):
     trigger.wait()
     while not end.is_set():
         while (len(queue)>0):
-            command = queue[0]
+            command = queue[0]["tosend"]
             response = run_command(device, command)
+            Tools.verbose("Device response:\n" + response, level=1)
             parse_result = Message.parse("ATT " + command, response, db)
-            if (parse_result != None):
-                Tools.print_interaction(command, response)
-            #else:
-            #    print("-> ", end = "")
-            #    sys.stdout.flush()
+            queue[0]["toreturn"].set()
             queue.pop(0)
         trigger.clear()
         trigger.wait()
 
 def run_command(device, command):
+    response = device.read(1024) # Clean buffer
     device.write(str.encode(command + "\r"))
     movement_pause(command) # Sleep pause for attenuator movement Lothar: Pending delay for steps
     response = device.read(1024)
@@ -54,5 +52,6 @@ def movement_pause(command):
     match = re.match("^[aA]([0-9]+(\.[0-9]+)?)", command)
     if (match):
         current = float(Db.rescue_current("ATT_DB", "0"))
-        to_sleep = abs(float(match.group(1))-current)/10 + 0.25
+        to_sleep = abs(float(match.group(1))-current)/10
         time.sleep(to_sleep)
+    time.sleep(0.25)

@@ -28,14 +28,11 @@ def queue_handler(device, queue, trigger, end, db):
     trigger.wait()
     while not end.is_set():
         while (len(queue)>0):
-            command = queue[0]
+            command = queue[0]["tosend"]
             response = run_command(device, command)
+            Tools.verbose("Device response:\n" + response, level=1)
             parse_result = Message.parse("LAS " + command, response, db)
-            if (parse_result != None):
-                Tools.print_interaction(command, response)
-            #else:
-            #    print("-> ", end = "")
-            #    sys.stdout.flush()
+            queue[0]["toreturn"].set()
             queue.pop(0)
         trigger.clear()
         trigger.wait()
