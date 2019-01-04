@@ -29,7 +29,7 @@
     // Retrieving request /////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
 
-    $user = "";
+    $user = "dummy";
     if (isset($_POST["request"])) {
         $user = json_decode($_POST["request"], true);
     } else {
@@ -39,7 +39,9 @@
             exit;
         }
     }
-
+    print("Request:\n");
+    print_r($user);
+    
     ///////////////////////////////////////////////////////////////////////////////
     // Accesing data //////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
@@ -50,7 +52,6 @@
     $commands = "";
     $info = "";
     $temperatures = array("times" => array(), "label" => array(), "diode" => array(), "crystal" => array(), "electronicsink" => array(), "heatsink" => array());
-
     // Executing commands
     if (isset($user["commands"])) {
         $commands = $user["commands"];
@@ -87,7 +88,7 @@
                             $result = $result->fetch_assoc();
                             array_push($values, $result);
                         } else {
-                            array_push($values, "");
+                            array_push($info, "Value \"".$point."\" not found");
                         }
                     }
                 }
@@ -126,7 +127,10 @@
     ///////////////////////////////////////////////////////////////////////////////
     // Returning result ///////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
-    $return = array("tried" => $commands, "commands" => $ok, "values" => $values, "temperatures" => $temperatures, "info" => $info);
+    
+    $return = array("commands" => $ok, "tried" => $commands, "values" => $values, "temperatures" => $temperatures, "info" => $info);
+    print("Response:\n");
+    print_r($return);
     print(json_encode($return));
 
 ?>

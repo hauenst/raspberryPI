@@ -122,17 +122,3 @@ def terminate(soc, events, devices_threads, devices, client_management, success)
         print("Good Bye!")
     else:
         print("ERROR: Unexpected termination")
-
-# ===============================================================================
-# Status reporting ==============================================================
-# ===============================================================================
-
-def message_handler(message, events):
-    if (message["tosend"] == ""):
-        return ("OK - laserServer is alive! (PID %d)" % os.getpid())
-    elif (message["tosend"] == "exit"):
-        events["server_management"].set()
-        message["toreturn"].set()
-        return "exit"
-    else:
-        return ""

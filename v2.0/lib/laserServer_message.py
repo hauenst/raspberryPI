@@ -1,13 +1,15 @@
 
 # System Imports
 import re
+import os
 import sys
 import math
 from threading import Event
 
 # Local Imports
-import laserServer_main as Main
-import laserTools       as Tools
+import laserServer_main   as Main
+import laserServer_config as Config
+import laserTools         as Tools
 
 # ===============================================================================
 # Client message processing =====================================================
@@ -34,13 +36,58 @@ def process(input_str, events, queue):
         events["gener"].set()
         response = "OK - Generator command completed"
     elif (device == "STA"):
-        # Get server status
-        response = Main.message_handler({"tosend": tosend, "toreturn": lock}, events)
+        response = process_internal(tosend, events)
+        lock.set()
     else:
         response = "KO - Command NOT Queued. Device \"" + device + "\" NOT recognized"
     lock.wait()
     Tools.verbose(response, level=1)
     sys.stdout.flush()
+    return response
+
+def process_internal(command, events):
+    # Connecting Database
+    try:
+        cursor = Config.db.cursor()
+    except:
+        print("ERROR: Not possible to obtain DB cursor. " + str(sys.exc_info()))
+        return
+    # Storing command
+    query_run(cursor, [query_command("STA " + command)])
+    # Processing message
+    response = "KO - Internal command not recognized"
+    if (command == ""):
+        # Get server status
+        response = ("OK - laserServer is alive! (PID %d)" % os.getpid())
+    elif (command == "EXIT"):
+        # Terminate threads
+        events["server_management"].set()
+        response = "exit"
+    else:
+        while (True):
+            # Processing commands
+            m = re.match("^OPE ([0-9])", command)
+            if (m):
+                # Get current ope
+                ope_current = int(query_run(cursor, [querry_operational()])[0][0])
+                # Parse requested ope
+                ope_request = int(m.group(1))
+                # Advancing ope
+                if (ope_request == ope_current):
+                    response = "OK - Keeping operational state %d" % ope_request
+                elif (ope_request - 1 == ope_current):
+                    query_run(cursor, [query_current("STA_OPERATIONAL",  "%d" % ope_request)])
+                    response = "OK - New operational state %d" % ope_request
+                elif (ope_request == 0):
+                    query_run(cursor, [query_current("STA_OPERATIONAL",  "0")])
+                    response = "OK - Operational reset to 0"
+                else:
+                    query_run(cursor, [query_current("STA_OPERATIONAL",  "0")])
+                    response = "KO - Invalid or unexpected operational state"
+                break
+            break
+    Config.db.commit()
+    cursor.close()
     return response
 
 # ===============================================================================
@@ -59,7 +106,7 @@ def parse(command, response, db):
         return None
     queries = []
     # Storing command
-    queries.append('INSERT INTO `commands` (`id`, `timestamp`, `command`) VALUES (NULL, CURRENT_TIMESTAMP, \'%s\');' % command)
+    queries.append(query_command(command))
     # matching regular expressions
     response_match = True
     while True:
@@ -142,23 +189,30 @@ def parse(command, response, db):
             queries.append(query_history("ATT_DB"  , m.group(2)))
             queries.append(query_history("ATT_PERCENT", round(math.exp(-float(m.group(2))/4.3425121307373)*100,4)))
             break
-        m = re.match("^[aA]([0-9]+(\.[0-9])?)\r\nPos:([0-9]+)", response)
+        m = re.match("^[aA]([0-9]+(\.[0-9]+)?)\r\nPos:([0-9]+)", response)
         if (m):
             # Current
             queries.append(query_current("ATT_DB"     , m.group(1)))
             queries.append(query_current("ATT_POS"    , m.group(3)))
             queries.append(query_current("ATT_PERCENT", round(math.exp(-float(m.group(1))/4.3425121307373)*100,4)))
+            queries.append(query_current("ATT_LAST"   , 'DB'))
             # History
             queries.append(query_history("ATT_DB"     , m.group(1)))
             queries.append(query_history("ATT_POS"    , m.group(3)))
             queries.append(query_history("ATT_PERCENT", round(math.exp(-float(m.group(1))/4.3425121307373)*100,4)))
             break
-        m = re.match("^[sS]([0-9])\r\nPos:([0-9]+)", response)
+        m = re.match("^[sS]([0-9]+)\r\nPos:([0-9]+)", response)
         if (m):
             # Current
-            queries.append(query_current("ATT_POS" , m.group(2)))
+            queries.append(query_current("ATT_POS"    , m.group(2)))
+            queries.append(query_current("ATT_POS"    , ""))
+            queries.append(query_current("ATT_PERCENT", ""))
+            queries.append(query_current("ATT_LAST"   , 'STEP'))
             # History
-            queries.append(query_history("ATT_POS" , m.group(2)))
+            queries.append(query_history("ATT_POS"    , m.group(2)))
+            queries.append(query_history("ATT_POS"    , ""))
+            queries.append(query_history("ATT_PERCENT", ""))
+            
             break
         m = re.match("^C([12]):OUTP (ON|OFF),LOAD,(HZ|[0-9]+),PLRT,(NOR|INVT)", response)
         if (m):
@@ -208,15 +262,25 @@ def parse(command, response, db):
     if (not response_match):
         print("ERROR: Command \"" + command + "\" not recognized")
     # Excuting queries
-    Tools.verbose("Running queries:", level=2)
-    for query in queries:
-        Tools.verbose(query, level=2)
-        cursor.execute(query)
+    query_run(cursor, queries)
     # Clossing db cursor
     db.commit()
     cursor.close()
     Tools.verbose("Parsing finished")
     return True
+
+def query_run(cursor, queries):
+    toreturn = []
+    Tools.verbose("Running queries:", level=2)
+    for query in queries:
+        Tools.verbose(query, level=2)
+        cursor.execute(query)
+        while (True):
+            result = cursor.fetchone()
+            if (result == None):
+                break
+            toreturn.append(result)
+    return toreturn
 
 def query_current(name, value):
     return ('INSERT INTO `current` (`timestamp`, `name`, `value`) VALUES (CURRENT_TIMESTAMP, \'%s\', \'%s\') ON DUPLICATE KEY UPDATE value = \'%s\', timestamp = CURRENT_TIMESTAMP;' % (name, value, value))
@@ -226,3 +290,9 @@ def query_history(name, value):
 
 def query_temperature(diode, crystal, electronicsink, heatsink):
     return ('INSERT INTO `temperatures` (`id`, `timestamp`, `diode`, `crystal`, `electronicsink`, `heatsink`) VALUES (NULL, CURRENT_TIMESTAMP, \'%f\', \'%f\', \'%f\', \'%f\');' % (float(diode)/100, float(crystal)/100, float(electronicsink), float(heatsink)))
+
+def querry_operational():
+    return "SELECT `value` FROM `current` WHERE `name` = 'STA_OPERATIONAL';"
+
+def query_command(command):
+    return ('INSERT INTO `commands` (`id`, `timestamp`, `command`) VALUES (NULL, CURRENT_TIMESTAMP, \'%s\');' % command)
