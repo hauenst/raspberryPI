@@ -4,44 +4,73 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 function update_operational(ope) {
+    operational = ope;
+    $('[id="STA_OPERATIONAL"]').text((ope > 4)?"Done":(ope == 0)?"Ready":(ope < 0)?"Error":ope);
     $('[id^="A_OP_STEP"]').attr('disabled', true);
+    $('[id^="O_OP_STEP"]').attr('disabled', true);
+    $('[id^="F_OP_STEP"]').attr('disabled', true);
+    $('[id^="F_OP_STEP"]').attr('readonly', true);
     $('[id^="A_OP_STEP"]').removeClass('completed');
+    $('[id^="F_OP_STEP"]').removeClass('completed');
+    $('[id^="F_OP_STEP"]').addClass('uncompleted');
     if (ope == 0) {
-        $('[id="A_OP_STEP0"]').attr('disabled', false);
+        $('[id^="A_OP_STEP0"]').attr('disabled', false);
+        $('[id^="F_OP_STEP2"]').val("");
+        $('[id^="F_OP_STEP3"]').val("");
     }
     if (ope == 1) {
-        $('[id="A_OP_STEP0"]').attr('disabled', true);
-        $('[id="A_OP_STEP1"]').attr('disabled', false);
+        $('[id^="A_OP_STEP0"]').attr('disabled', true);
+        $('[id^="A_OP_STEP1"]').attr('disabled', false);
     }
     if (ope == 2) {
-        $('[id="A_OP_STEP1"]').attr('disabled', true);
-        $('[id="A_OP_STEP2"]').attr('disabled', false);
+        $('[id^="A_OP_STEP1"]').attr('disabled', true);
+        $('[id^="A_OP_STEP2"]').attr('disabled', false);
+        $('[id^="O_OP_STEP2"]').attr('disabled', false);
+        $('[id^="F_OP_STEP2"]').attr('disabled', false);
+        $('[id^="F_OP_STEP2"]').attr('readonly', false);
+        $('[id="F_OP_STEP2_FRQ"]').val($('[id="GEN_C1_FRQ"]').val());
+        $('[id="F_OP_STEP2_ATT"]').val($('[id="ATT_DB"]').val());
+        $('[id="F_OP_STEP2_PWD"]').val($('[id="GEN_C1_WIDTH"]').val());
     }
     if (ope == 3) {
-        $('[id="A_OP_STEP2"]').attr('disabled', true);
-        $('[id="A_OP_STEP3"]').attr('disabled', false);
+        $('[id^="A_OP_STEP2"]').attr('disabled', true);
+        $('[id^="O_OP_STEP2"]').attr('disabled', true);
+        $('[id^="A_OP_STEP3"]').attr('disabled', false);
+        $('[id^="O_OP_STEP3"]').attr('disabled', false);
+        $('[id^="F_OP_STEP3"]').attr('disabled', false);
+        $('[id^="F_OP_STEP3"]').attr('readonly', false);
+        $('[id="F_OP_STEP2_FRQ"]').val("");
+        $('[id="F_OP_STEP2_ATT"]').val("");
+        $('[id="F_OP_STEP2_PWD"]').val("");
+        $('[id="F_OP_STEP3_FRQ"]').val($('[id="GEN_C1_FRQ"]').val());
+        $('[id="F_OP_STEP3_ATT"]').val($('[id="ATT_DB"]').val());
     }
     if (ope == 4) {
-        $('[id="A_OP_STEP3"]').attr('disabled', true);
-        $('[id="A_OP_STEP4"]').attr('disabled', false);
+        $('[id^="A_OP_STEP3"]').attr('disabled', true);
+        $('[id^="O_OP_STEP3"]').attr('disabled', true);
+        $('[id^="A_OP_STEP4"]').attr('disabled', false);
+        $('[id="F_OP_STEP3_FRQ"]').val("");
+        $('[id="F_OP_STEP3_ATT"]').val("");
     }
     if (ope == 5) {
-        $('[id="A_OP_STEP5"]').attr('disabled', true);
+        $('[id^="A_OP_STEP5"]').attr('disabled', true);
     }
     if (ope > 0) {
-        $('[id="A_OP_STEP0"]').addClass('completed');
+        $('[id^="A_OP_STEP0"]').addClass('completed');
     }
     if (ope > 1) {
-        $('[id="A_OP_STEP1"]').addClass('completed');
+        $('[id^="A_OP_STEP1"]').addClass('completed');
     }
     if (ope > 2) {
-        $('[id="A_OP_STEP2"]').addClass('completed');
+        $('[id^="A_OP_STEP2"]').addClass('completed');
+        $('[id^="F_OP_STEP2"]').addClass('completed');
     }
     if (ope > 3) {
-        $('[id="A_OP_STEP3"]').addClass('completed');
+        $('[id^="A_OP_STEP3"]').addClass('completed');
+        $('[id^="F_OP_STEP3"]').addClass('completed');
     }
     if (ope > 4) {
-        $('[id="A_OP_STEP4"]').addClass('completed');
+        $('[id^="A_OP_STEP4"]').addClass('completed');
     }
 }
 
@@ -81,8 +110,8 @@ function update_points(points){
         $('[id="ATT_PERCENT"]').prop("readonly", true);
         $('[id="N_AT_DB"]').prop('disabled', true);
         $('[id="N_AT_PERCENT"]').prop('disabled', true);
-        $('[id="X_ATT_SET_DB"]').prop('disabled', true);
-        $('[id="X_ATT_SET_PERCENT"]').prop('disabled', true);
+        $('[id="X_AT_SET_DB"]').prop('disabled', true);
+        $('[id="X_AT_SET_PERCENT"]').prop('disabled', true);
     } else if ($('[id="ATT_LAST"]').val() == "DB") {
         $('[id="ATT_DB"]').prop("readonly", false);
         $('[id="ATT_PERCENT"]').prop("readonly", false);
@@ -285,8 +314,8 @@ function tmp_pop(object) {
             }
             $('[id="ATT_DB"]').prop('readonly', false);
             $('[id="ATT_PERCENT"]').prop('readonly', false);
-            $('[id="X_ATT_SET_DB"]').prop('disabled', false);
-            $('[id="X_ATT_SET_PERCENT"]').prop('disabled', false);
+            $('[id="X_AT_SET_DB"]').prop('disabled', false);
+            $('[id="X_AT_SET_PERCENT"]').prop('disabled', false);
         }
     } else if (object.id == "ATT_PERCENT") {
         if (object.value == "") {
@@ -297,8 +326,8 @@ function tmp_pop(object) {
             }
             $('[id="ATT_DB"]').prop('readonly', false);
             $('[id="ATT_PERCENT"]').prop('readonly', false);
-            $('[id="X_ATT_SET_DB"]').prop('disabled', false);
-            $('[id="X_ATT_SET_PERCENT"]').prop('disabled', false);
+            $('[id="X_AT_SET_DB"]').prop('disabled', false);
+            $('[id="X_AT_SET_PERCENT"]').prop('disabled', false);
         }
     }
 }
@@ -308,42 +337,66 @@ function value_hook(id) {
         case "GEN_C1_DUTY":
             freq = parseFloat($("#GEN_C1_FRQ").val());
             duty = parseFloat($("#GEN_C1_DUTY").val());
+            if (duty <= 0 || duty >= 100) {
+                alert("Error: The duty should be over 0[%] and under 100[%]")
+                return false;
+            }
             $("#GEN_C1_WIDTH").val(duty/freq/100 + " [S]");
             break;
         case "GEN_C1_FRQ":
             freq = parseFloat($("#GEN_C1_FRQ").val());
             duty = parseFloat($("#GEN_C1_DUTY").val());
+            if (freq <= 0 ) {
+                alert("Error: The frequency should be greater than 0[S]")
+                return false;
+            }
             $("#GEN_C1_WIDTH").val(duty/freq/100 + " [S]");
             break;
         case "GEN_C1_WIDTH":
             freq = parseFloat($("#GEN_C1_FRQ").val());
             width = parseFloat($("#GEN_C1_WIDTH").val());
-            duty = 100*width/freq;
-            if (duty>=100) {
-                alert("Error: The calculated duty cycle is greater or equal to 100%. Returnint to original pulse width value")
+            duty = width*freq*100;
+            if (width <= 0){
+                alert("Error: The pulse should be greater than 0[S]")
                 return false;
             }
-            $("#GEN_C1_DUTY").val(100*width/freq + " [S]");
+            if (duty>=100) {
+                alert("Error: The calculated duty cycle is greater or equal to 100[%]")
+                return false;
+            }
+            $("#GEN_C1_DUTY").val(duty + " [%]");
             break;
         case "GEN_C2_DUTY":
             freq = parseFloat($("#GEN_C2_FRQ").val());
             duty = parseFloat($("#GEN_C2_DUTY").val());
+            if (duty <= 0 || duty >= 100) {
+                alert("Error: The duty should be over 0[%] and under 100[%]")
+                return false;
+            }
             $("#GEN_C2_WIDTH").val(duty/freq/100 + " [S]");
             break;
         case "GEN_C2_FRQ":
             freq = parseFloat($("#GEN_C2_FRQ").val());
             duty = parseFloat($("#GEN_C2_DUTY").val());
+            if (freq <= 0 ) {
+                alert("Error: The frequency should be greater than 0[Hz]")
+                return false;
+            }
             $("#GEN_C2_WIDTH").val(duty/freq/100 + " [S]");
             break;
         case "GEN_C2_WIDTH":
             freq = parseFloat($("#GEN_C2_FRQ").val());
             width = parseFloat($("#GEN_C2_WIDTH").val());
-            duty = 100*width/freq;
-            if (duty >= 100) {
-                alert("Error: The calculated duty cycle is greater or equal to 100%. Returnint to original pulse width value")
+            duty = width*freq*100;
+            if (width <= 0){
+                alert("Error: The pulse should be greater than 0[S]")
                 return false;
             }
-            $("#GEN_C2_DUTY").val(100*width/freq + " [%]");
+            if (duty>=100) {
+                alert("Error: The calculated duty cycle is greater or equal to 100[%]")
+                return false;
+            }
+            $("#GEN_C2_DUTY").val(duty + " [%]");
             break;
         case "ATT_DB":
             db = parseFloat($("#ATT_DB").val());
@@ -384,7 +437,6 @@ var channel_defaults = {
         GEN_C1_WIDTH: "0.0001 [S]",
         GEN_C1_RISE:  "1.68e-08 [S]",
         GEN_C1_FALL:  "1.68e-08 [S]",
-        GEN_C1_OUT:   "" 
     },
     2: {
         GEN_C2_AMP:   "5 [V]",
@@ -394,7 +446,6 @@ var channel_defaults = {
         GEN_C2_WIDTH: "0.0001 [S]",
         GEN_C2_RISE:  "1.68e-08 [S]",
         GEN_C2_FALL:  "1.68e-08 [S]",
-        GEN_C2_OUT:   "" 
     }
 };
 
@@ -421,44 +472,46 @@ function set_parameters(channel) {
     }
     commands = commands + ',"GEN C' + channel + ':BSWV?"';
     commands = commands + ',"GEN C' + channel + ':OUTP?"';
-    input_disable(to_refresh);
+    input_disable(to_refresh + ',"GEN_C' + channel + '_OUT"');
     laserServer(commands, to_refresh, 0,
         function() {
-            input_enable(to_refresh);
+            input_enable(to_refresh + ',"GEN_C' + channel + '_OUT"');
         }
     );
 }
 
-function set_db() {
-    if ($('#ATT_DB').val() == "" || $('#ATT_DB').val() != undefined) {
-        alert("Error: Empty dB value");
-        return;
+function set_db(value) {
+    commands = "";
+    if (value == "field") {
+        if ($('#ATT_DB').val() == "") {
+            alert("Error: Empty dB value");
+            return;
+        }
+        value = $('#ATT_DB').val();
+        commands = '"STA OPE 0",'
     }
-    value = parseFloat($('#ATT_DB').val());
-    commands = '"ATT A' + Math.round(value*100)/100 + '","ATT D"';
+    commands = commands + '"ATT A' + Math.round(parseFloat(value)*100)/100 + '","ATT D"';
     to_refresh = '"ATT_LAST","ATT_DB","ATT_PERCENT","ATT_POS"'
-    input_disable(to_refresh);
+    input_disable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
     laserServer(commands, to_refresh, 0,
         function() {
-            input_enable(to_refresh);
+            input_enable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
         }
     );
 }
 
 function set_pos() {
     value = parseInt($('#ATT_POS').val());
-    commands = '"ATT S' + value + '","ATT D"';
+    commands = '"STA OPE 0","ATT S' + value + '","ATT D"';
     to_refresh = '"ATT_LAST","ATT_POS"'
-    input_disable(to_refresh);
+    input_disable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
     laserServer(commands, to_refresh, 0,
         function() {
-            input_enable(to_refresh);
+            input_enable(to_refresh + ',"X_AT_SET_STEP","N_AT_STEP"');
         }
     );
     $('#ATT_DB').val("");
     $('#ATT_PERCENT').val("");
-    $('#ATT_DB').prop('readonly', true);
-    $('#ATT_PERCENT').prop('readonly', true);
 }
 
 function step_db(step) {
@@ -469,17 +522,76 @@ function step_db(step) {
         alert("Error: Applied step gets the dB out of range [0, 40]");
         return;
     }
-    commands = '"ATT A' + newvalue + '","ATT D"';
-
+    commands = '"STA OPE 0","ATT A' + newvalue + '","ATT D"';
     to_refresh = '"ATT_LAST","ATT_POS","ATT_DB","ATT_PERCENT"'
+    input_disable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
+    laserServer(commands, to_refresh, 0,
+        function() {
+            input_enable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
+        }
+    );
+    $('#ATT_DB').prop('readonly', false);
+    $('#ATT_PERCENT').prop('readonly', true);
+}
+
+function step_percent(step) {
+    value = parseFloat($('#ATT_PERCENT').val());
+    step = parseFloat(step);
+    newvalue = value + step;
+    $('#ATT_PERCENT').val(newvalue);
+    if (!value_hook("ATT_PERCENT")){
+        $('#ATT_PERCENT').val(value + " [%]");
+        return false
+    }
+    dbvalue = parseFloat($('#ATT_DB').val());
+    commands = '"STA OPE 0","ATT A' + dbvalue + '","ATT D"';
+    to_refresh = '"ATT_LAST","ATT_POS","ATT_DB","ATT_PERCENT"'
+    input_disable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
+    laserServer(commands, to_refresh, 0,
+        function() {
+            input_enable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
+        }
+    );
+    $('#ATT_DB').prop('readonly', false);
+    $('#ATT_PERCENT').prop('readonly', true);
+}
+
+function set_pwd(value) {
+    commands = "";
+    commands = '"GEN C1:BSWV WIDTH,' + parseFloat(value) + '","GEN C1:OUTP?","GEN C1:BSWV?"';
+    to_refresh = '"GEN_C1_WVTP","GEN_C1_AMP","GEN_C1_OFST","GEN_C1_FRQ","GEN_C1_DUTY","GEN_C1_WIDTH","GEN_C1_RISE","GEN_C1_FALL","GEN_C1_OUT"'
+    input_disable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
+    laserServer(commands, to_refresh, 0,
+        function() {
+            input_enable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
+        }
+    );
+}
+
+function step_step(step) {
+    value = parseInt($('#ATT_POS').val());
+    step = parseInt(step);
+    newvalue = value + step;
+    commands = '"STA OPE 0","ATT S' + newvalue + '","ATT D"';
+    to_refresh = '"ATT_LAST","ATT_POS","ATT_DB","ATT_PERCENT"'
+    input_disable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
+    laserServer(commands, to_refresh, 0,
+        function() {
+            input_enable(to_refresh + ',"X_AT_SET_STEP","N_AT_STEP"');
+        }
+    );
+}
+
+function set_frq(value) {
+    commands = "";
+    commands = '"GEN C1:BSWV FRQ,' + parseInt(value) + '","GEN C1:OUTP?","GEN C1:BSWV?"';
+    to_refresh = '"GEN_C1_WVTP","GEN_C1_AMP","GEN_C1_OFST","GEN_C1_FRQ","GEN_C1_DUTY","GEN_C1_WIDTH","GEN_C1_RISE","GEN_C1_FALL","GEN_C1_OUT"'
     input_disable(to_refresh);
     laserServer(commands, to_refresh, 0,
         function() {
             input_enable(to_refresh);
         }
     );
-    $('#ATT_DB').prop('readonly', false);
-    $('#ATT_PERCENT').prop('readonly', true);
 }
 
 function input_disable(values) {
@@ -488,7 +600,18 @@ function input_disable(values) {
     }
     values = values.split(",");
     var arrayLength = values.length;
+    if (operational == 2) {
+        $('[id="O_OP_STEP2_PWD"]').prop('disabled', true);
+        $('[id="O_OP_STEP2_FRQ"]').prop('disabled', true);
+        $('[id="O_OP_STEP2_ATT"]').prop('disabled', true);
+    } else if (operational == 3) {
+        $('[id="O_OP_STEP3_FRQ"]').prop('disabled', true);
+        $('[id="O_OP_STEP3_ATT"]').prop('disabled', true);
+    }
     for (var i = 0; i < arrayLength; i++) {
+        if(values[i].substr(0,1)=="X") {
+            alert(values[i]);
+        }
         $('[id=' + values[i] + ']').prop('disabled', true);
     }
 }
@@ -499,6 +622,14 @@ function input_enable(values) {
     }
     values = values.split(",");
     var arrayLength = values.length;
+    if (operational == 2) {
+        $('[id="O_OP_STEP2_PWD"]').prop('disabled', false);
+        $('[id="O_OP_STEP2_FRQ"]').prop('disabled', false);
+        $('[id="O_OP_STEP2_ATT"]').prop('disabled', false);
+    } else if (operational == 3) {
+        $('[id="O_OP_STEP3_FRQ"]').prop('disabled', false);
+        $('[id="O_OP_STEP3_ATT"]').prop('disabled', false);
+    }        
     for (var i = 0; i < arrayLength; i++) {
         $('[id=' + values[i] + ']').prop('disabled', false);
     }
@@ -528,6 +659,16 @@ $(document).ready(
             function() {
                 commands = $(this).attr("req_cmd");
                 to_refresh = $(this).attr("req_val");
+                if ($(this).attr("req_ope") == undefined){
+                    if (commands != undefined) {
+                        commands = commands + ',';
+                    }
+                    commands = commands + '"STA OPE 0"';
+                } else {
+                    if (to_refresh == undefined) {
+                        to_refresh = startup_values;
+                    }
+                }
                 input_disable(to_refresh);
                 laserServer(commands, to_refresh, 0,
                     function() {
@@ -611,24 +752,49 @@ $(document).ready(
         );
         $('[id^="N_AT_DB"]').click(
             function() {
-                step_db($(this).attr('step'))
+                step_db($(this).attr('step'));
             }
         );
         $('[id^="N_AT_PERCENT"]').click(
             function() {
-                step_percent($(this).attr('step'))
+                step_percent($(this).attr('step'));
             }
         );
         $('[id^="N_AT_STEP"]').click(
             function() {
-                step_step($(this).attr('step'))
+                step_step($(this).attr('step'));
             }
         );
+        $('[id="O_OP_STEP2_PWD"]').click(
+            function() {
+                set_pwd($('[id="F_OP_STEP2_PWD"]').val())
+            }
+        )
+        $('[id="O_OP_STEP2_FRQ"]').click(
+            function() {
+                set_frq($('[id="F_OP_STEP2_FRQ"]').val())
+            }
+        )
+        $('[id="O_OP_STEP3_FRQ"]').click(
+            function() {
+                set_frq($('[id="F_OP_STEP3_FRQ"]').val())
+            }
+        )
+        $('[id="O_OP_STEP2_ATT"]').click(
+            function() {
+                set_db($('[id="F_OP_STEP2_ATT"]').val())
+            }
+        )
+        $('[id="O_OP_STEP3_ATT"]').click(
+            function() {
+                set_db($('[id="F_OP_STEP3_ATT"]').val())
+            }
+        )
         // Load default values and remove loading page
         laserServer(startup_commands, startup_values, temps_seconds_default,
             function() {
                 draw_plot();
-                input_enable(startup_values)
+                input_enable(startup_values);
                 $("#H_advanced").fadeIn(500);
                 $("#panel_loading").fadeOut(500);
             }

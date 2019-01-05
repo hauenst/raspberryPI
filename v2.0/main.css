@@ -1,5 +1,6 @@
-
-/* Font inputs */
+/* ----------------------------------- */
+/* Diagramation ---------------------- */
+/* ----------------------------------- */
 
 body {
     font-family: system-ui;
@@ -7,15 +8,20 @@ body {
     margin:      10px;
 }
 
-/* ----------------------------------- */
-/* Diagramation ---------------------- */
-/* ----------------------------------- */
-
 /* Level 0 --------------------------- */
 
 #container {
     width:      100%;
-    text-align: center;
+    height:     100%;
+    display:    table;
+}
+
+#container_cell {
+    width:          100%;
+    height:         100%;
+    display:        table-cell;
+    text-align:     center;
+    vertical-align: middle;
 }
 
 /* Level 1 --------------------------- */
@@ -26,7 +32,7 @@ body {
     padding:    0px;
     margin:     auto;
     width:      1204px;
-    height:     903px;/*452px 903px;*/
+    height:     452px;
     background: gainsboro;
 }
 
@@ -35,7 +41,7 @@ body {
     position:   relative;
     padding:    0px;
     margin:     0px 10px 0px 10px;
-    width:      1204px;
+    width:      1206px;
     text-align: right;
 }
 
@@ -44,7 +50,7 @@ body {
 #panel_advanced {
     position: absolute;
     bottom:   0px;
-    /*display:  none;*/
+    display:  none;
 }
 
 #panel_loading {
@@ -74,10 +80,6 @@ body {
     height:         100%;
     vertical-align: middle;
     text-align:     center;
-}
-
-#loading_table_cell.img {
-    border: none;
 }
 
 div.panel_section {
@@ -202,9 +204,11 @@ div.content {
     text-align:  center;
 }
 
+/* Level 5 --------------------------- */
+
 /* Canvas ---------------------------- */
 
-/* Common ---------------------------- */
+/* Canvas - Common ------------------- */
 
 div.canvas_menu {
     position:   absolute;
@@ -216,7 +220,7 @@ div.canvas_menu {
     text-align: right;
 }
 
-/* Diagram --------------------------- */
+/* Canvas - Diagram ------------------ */
 
 #canvas_diagram {
     position:   absolute;
@@ -237,7 +241,7 @@ div.canvas_menu {
     padding:  20px 25px 0px 25px;
 }
 
-/* Temperature Plot ------------------ */
+/* Canvas - Temperature Plot --------- */
 
 #canvas_plot {
     position:   absolute;
@@ -319,6 +323,187 @@ div.canvas_menu {
     font-size:   11px;
 }
 
+#script_status_reporting {
+    width:      130px;
+    text-align: center;
+}
+
+#script_status {
+    display:    inline;
+    font-weight: bold;
+}
+
+/* ----------------------------------- */
+/* Elements -------------------------- */
+/* ----------------------------------- */
+
+/* Button ---------------------------- */
+
+button {
+    display:     inline-block;
+    box-sizing:  border-box;
+    font-family: system-ui;
+    font-size:   11px;
+    padding:     1px;
+    height:      21px;
+    width:       130px;
+    text-align:  center;
+    background:  silver;
+    border:      1px solid silver;
+    margin:      2px 1px 0px 1px;
+
+}
+
+button.advanced {
+    width:       150px;
+    background:  gainsboro;
+    border:      1px solid black;
+    text-align:  center;
+    margin:      2px 1px 0px 1px;   
+}
+
+button.quarter {
+    width: 64px;
+}
+
+button.full {
+    width: 262px;
+}
+
+button.canvas_menu {
+    width:  82px;
+    margin: 0px 1px 0px 1px;
+}
+
+button.canvas_single {
+    width: 40px;
+}
+
+button.highlight {
+    background: gray;
+}
+
+button.completed {
+    background: darkseagreen;
+}
+
+button:focus {
+    outline: 1px solid steelblue;
+}
+
+button:active {
+    background: olive;
+}
+
+/* Input ----------------------------- */
+
+#ATT_DB:read-only,
+#ATT_PERCENT:read-only,
+input:disabled {
+    background: moccasin;
+}
+
+input {
+    display:     inline-block;
+    box-sizing:  border-box;
+    font-family: system-ui;
+    font-size:   11px;
+    padding:     1px;
+    height:      21px;
+    width:       130px;
+    line-height: 17px;
+    border:      1px solid silver;
+    margin:      2px 1px 2px 1px;
+    text-align:  center;
+}
+
+input.info_on,
+input.completed:disabled {
+    background: darkseagreen;
+}
+
+input.info_off {
+    background: salmon;
+}
+
+input.focus {
+    outline: 1px solid steelblue;
+}
+
+input.uncompleted:disabled {
+    background: silver;
+}
+
+/* List ------------------------------ */
+
+ul {
+    list-style-type: none;
+    padding:         0px;
+    margin:          0px;
+    width:           100%;
+}
+
+li {
+    display:    inline-block;
+    text-align: center;
+    width:      264px;
+    padding:    0px;
+    height:     23px;
+}
+
+li.title {
+    line-height: 23px;
+    font-weight: bold;
+}
+
+/* Select ---------------------------- */
+
+select {
+    display:     inline-block;
+    box-sizing:  border-box;
+    font-family: system-ui;
+    font-size:   11px;
+    padding:     1px;
+    height:      21px;
+    width:       130px;
+    line-height: 19px; 
+    border:      1px solid silver;
+    margin:      2px 1px 2px 1px;
+    text-align:  center;
+    background:  white;
+}
+
+select:disabled {
+    background: moccasin;
+}
+
+/* Span ------------------------------ */
+
+span {
+    display:     inline-block;
+    box-sizing:  border-box;
+    font-family: system-ui;
+    font-size:   11px;
+    padding:     1px;
+    height:      21px;
+    width:       130px;
+    line-height: 19px;
+    border:      1px solid gainsboro;
+    margin:      0px 1px 0px 1px;
+    text-align:  left;
+}
+
+#STA_OPERATIONAL {
+    display:     inline;
+    font-weight: bold;
+}
+
+span.center {
+    text-align: center;
+}
+
+/* Table ----------------------------- */
+
 td.number {
     width:      25px;
     text-align: center;
@@ -345,171 +530,4 @@ td.action {
 td.icon {
     width:      13px;
     text-align: center;
-}
-
-#script_status_reporting {
-    width:      130px;
-    text-align: center;
-}
-
-#script_status {
-    display:    inline;
-    font-weight: bold;
-}
-
-/* Attenuator ------------------------ */
-
-#ATT_DB:read-only {
-    background: moccasin;
-}
-
-#ATT_PERCENT:read-only {
-    background: moccasin;
-}
-
-/* Elements -------------------------- */
-
-/* Button Element -------------------- */
-
-button {
-    display:     inline-block;
-    box-sizing:  border-box;
-    font-family: system-ui;
-    font-size:   11px;
-    padding:     1px;
-    height:      21px;
-    width:       130px;
-    text-align:  center;
-    background:  silver;
-    border:      1px solid silver;
-    margin:      2px 1px 0px 1px;
-
-}
-
-button.advanced {
-    width:       302px;
-    background:  gainsboro;
-    border:      1px solid black;
-    text-align:  center;
-    margin:      2px 0px 0px 0px;    
-}
-
-button.quarter {
-    width: 64px;
-}
-
-button.full {
-    width: 262px;
-}
-
-button.canvas_menu {
-    width:       82px;
-    margin:      0px 1px 0px 1px;
-}
-
-button.canvas_single {
-    width: 40px;
-}
-
-button.highlight {
-    background: gray;
-}
-
-button.completed {
-    background: darkseagreen;
-}
-
-button:focus {
-    outline: 2px solid steelblue;
-}
-
-button:active {
-    background: olive;
-}
-
-/* Input Element --------------------- */
-
-input {
-    display:     inline-block;
-    box-sizing:  border-box;
-    font-family: system-ui;
-    font-size:   11px;
-    padding:     1px;
-    height:      21px;
-    width:       130px;
-    line-height: 17px;
-    border:      1px solid silver;
-    margin:      2px 1px 2px 1px;
-    text-align:  center;
-}
-
-input.info_on {
-    background: lightgreen;
-}
-
-input.info_off {
-    background: salmon;
-}
-
-input:disabled {
-    background: moccasin;
-}
-
-/* List Element ---------------------- */
-
-ul {
-    list-style-type: none;
-    padding:         0px;
-    margin:          0px;
-    width:           100%;
-}
-
-li {
-    display:    inline-block;
-    text-align: center;
-    width:      264px;
-    padding:    0px;
-    height:     23px;
-}
-
-li.title {
-    line-height: 23px;
-    font-weight: bold;
-}
-
-/* Select Element -------------------- */
-
-select {
-    display:     inline-block;
-    box-sizing:  border-box;
-    font-family: system-ui;
-    font-size:   11px;
-    padding:     1px;
-    height:      21px;
-    width:       130px;
-    line-height: 19px; 
-    border:      1px solid silver;
-    margin:      2px 1px 2px 1px;
-    text-align:  center;
-    background:  white;
-}
-
-select:disabled {
-    background: moccasin;
-}
-
-/* Span Element ---------------------- */
-
-span {
-    display:     inline-block;
-    box-sizing:  border-box;
-    font-family: system-ui;
-    font-size:   11px;
-    padding:     1px;
-    height:      21px;
-    width:       130px;
-    line-height: 19px;
-    border:      1px solid gainsboro;
-    margin:      0px 1px 0px 1px;
-    text-align:  left;
 }
