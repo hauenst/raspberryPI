@@ -5,7 +5,10 @@
     ///////////////////////////////////////////////////////////////////////////////
 
     function command_validation($command) {
-        return $command;
+        if (substr($command, 0, 1) == "X") {
+            return "skip";
+        }
+        return "OK";
     }
 
     function point_validation($point) {
@@ -50,25 +53,40 @@
     $ok = 0;
     $values = array();
     $commands = "";
-    $info = "";
+    $info = array();
     $temperatures = array("times" => array(), "label" => array(), "diode" => array(), "crystal" => array(), "electronicsink" => array(), "heatsink" => array());
     // Executing commands
     if (isset($user["commands"])) {
         $commands = $user["commands"];
         foreach ($commands as $command) {
-            $command = command_validation($command);
-            if ($command === FALSE) {
+            // Validating command
+            $valid = command_validation($command);
+            if ($valid == "OK") {
+            } elseif ($valid == "skip") {
+                array_push($info, "Command \"${command}\" skipped");
+                continue;
+            } elseif ($valid == "exit") {
+                array_push($info, "ERROR: Command validation requested the process termination");
                 exit;
+            } else {
+                array_push($info, "ERROR: Not possible to calculate command \"${command}\" validity");
+                break;
             }
+            // Executing command
             $request = "./laserClient.py \"${command}\"";
+            unset($result);
             exec($request, $result);
+            // Storing and reporting result
             if (!empty($result) && substr(end($result), 0, 2) == "OK") {
                 $ok++;
+                foreach ($result as $line) {
+                    array_push($info, $line);
+                }
             } else {
+                array_push($info, "ERROR: Error processing command \"${command}\"");
                 break;
             }
         }
-        $info = $result;
     }
     // Retreiving database values
     if (isset($user["values"]) || isset($user["temps"])) {
@@ -120,7 +138,7 @@
             }
             $con->close();
         } else {
-            array_push($responses, "ERROR: Not possible to connect to DB");
+            array_push($info, "ERROR: Not possible to connect to DB");
         }
     }
 
