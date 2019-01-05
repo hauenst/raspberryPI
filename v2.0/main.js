@@ -11,6 +11,7 @@ function update_operational(ope) {
     $('[id^="F_OP_STEP"]').attr('disabled', true);
     $('[id^="F_OP_STEP"]').attr('readonly', true);
     $('[id^="A_OP_STEP"]').removeClass('completed');
+    $('[id^="O_OP_STEP"]').removeClass('completed');
     $('[id^="F_OP_STEP"]').removeClass('completed');
     $('[id^="F_OP_STEP"]').addClass('uncompleted');
     if (ope == 0) {
@@ -52,9 +53,6 @@ function update_operational(ope) {
         $('[id="F_OP_STEP3_FRQ"]').val("");
         $('[id="F_OP_STEP3_ATT"]').val("");
     }
-    if (ope == 5) {
-        $('[id^="A_OP_STEP5"]').attr('disabled', true);
-    }
     if (ope > 0) {
         $('[id^="A_OP_STEP0"]').addClass('completed');
     }
@@ -63,14 +61,21 @@ function update_operational(ope) {
     }
     if (ope > 2) {
         $('[id^="A_OP_STEP2"]').addClass('completed');
+        $('[id^="O_OP_STEP2"]').addClass('completed');
+        $('[id^="F_OP_STEP2"]').removeClass('uncompleted');
         $('[id^="F_OP_STEP2"]').addClass('completed');
     }
     if (ope > 3) {
         $('[id^="A_OP_STEP3"]').addClass('completed');
+        $('[id^="O_OP_STEP3"]').addClass('completed');
+        $('[id^="F_OP_STEP3"]').removeClass('uncompleted');
         $('[id^="F_OP_STEP3"]').addClass('completed');
     }
     if (ope > 4) {
         $('[id^="A_OP_STEP4"]').addClass('completed');
+    }
+    if (ope == 5) {
+        $('[id^="A_OP_STEP5"]').attr('disabled', true);
     }
 }
 
@@ -89,6 +94,7 @@ function update_points(points){
                 var unit = get_unit(point["name"]);
                 var to_write = point["value"] + unit;
                 $('[id="' + point["name"] + '"]').val(to_write);
+                $('[id="' + point["name"] + '"]').text(to_write);
                 if (to_write == "ON") {
                     $('[id="' + point["name"] + '"]').removeClass("info_off");
                     $('[id="' + point["name"] + '"]').addClass("info_on");
@@ -118,6 +124,42 @@ function update_points(points){
         $('[id="N_AT_DB"]').prop('disabled', false);
         $('[id="N_AT_PERCENT"]').prop('disabled', false);
     }
+    update_diagram();
+}
+
+function update_diagram () {
+elements = ["DIA_A_B", "DIA_B_C", "DIA_C_D", "DIA_D_E", "DIA_D_F", "DIA_SCRAMBLER", "DIA_SPLITER", "DIA_GENERATOR", "DIA_LASER", "DIA_ATTENUATOR", "DIA_DIODE"];
+    // Cleaning previous settings
+    elements.forEach(
+        function (element) {
+            $('[id="' + element +'"]').removeClass("on");
+            $('[id="' + element +'"]').removeClass("warning");
+            $('[id="' + element +'"]').removeClass("active");
+        }
+    );
+    // Coloring diagram
+    laser_on = $('[id="LAS_D"]').val()=="ON"?true:false;
+    generator_on = $('[id="GEN_C1_OUT"]').val()=="ON"?true:false;
+    if (laser_on && !generator_on) {
+        $('[id="DIA_LASER"]').addClass("on");
+    } else if (!laser_on && generator_on) {
+        $('[id="DIA_GENERATOR"]').addClass("on");
+        $('[id="DIA_LASER"]').addClass("warning");
+        $('[id="DIA_A_B"]').addClass("warning");
+        alert("WARNING: Please check your Laser status, the Laser it's expected ON when the Signal Generator starts emitting signal")
+    } else if (laser_on && generator_on) {
+        $('[id="DIA_GENERATOR"]').addClass("on");
+        $('[id="DIA_LASER"]').addClass("on");
+        $('[id="DIA_SCRAMBLER"]').addClass("on");
+        $('[id="DIA_SPLITER"]').addClass("on");
+        $('[id="DIA_ATTENUATOR"]').addClass("on");
+        $('[id="DIA_DIODE"]').addClass("on");
+        $('[id="DIA_A_B"]').addClass("active");
+        $('[id="DIA_B_C"]').addClass("active");
+        $('[id="DIA_C_D"]').addClass("active");
+        $('[id="DIA_D_E"]').addClass("active");
+        $('[id="DIA_D_F"]').addClass("active");
+    } 
 }
 
 function update_temperatures(data) {
@@ -195,8 +237,8 @@ function update_plot_time(chart, time){
 
 function draw_plot() {
     let minX = Math.ceil(Math.min(...temp_times)/60/60)*60*60;
-    var ctx = document.getElementById("temp_1").getContext('2d');
-    temp_1 = new Chart(ctx, {
+    var ctx = document.getElementById("temperature_plot").getContext('2d');
+    temperature_plot = new Chart(ctx, {
         type: 'scatter',
         data: {
             datasets: [{
@@ -681,7 +723,7 @@ $(document).ready(
         // Start listening to plot buttons
         $('[id^="T_"]').click(
             function() {
-                update_plot_time(temp_1, $(this).attr("req_tim")*60*60+60);
+                update_plot_time(tem[erature_plot], $(this).attr("req_tim")*60*60+60);
             }
         );
         $('[id="H_diagram"]').click(
@@ -799,5 +841,6 @@ $(document).ready(
                 $("#panel_loading").fadeOut(500);
             }
         );
+        system_diagram = $('[id="system_diagram"]');
     }
 );

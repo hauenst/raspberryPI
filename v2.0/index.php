@@ -35,6 +35,54 @@
                             <div class="content">
                                 <div id="canvas_diagram">
                                     <div id="diagram_drawing">
+                                        <svg id="system_diagram">
+                                            <!--- Connection Lines -->
+                                            <g style="stroke-width:5px;stroke:#000;stroke-linecap:square;">
+                                                <!--- Generator to Laser --->
+                                                <line x1="10%" y1="75%" x2="30%" y2="75%" id="DIA_A_B"/>
+                                                <!--- Laser to Scrambler --->
+                                                <line x1="30%" y1="75%" x2="50%" y2="75%" id="DIA_B_C"/>
+                                                <!--- Scrambler to Spliter --->
+                                                <line x1="50%" y1="75%" x2="70%" y2="75%" id="DIA_C_D"/>
+                                                <!--- Spliter to Attenuator --->
+                                                <line x1="70%" y1="75%" x2="90%" y2="75%" id="DIA_D_E"/>
+                                                <!--- Spliter to Photodiode --->
+                                                <line x1="70%" y1="25%" x2="90%" y2="25%" id="DIA_D_F"/>
+                                                <line x1="70%" y1="25%" x2="70%" y2="75%" id="DIA_D_F"/>
+                                            </g>
+                                            <!--- Base Elements --->
+                                            <g style="fill:#DDD;">
+                                                <circle cx="50%" cy="75%" r="8%"                   id="DIA_SCRAMBLER"/>
+                                                <circle cx="70%" cy="75%" r="8%"                   id="DIA_SPLITER"/>
+                                                <rect    x="2%"   y="55%" width="16%" height="40%" id="DIA_GENERATOR"/>
+                                                <rect    x="22%"  y="55%" width="16%" height="40%" id="DIA_LASER"/>
+                                                <rect    x="82%"  y="55%" width="16%" height="40%" id="DIA_ATTENUATOR"/>
+                                                <rect    x="82%"  y="5%"  width="16%" height="40%" id="DIA_DIODE"/>
+                                            <g>
+                                            <!--- Title Boxes --->
+                                            <g style="fill:#AAA;">
+                                                <rect x="2%"  y="55%" width="16%" height="10%"/>
+                                                <rect x="22%" y="55%" width="16%" height="10%"/>
+                                                <rect x="82%" y="55%" width="16%" height="10%"/>
+                                                <rect x="82%" y="5%"  width="16%" height="10%"/>
+                                            </g>
+                                            <!--- Texts --->
+                                            <g style="text-anchor:middle;dominant-baseline:middle;fill:black;">
+                                                <text x="10%" y="60%"                  >Generator</text>
+                                                <text x="10%" y="70%" id="GEN_C1_WIDTH"></text>
+                                                <text x="10%" y="80%" id="GEN_C1_FRQ"  ></text>
+                                                <text x="10%" y="90%" id="GEN_C1_OUT"  ></text>
+                                                <text x="30%" y="60%"                  >Laser</text>    
+                                                <text x="30%" y="80%" id="LAS_D"       ></text>
+                                                <text x="50%" y="75%"                  >Scrambler</text>
+                                                <text x="70%" y="75%"                  >Spliter</text>
+                                                <text x="90%" y="60%"                  >Attenuator</text>
+                                                <text x="90%" y="75%" id="ATT_DB"      ></text>
+                                                <text x="90%" y="85%" id="ATT_PERCENT" ></text>
+                                                <text x="90%" y="10%"                  >Photodiode</text>
+                                                <text x="90%" y="30%" id="LAS_D"       ></text>
+                                            </g>
+                                        </svg>
                                     </div>
                                     <div class="canvas_menu">
                                         <button id="H_diagram" class="canvas_menu canvas_single">D</button><!---
@@ -43,7 +91,7 @@
                                 </div>
                                 <div id="canvas_plot">
                                     <div id="plot_drawing">
-                                        <canvas id="temp_1"></canvas>
+                                        <canvas id="temperature_plot"></canvas>
                                     </div>
                                     <div class="canvas_menu">
                                         <button id="T_1" req_tim="1" class="canvas_menu button_init">1H</button><!---

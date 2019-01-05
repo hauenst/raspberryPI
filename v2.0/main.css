@@ -3,7 +3,7 @@
 /* ----------------------------------- */
 
 body {
-    font-family: system-ui;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size:   11px;
     margin:      10px;
 }
@@ -233,12 +233,15 @@ div.canvas_menu {
 }
 
 #diagram_drawing {
-    position: absolute;
-    top:      0px;
-    bottom:   40px;
-    left:     0px;
-    right:    0px;
-    padding:  20px 25px 0px 25px;
+    position:   absolute;
+    box-sizing: border-box;
+    width:      600px;
+    height:     385px;
+    top:        0px;
+    bottom:     40px;
+    left:       0px;
+    right:      0px;
+    padding:    0px;
 }
 
 /* Canvas - Temperature Plot --------- */
@@ -319,7 +322,7 @@ div.canvas_menu {
 
 #script {
     width:       100%;
-    font-family: system-ui;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size:   11px;
 }
 
@@ -342,7 +345,7 @@ div.canvas_menu {
 button {
     display:     inline-block;
     box-sizing:  border-box;
-    font-family: system-ui;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size:   11px;
     padding:     1px;
     height:      21px;
@@ -406,7 +409,7 @@ input:disabled {
 input {
     display:     inline-block;
     box-sizing:  border-box;
-    font-family: system-ui;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size:   11px;
     padding:     1px;
     height:      21px;
@@ -461,7 +464,7 @@ li.title {
 select {
     display:     inline-block;
     box-sizing:  border-box;
-    font-family: system-ui;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size:   11px;
     padding:     1px;
     height:      21px;
@@ -482,7 +485,7 @@ select:disabled {
 span {
     display:     inline-block;
     box-sizing:  border-box;
-    font-family: system-ui;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size:   11px;
     padding:     1px;
     height:      21px;
@@ -530,4 +533,34 @@ td.action {
 td.icon {
     width:      13px;
     text-align: center;
+}
+
+/* Canvas ---------------------------- */
+
+#system_diagram {
+    width:      502px;
+    height:     252px;
+    border:     1px solid lightslategray;
+    background: white;
+    margin-top: 70px;
+}
+
+/* Canvas elements ------------------- */
+
+rect.on,
+circle.on  {
+    fill: darkseagreen;
+}
+
+circle.warning,
+rect.warning {
+    fill: coral;
+}
+
+line.active {
+    stroke: palegreen;
+}
+
+line.warning {
+    stroke: peachpuff;
 }

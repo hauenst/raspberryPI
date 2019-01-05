@@ -81,7 +81,10 @@ var units = {
 }
 
 // Variable to reference the temperature plot
-var temp_1;
+var temperature_plot;
+
+// Variable to reference the diagram plot
+var system_diagram;
 
 // Default amount of seconds for the temperature plot tim range
 var temps_seconds_default = 1*60*60+60;
