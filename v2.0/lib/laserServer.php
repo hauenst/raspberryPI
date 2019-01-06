@@ -20,8 +20,7 @@
     }
 
     function temps_query($window) {
-        return "SELECT `timestamp_diff`, TIME_FORMAT(SEC_TO_TIME(`timestamp_diff`), '%H:%i') as `elapsed`, DATE_FORMAT(FROM_UNIXTIME(`timestamp`), '%H:%i:%s') as `timestamp`, `diode`, `crystal`, `electronicsink`, `heatsink` FROM (SELECT TIMESTAMPDIFF(SECOND, NOW(), `timestamp`) as `timestamp_diff`, UNIX_TIMESTAMP(`timestamp`) as `timestamp`, `diode`, `crystal`, `electronicsink`, `heatsink` FROM `temperatures`) AS `temps` WHERE `temps`.`timestamp_diff` >= -${window};";
-        //return "SELECT `timestamp_diff`, `timestamp_diff` as `elapsed`, DATE_FORMAT(FROM_UNIXTIME(`timestamp`), '%H:%i:%s') as `timestamp`, `diode`, `crystal`, `electronicsink`, `heatsink` FROM (SELECT TIMESTAMPDIFF(SECOND, NOW(), `timestamp`) as `timestamp_diff`, UNIX_TIMESTAMP(`timestamp`) as `timestamp`, `diode`, `crystal`, `electronicsink`, `heatsink` FROM `temperatures`) AS `temps` WHERE `temps`.`timestamp_diff` >= -${window};";
+        return "SELECT TIMESTAMPDIFF(SECOND, NOW(), `timestamp`) as `timestamp_diff`, `diode`, `crystal`, `electronicsink`, `heatsink` FROM `temperatures`  WHERE  TIMESTAMPDIFF(SECOND, NOW(), `timestamp`) >= -${window};";
     }
 
     function values_query($point) {
@@ -42,28 +41,39 @@
             exit;
         }
     }
-    print("Request:\n");
-    print_r($user);
-    
+     
     ///////////////////////////////////////////////////////////////////////////////
     // Accesing data //////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
 
     // Creating variables to return
-    $ok = 0;
-    $values = array();
-    $commands = "";
-    $info = array();
-    $temperatures = array("times" => array(), "label" => array(), "diode" => array(), "crystal" => array(), "electronicsink" => array(), "heatsink" => array());
+    $return = array();
+    $info   = array();
+    
     // Executing commands
     if (isset($user["commands"])) {
+        $ok = 0;        
         $commands = $user["commands"];
         foreach ($commands as $command) {
             // Validating command
             $valid = command_validation($command);
             if ($valid == "OK") {
+                // Executing command
+                $request = "./laserClient.py \"${command}\"";
+                unset($result);
+                exec($request, $result);
+                // Storing and reporting result
+                if (!empty($result) && substr(end($result), 0, 2) == "OK") {
+                    $ok++;
+                    foreach ($result as $line) {
+                        array_push($info, "LOG: ".$line);
+                    }
+                } else {
+                    array_push($info, "ERROR: Error processing command \"${command}\"");
+                    break;
+                }                
             } elseif ($valid == "skip") {
-                array_push($info, "Command \"${command}\" skipped");
+                array_push($info, "WARNING: Command \"${command}\" skipped");
                 continue;
             } elseif ($valid == "exit") {
                 array_push($info, "ERROR: Command validation requested the process termination");
@@ -72,31 +82,23 @@
                 array_push($info, "ERROR: Not possible to calculate command \"${command}\" validity");
                 break;
             }
-            // Executing command
-            $request = "./laserClient.py \"${command}\"";
-            unset($result);
-            exec($request, $result);
-            // Storing and reporting result
-            if (!empty($result) && substr(end($result), 0, 2) == "OK") {
-                $ok++;
-                foreach ($result as $line) {
-                    array_push($info, $line);
-                }
-            } else {
-                array_push($info, "ERROR: Error processing command \"${command}\"");
-                break;
-            }
         }
+        $return["commands"]              = array();
+        $return["commands"]["success"]   = $ok;
+        $return["commands"]["requested"] = $commands;
+
     }
     // Retreiving database values
     if (isset($user["values"]) || isset($user["temps"])) {
+        // Connecting to database
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $con = mysqli_connect("localhost", "henlablaser", "inJub6bMZeXQhdUp", "henlablaser");
         $con->query("SET time_zone = 'America/New_York';");
         if (! mysqli_connect_errno()) {
             // Acquiring keyword values
             if (isset($user["values"])) {
-            $points = $user["values"];
+                $values = array();
+                $points = $user["values"];
                 foreach ($points as $point) {
                     $point = point_validation($point);
                     if ($point !== FALSE) {
@@ -106,13 +108,15 @@
                             $result = $result->fetch_assoc();
                             array_push($values, $result);
                         } else {
-                            array_push($info, "Value \"".$point."\" not found");
+                            array_push($info, "WARNING: Value \"".$point."\" not found");
                         }
                     }
                 }
+                $return["values"] = $values;
             }
             // Acquiring temperatures
             if (isset($user["temps"])) {
+                $temperatures = array("times" => array(), "label" => array(), "diode" => array(), "crystal" => array(), "electronicsink" => array(), "heatsink" => array());
                 $window = $user["temps"];
                 $window = window_validation($window);
                 if($window !== FALSE) {
@@ -127,14 +131,11 @@
                             array_push($temperatures["electronicsink"], floatval($rowtemp["electronicsink"]));
                             array_push($temperatures["heatsink"], floatval($rowtemp["heatsink"]));
                             array_push($temperatures["times"], intval($rowtemp["timestamp_diff"]));
-                            if (++$counter == $numrows) {
-                                array_push($temperatures["label"], $rowtemp["timestamp"]);
-                            } else {
-                                array_push($temperatures["label"], $rowtemp["elapsed"]);
-                            }
+                            array_push($temperatures["label"], $rowtemp["timestamp_diff"]);
                         }
                     }
                 }
+                $return["temperatures"] = $temperatures;
             }
             $con->close();
         } else {
@@ -146,9 +147,7 @@
     // Returning result ///////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
     
-    $return = array("commands" => $ok, "tried" => $commands, "values" => $values, "temperatures" => $temperatures, "info" => $info);
-    print("Response:\n");
-    print_r($return);
+    $return["info"] = $info;
     print(json_encode($return));
 
 ?>
