@@ -1,3 +1,4 @@
+
 /* ----------------------------------- */
 /* Diagramation ---------------------- */
 /* ----------------------------------- */
@@ -5,7 +6,7 @@
 body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size:   11px;
-    margin:      10px;
+    margin:      10px 0px 10px 0px;
 }
 
 /* Level 0 --------------------------- */
@@ -246,7 +247,7 @@ div.canvas_menu {
 
 /* Canvas - Temperature Plot --------- */
 
-#canvas_plot {
+#canvas_temperature {
     position:   absolute;
     top:        0px;
     bottom:     0px;
@@ -257,7 +258,7 @@ div.canvas_menu {
     display:    none;
 }
 
-#plot_drawing {
+#temperature_drawing {
     position: absolute;
     top:      0px;
     bottom:   40px;
@@ -400,8 +401,8 @@ button:active {
 
 /* Input ----------------------------- */
 
-#ATT_DB:read-only,
-#ATT_PERCENT:read-only,
+#I_ATT_DB:read-only,
+#I_ATT_PERCENT:read-only,
 input:disabled {
     background: moccasin;
 }
@@ -496,7 +497,7 @@ span {
     text-align:  left;
 }
 
-#STA_OPERATIONAL {
+#S_OPE_STA_OPERATIONAL {
     display:     inline;
     font-weight: bold;
 }

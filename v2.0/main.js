@@ -1,239 +1,421 @@
 
 /////////////////////////////////////////////////////////////////////////////////
-// Information management functions /////////////////////////////////////////////
+// Operational panel functions //////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 
-function update_operational(ope) {
-    operational = ope;
-    $('[id="STA_OPERATIONAL"]').text((ope > 4)?"Done":(ope == 0)?"Ready":(ope < 0)?"Error":ope);
-    $('[id^="A_OP_STEP"]').attr('disabled', true);
-    $('[id^="O_OP_STEP"]').attr('disabled', true);
-    $('[id^="F_OP_STEP"]').attr('disabled', true);
-    $('[id^="F_OP_STEP"]').attr('readonly', true);
-    $('[id^="A_OP_STEP"]').removeClass('completed');
-    $('[id^="O_OP_STEP"]').removeClass('completed');
-    $('[id^="F_OP_STEP"]').removeClass('completed');
-    $('[id^="F_OP_STEP"]').addClass('uncompleted');
-    if (ope == 0) {
-        $('[id^="A_OP_STEP0"]').attr('disabled', false);
-        $('[id^="F_OP_STEP2"]').val("");
-        $('[id^="F_OP_STEP3"]').val("");
+function set_pwd(value) {
+    old_pwd = $('#I_GE1_WIDTH').val();
+    $('#I_GE1_WIDTH').val(value);
+    if (!check_value("I_GE1_WIDTH")){
+        $('#I_GE1_WIDTH').val(old_pwd);
+        $('#I_OPE_STEP2_GE1_PWD').val(old_pwd);
+        return false;
     }
-    if (ope == 1) {
-        $('[id^="A_OP_STEP0"]').attr('disabled', true);
-        $('[id^="A_OP_STEP1"]').attr('disabled', false);
-    }
-    if (ope == 2) {
-        $('[id^="A_OP_STEP1"]').attr('disabled', true);
-        $('[id^="A_OP_STEP2"]').attr('disabled', false);
-        $('[id^="O_OP_STEP2"]').attr('disabled', false);
-        $('[id^="F_OP_STEP2"]').attr('disabled', false);
-        $('[id^="F_OP_STEP2"]').attr('readonly', false);
-        $('[id="F_OP_STEP2_FRQ"]').val($('[id="GEN_C1_FRQ"]').val());
-        $('[id="F_OP_STEP2_ATT"]').val($('[id="ATT_DB"]').val());
-        $('[id="F_OP_STEP2_PWD"]').val($('[id="GEN_C1_WIDTH"]').val());
-    }
-    if (ope == 3) {
-        $('[id^="A_OP_STEP2"]').attr('disabled', true);
-        $('[id^="O_OP_STEP2"]').attr('disabled', true);
-        $('[id^="A_OP_STEP3"]').attr('disabled', false);
-        $('[id^="O_OP_STEP3"]').attr('disabled', false);
-        $('[id^="F_OP_STEP3"]').attr('disabled', false);
-        $('[id^="F_OP_STEP3"]').attr('readonly', false);
-        $('[id="F_OP_STEP2_FRQ"]').val("");
-        $('[id="F_OP_STEP2_ATT"]').val("");
-        $('[id="F_OP_STEP2_PWD"]').val("");
-        $('[id="F_OP_STEP3_FRQ"]').val($('[id="GEN_C1_FRQ"]').val());
-        $('[id="F_OP_STEP3_ATT"]').val($('[id="ATT_DB"]').val());
-    }
-    if (ope == 4) {
-        $('[id^="A_OP_STEP3"]').attr('disabled', true);
-        $('[id^="O_OP_STEP3"]').attr('disabled', true);
-        $('[id^="A_OP_STEP4"]').attr('disabled', false);
-        $('[id="F_OP_STEP3_FRQ"]').val("");
-        $('[id="F_OP_STEP3_ATT"]').val("");
-    }
-    if (ope > 0) {
-        $('[id^="A_OP_STEP0"]').addClass('completed');
-    }
-    if (ope > 1) {
-        $('[id^="A_OP_STEP1"]').addClass('completed');
-    }
-    if (ope > 2) {
-        $('[id^="A_OP_STEP2"]').addClass('completed');
-        $('[id^="O_OP_STEP2"]').addClass('completed');
-        $('[id^="F_OP_STEP2"]').removeClass('uncompleted');
-        $('[id^="F_OP_STEP2"]').addClass('completed');
-    }
-    if (ope > 3) {
-        $('[id^="A_OP_STEP3"]').addClass('completed');
-        $('[id^="O_OP_STEP3"]').addClass('completed');
-        $('[id^="F_OP_STEP3"]').removeClass('uncompleted');
-        $('[id^="F_OP_STEP3"]').addClass('completed');
-    }
-    if (ope > 4) {
-        $('[id^="A_OP_STEP4"]').addClass('completed');
-    }
-    if (ope == 5) {
-        $('[id^="A_OP_STEP5"]').attr('disabled', true);
-    }
-}
-
-function get_unit(point) {
-    if (point in units) {
-        return " " + units[point];
-    } else {
-        return "";
-    }
-}
-
-function update_points(points){
-    $.each(points,
-        function(i, point) {
-            if (point["value"] != "" && point["value"] != undefined) {
-                var unit = get_unit(point["name"]);
-                var to_write = point["value"] + unit;
-                $('[id="' + point["name"] + '"]').val(to_write);
-                $('[id="' + point["name"] + '"]').text(to_write);
-                if (to_write == "ON") {
-                    $('[id="' + point["name"] + '"]').removeClass("info_off");
-                    $('[id="' + point["name"] + '"]').addClass("info_on");
-                } else if ((to_write == "OFF")) {
-                    $('[id="' + point["name"] + '"]').removeClass("info_on");
-                    $('[id="' + point["name"] + '"]').addClass("info_off");
-                }
-            }
-        }
-    );
-    if (points[0]["name"] == "STA_OPERATIONAL") {
-        update_operational(parseInt(points[0]["value"]));
-    }
-    // Managing attenuator special blockings
-    if ($('[id="ATT_LAST"]').val() == "STEP") {
-        $('[id="ATT_DB"]').val("");
-        $('[id="ATT_DB"]').prop("readonly", true);
-        $('[id="ATT_PERCENT"]').val("");
-        $('[id="ATT_PERCENT"]').prop("readonly", true);
-        $('[id="N_AT_DB"]').prop('disabled', true);
-        $('[id="N_AT_PERCENT"]').prop('disabled', true);
-        $('[id="X_AT_SET_DB"]').prop('disabled', true);
-        $('[id="X_AT_SET_PERCENT"]').prop('disabled', true);
-    } else if ($('[id="ATT_LAST"]').val() == "DB") {
-        $('[id="ATT_DB"]').prop("readonly", false);
-        $('[id="ATT_PERCENT"]').prop("readonly", false);
-        $('[id="N_AT_DB"]').prop('disabled', false);
-        $('[id="N_AT_PERCENT"]').prop('disabled', false);
-    }
-    update_diagram();
-}
-
-function update_diagram () {
-elements = ["DIA_A_B", "DIA_B_C", "DIA_C_D", "DIA_D_E", "DIA_D_F", "DIA_SCRAMBLER", "DIA_SPLITER", "DIA_GENERATOR", "DIA_LASER", "DIA_ATTENUATOR", "DIA_DIODE"];
-    // Cleaning previous settings
-    elements.forEach(
-        function (element) {
-            $('[id="' + element +'"]').removeClass("on");
-            $('[id="' + element +'"]').removeClass("warning");
-            $('[id="' + element +'"]').removeClass("active");
-        }
-    );
-    // Coloring diagram
-    laser_on = $('[id="LAS_D"]').val()=="ON"?true:false;
-    generator_on = $('[id="GEN_C1_OUT"]').val()=="ON"?true:false;
-    if (laser_on && !generator_on) {
-        $('[id="DIA_LASER"]').addClass("on");
-    } else if (!laser_on && generator_on) {
-        $('[id="DIA_GENERATOR"]').addClass("on");
-        $('[id="DIA_LASER"]').addClass("warning");
-        $('[id="DIA_A_B"]').addClass("warning");
-        alert("WARNING: Please check your Laser status, the Laser it's expected ON when the Signal Generator starts emitting signal")
-    } else if (laser_on && generator_on) {
-        $('[id="DIA_GENERATOR"]').addClass("on");
-        $('[id="DIA_LASER"]').addClass("on");
-        $('[id="DIA_SCRAMBLER"]').addClass("on");
-        $('[id="DIA_SPLITER"]').addClass("on");
-        $('[id="DIA_ATTENUATOR"]').addClass("on");
-        $('[id="DIA_DIODE"]').addClass("on");
-        $('[id="DIA_A_B"]').addClass("active");
-        $('[id="DIA_B_C"]').addClass("active");
-        $('[id="DIA_C_D"]').addClass("active");
-        $('[id="DIA_D_E"]').addClass("active");
-        $('[id="DIA_D_F"]').addClass("active");
-    } 
-}
-
-function update_temperatures(data) {
-    temp_diode          = [];
-    temp_crystal        = [];
-    temp_electronicsink = [];
-    temp_heatsink       = [];
-    var i;
-    for (i = 0; i < data["times"].length; i++) { 
-        temp_diode.push({x: data["times"][i], y: data["diode"][i]});
-        temp_crystal.push({x: data["times"][i], y: data["crystal"][i]});
-        temp_electronicsink.push({x: data["times"][i], y: data["electronicsink"][i]});
-        temp_heatsink.push({x: data["times"][i], y: data["heatsink"][i]});
-    }
-    temp_times = data["times"];
-}
-
-function update_info(data, status){
-    data = data.split("\n");
-    response = JSON.parse(data[data.length - 1]);
-    update_points(response["values"]);
-    update_temperatures(response["temperatures"]);
-}
-
-function laserServer(req_cmd, req_val, req_tim, callback) {
-    req = "{";
-    req = req + '"values":["STA_OPERATIONAL"'
-    if (req_val != "" && req_val != undefined) {
-        req = req + ',' + req_val;
-    }
-    req = req + ']';
-    if (req_cmd != "" && req_cmd != undefined) {
-        req = req + ',"commands":[' + req_cmd + ']';
-    }
-    if (req_tim != 0 && req_tim != undefined) {
-        req = req + ',"temps":' + req_tim;
-    }
-    req = req + "}";
-    $.post("lib/laserServer.php", {
-        random:  Math.random(),
-        request: req
-    },
-        function(data, status) {
-            update_info(data, status);
-            if (callback) {
-                callback();
-            }
-        }
-    );
-}
-
-/////////////////////////////////////////////////////////////////////////////////
-// Plotting functions ///////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-
-function update_plot(chart) {
-    chart.data.datasets[0].data = temp_diode;
-    chart.data.datasets[1].data = temp_crystal;
-    chart.data.datasets[2].data = temp_electronicsink;
-    chart.data.datasets[3].data = temp_heatsink;
-    minX = Math.ceil(Math.min(...temp_times)/60/60)*60*60;
-    chart.options.scales.xAxes[0].ticks.max = 0;
-    chart.options.scales.xAxes[0].ticks.min = minX;
-    chart.options.scales.xAxes[0].ticks.stepSize = Math.abs(minX)/6;
-    chart.update();
-}
-
-function update_plot_time(chart, time){
-    laserServer("", "", time,
+    commands = '"GEN C1:BSWV WIDTH,' + parseFloat(value) + '","GEN C1:OUTP?","GEN C1:BSWV?"';
+    to_refresh = generator_ch1_parameters
+    input_disable(to_refresh, generator_ch1_buttons);
+    laserServer(commands, to_refresh, 0,
         function() {
-            update_plot(chart);
+            input_enable(to_refresh, generator_ch1_buttons);
         }
     );
 }
+
+function set_frq(value) {
+    old_pwd = $('#I_GE1_FRQ').val();
+    $('#I_GE1_FRQ').val(value);
+    if (!check_value("I_GE1_FRQ")){
+        $('#I_GE1_FRQ').val(old_pwd);
+        $('#I_OPE_STEP2_GE1_FRQ').val(old_pwd);
+        return false;
+    }
+    commands = '"GEN C1:BSWV FRQ,' + parseInt(value) + '","GEN C1:OUTP?","GEN C1:BSWV?"';
+    to_refresh = generator_ch1_parameters;
+    input_disable(to_refresh, generator_ch1_buttons);
+    laserServer(commands, to_refresh, 0,
+        function() {
+            input_enable(to_refresh, generator_ch1_buttons);
+        }
+    );
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+// Form management //////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+
+function tmp_push(object) {
+    // Special case for attenuator
+    if(object.id == "I_ATT_DB" || object.id == "I_ATT_PERCENT"){
+        $('[id="' + object.id + '"]').prop('readonly', false);
+    }
+    // All the rest
+    tmp_value = object.value;
+    object.value = "";
+}
+
+function hook_disabling(object) {
+    switch (object.id) {
+        case "I_ATT_DB":
+            if (object.value == "") {
+                $('[id="I_ATT_DB"]').prop('readonly', true);
+            } else {
+                if (tmp_value == "") {
+                    object.value = object.value + " [dB]";
+                }
+                $('[id="I_ATT_DB"]').prop('readonly', false);
+                $('[id="I_ATT_PERCENT"]').prop('readonly', false);
+                $('[id="B_ATT_DB"]').prop('disabled', false);
+                $('[id="B_ATT_PERCENT"]').prop('disabled', false);
+            }
+            break;
+        case "I_ATT_PERCENT":
+            if (object.value == "") {
+                $('[id="I_ATT_PERCENT"]').prop('readonly', true);
+            } else {
+                if (tmp_value == "") {
+                    object.value = object.value;
+                }
+                $('[id="I_ATT_DB"]').prop('readonly', false);
+                $('[id="I_ATT_PERCENT"]').prop('readonly', false);
+                $('[id="B_ATT_DB"]').prop('disabled', false);
+                $('[id="B_ATT_PERCENT"]').prop('disabled', false);
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+function check_value(id) {
+    var reload = true;
+    switch (id) {
+        case "I_GE1_DUTY":
+            freq = parseFloat($("#I_GE1_FRQ").val());
+            duty = parseFloat($("#I_GE1_DUTY").val());
+            if (duty <= 0 || duty >= 100) {
+                alert("ERROR: The duty should be over 0[%] and under 100[%]")
+                return false;
+            }
+            $("#I_GE1_WIDTH").val(duty/freq/100 + " [S]");
+            break;
+        case "I_OPE_STEP2_GE1_FRQ":
+            $('#I_GE1_FRQ').val($('#I_OPE_STEP2_GE1_FRQ').val());
+            reload = false;
+        case "I_OPE_STEP3_GE1_FRQ":
+            if (reload) {
+                $('#I_GE1_FRQ').val($('#I_OPE_STEP3_GE1_FRQ').val());
+            }
+        case "I_GE1_FRQ":
+            freq = parseFloat($("#I_GE1_FRQ").val());
+            duty = parseFloat($("#I_GE1_DUTY").val());
+            if (freq <= 0 ) {
+                alert("ERROR: The frequency should be greater than 0[S]")
+                $('[id="I_GE1_FRQ"').val(tmp_value);
+                return false;
+            }
+            $("#I_GE1_WIDTH").val(duty/freq/100 + " [S]");
+            break;
+        case "I_OPE_STEP2_GE1_PWD":
+            $('#I_GE1_FRQ').val($('#I_OPE_STEP2_GE1_FRQ').val());
+        case "I_GE1_WIDTH":
+            freq = parseFloat($("#I_GE1_FRQ").val());
+            width = parseFloat($("#I_GE1_WIDTH").val());
+            duty = width*freq*100;
+            if (width <= 0){
+                alert("ERROR: The pulse should be greater than 0[S]")
+                $('[id="I_GE1_WIDTH"').val(tmp_value);
+                return false;
+            }
+            if (duty>=100) {
+                alert("ERROR: The calculated duty cycle is greater or equal to 100[%]")
+                $('[id="I_GE1_WIDTH"').val(tmp_value);
+                return false;
+            }
+            $("#I_GE1_DUTY").val(duty + " [%]");
+            break;
+        case "I_GE2_DUTY":
+            freq = parseFloat($("#I_GE2_FRQ").val());
+            duty = parseFloat($("#I_GE2_DUTY").val());
+            if (duty <= 0 || duty >= 100) {
+                alert("ERROR: The duty should be over 0[%] and under 100[%]")
+                return false;
+            }
+            $("#I_GE2_WIDTH").val(duty/freq/100 + " [S]");
+            break;
+        case "I_GE2_FRQ":
+            freq = parseFloat($("#I_GE2_FRQ").val());
+            duty = parseFloat($("#I_GE2_DUTY").val());
+            if (freq <= 0 ) {
+                alert("ERROR: The frequency should be greater than 0[Hz]")
+                return false;
+            }
+            $("#I_GE2_WIDTH").val(duty/freq/100 + " [S]");
+            break;
+        case "I_GE2_WIDTH":
+            freq = parseFloat($("#I_GE2_FRQ").val());
+            width = parseFloat($("#I_GE2_WIDTH").val());
+            duty = width*freq*100;
+            if (width <= 0){
+                alert("ERROR: The pulse should be greater than 0[S]")
+                return false;
+            }
+            if (duty>=100) {
+                alert("ERROR: The calculated duty cycle is greater or equal to 100[%]")
+                return false;
+            }
+            $("#I_GE2_DUTY").val(duty + " [%]");
+            break;
+        case "I_OPE_STEP2_ATT_DB":
+            $('#I_ATT_DB').val($('#I_OPE_STEP2_ATT_DB').val());
+            reload = false;
+        case "I_OPE_STEP3_ATT_DB":
+            if (reload) {
+                $('#I_ATT_DB').val($('#I_OPE_STEP3_ATT_DB').val());
+            }
+        case "I_ATT_DB":
+            db = parseFloat($("#I_ATT_DB").val());
+            if (db < 0 || db > 40) {
+                alert("ERROR: Attenuation out of range [0, 40]")
+                $('[id="I_ATT_DB"').val(tmp_value);
+                return false
+            }
+            db = Math.round(db*100)/100
+            $("#I_ATT_PERCENT").val(Math.round(Math.exp(-db/4.3425121307373)*100*10000)/10000 + " [%]")
+            break;
+        case "I_ATT_PERCENT":
+            percent = parseFloat($("#I_ATT_PERCENT").val());
+            if (percent < 0.01 || percent > 100) {
+                alert("ERROR: Transference out of range [100, 0.01]")
+                return false
+            }
+            percent = Math.round(percent*10000)/10000
+            $("#I_ATT_DB").val(-Math.round(Math.log(percent/100)*4.3425121307373*100)/100 + " [dB]")
+            // Back to DB
+            db = Math.round(parseFloat($("#I_ATT_DB").val())*100)/100
+            $("#I_ATT_PERCENT").val(Math.round(Math.exp(-db/4.3425121307373)*100*10000)/10000 + " [%]")
+            // Back to %
+            $("#I_ATT_DB").val(-Math.round(Math.log(parseFloat($("#I_ATT_PERCENT").val())/100)*4.3425121307373*100)/100 + " [dB]")
+            break;
+        default:
+            break;
+    }
+    return true
+}
+
+function tmp_pop(object) {
+    if (object.value == "") {
+        object.value = tmp_value;
+    } else {
+        object.value = object.value + tmp_value.substr(tmp_value.lastIndexOf(" "));
+        if (!check_value(object.id)) {
+            object.value = tmp_value;
+        }
+    }
+    hook_disabling(object)
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+// Attenuator interface functions /////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+function set_db(value, data) {
+    commands = "";
+    if (value == "field") {
+        if (data) {
+            value = data;
+        } else if ($('#I_ATT_DB').val() == "") {
+            alert("ERROR: Empty dB value");
+            return;
+        } else {
+            value = $('#I_ATT_DB').val();
+        }
+        commands = '"STA OPE 0",'
+    }
+    commands = commands + '"ATT A' + Math.round(parseFloat(value)*100)/100 + '","ATT D"';
+    to_refresh = '"ATT_LAST","ATT_DB","ATT_PERCENT","ATT_POS"'
+    input_disable(to_refresh, attenuator_buttons);
+    laserServer(commands, to_refresh, 0,
+        function() {
+            input_enable(to_refresh, attenuator_buttons + "," + attenuator_fields);
+        }
+    );
+}
+
+function step_db(step) {
+    value = parseFloat($('#I_ATT_DB').val());
+    step = parseFloat(step);
+    newvalue = parseFloat(Math.round((value + step)*100)/100);
+    if (newvalue < 0 || newvalue > 40) {
+        $('#I_ATT_DB').val(Math.round(((value)*100)/100) + " [dB]");
+        alert("ERROR: Applied step gets the dB out of range [0, 40]");
+        return;
+    }
+    set_db('field', newvalue);
+    return;
+}
+
+function step_percent(step) {
+    value = parseFloat($('#I_ATT_PERCENT').val());
+    step = parseFloat(step);
+    newvalue = value + step;
+    $('#I_ATT_PERCENT').val(newvalue);
+    if (!check_value("I_ATT_PERCENT")){
+        $('#I_ATT_PERCENT').val(value + " [%]");
+        return false
+    }
+    set_db('field');
+}
+
+function set_pos() {
+    value = parseInt($('#I_ATT_POS').val());
+    commands = '"STA OPE 0","ATT S' + value + '","ATT D"';
+    to_refresh = '"ATT_LAST","ATT_POS"'
+    input_disable(to_refresh, attenuator_buttons);
+    laserServer(commands, to_refresh, 0,
+        function() {
+            input_enable(to_refresh, attenuator_step_buttons + ',"B_ATT_UPDATE"');
+        }
+    );
+    $('#I_ATT_DB').val("");
+    $('#I_ATT_PERCENT').val("");
+}
+
+function step_pos(step) {
+    value = parseInt($('#I_ATT_POS').val());
+    step = parseInt(step);
+    newvalue = value + step;
+    commands = '"STA OPE 0","ATT S' + newvalue + '","ATT D"';
+    to_refresh = '"ATT_LAST","ATT_POS","ATT_DB","ATT_PERCENT"'
+    input_disable(to_refresh, attenuator_buttons);
+    laserServer(commands, to_refresh, 0,
+        function() {
+            input_enable(to_refresh, attenuator_step_buttons + ',"B_ATT_UPDATE"');
+        }
+    );
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+// Generator interface functions //////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+function load_default(channel) {
+    input_disable(generator_parameters, generator_buttons);
+    values = channel_defaults[channel];
+    for (var key in values) {
+        $('#I_' + key).val(values[key]);
+    }
+    input_enable(generator_parameters, generator_buttons);
+}
+
+function set_parameters(channel) {
+    values = channel_defaults[channel];
+    to_refresh = "";
+    commands = '"STA OPE 0",';
+    for (var key in values) {
+        value = $('#I_' + key).val();
+        value = value.substr(0, value.lastIndexOf(" "));
+        if (to_refresh != "") {
+            to_refresh = to_refresh + ",";
+            commands = commands + ",";
+        }
+        to_refresh = to_refresh + "\"" + key + '"';
+        commands = commands + "\"GEN C" + channel + ":BSWV " + key.substr(key.lastIndexOf("_")+1) + "," + value + "\"";
+    }
+    commands = commands + ',"GEN C' + channel + ':BSWV?"';
+    commands = commands + ',"GEN C' + channel + ':OUTP?"';
+    input_disable(generator_parameters, generator_buttons);
+    laserServer(commands, to_refresh, 0,
+        function() {
+            input_enable(generator_parameters, generator_buttons);
+        }
+    );
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+// Managing elements readability //////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+function input_disable(values, extra_disable) {
+     if (values) {
+        var arrayValues = values.split(",");
+        var arrayLength = arrayValues.length;
+        for (var i = 0; i < arrayLength; i++) {
+            $('[id=' + arrayValues[i].replace('"', '"I_') + ']').prop('disabled', true);
+        }
+    }
+    if (extra_disable) {
+        arrayValues = extra_disable.split(",");
+        arrayLength = arrayValues.length;
+        for (var i = 0; i < arrayLength; i++) {
+            $('[id=' + arrayValues[i] + ']').prop('disabled', true);
+        }
+    }
+    // Extra for coloring an update while on stages 2 or 3
+    $('[id^="I_OPE_STEP"]').prop('disabled',  true);
+    if (operational == 2) {
+        $('[id="I_OPE_STEP2_GE1_FRQ"]').removeClass('uncompleted');
+        $('[id="I_OPE_STEP2_GE1_PWD"]').removeClass('uncompleted');
+        $('[id="I_OPE_STEP2_ATT_DB"]').removeClass('uncompleted');
+    } else if (operational == 3) {
+        $('[id="I_OPE_STEP3_GE1_FRQ"]').removeClass('uncompleted');
+        $('[id="I_OPE_STEP3_ATT_DB"]').removeClass('uncompleted');
+    }
+}
+
+function input_enable(values, extra_enabled) {
+    if (values) {
+        var arrayValues = values.split(",");
+        var arrayLength = arrayValues.length;
+        for (var i = 0; i < arrayLength; i++) {
+            $('[id=' + arrayValues[i].replace('"', '"I_') + ']').prop('disabled', false);
+        }
+    }
+    if (extra_enabled) {
+        arrayValues = extra_enabled.split(",");
+        arrayLength = arrayValues.length;
+        for (var i = 0; i < arrayLength; i++) {
+            $('[id=' + arrayValues[i] + ']').prop('disabled', false);
+        }
+    }
+    // Extra for coloring an update while on stages 2 or 3
+    if (operational == 2) {
+        $('[id="I_OPE_STEP2_GE1_FRQ"]').prop('disabled', false);
+        $('[id="I_OPE_STEP2_GE1_PWD"]').prop('disabled', false);
+        $('[id="I_OPE_STEP2_ATT_DB"]').prop('disabled',  false);
+        $('[id^="I_OPE_STEP2"]').addClass('uncompleted');
+    } else if (operational == 3) {
+        $('[id="I_OPE_STEP3_GE1_FRQ"]').prop('disabled', false);
+        $('[id="I_OPE_STEP3_ATT_DB"]').prop('disabled',  false);
+        $('[id^="I_OPE_STEP3"]').addClass('uncompleted');
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+// Button interactions ////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+function button_action(source, extra_disable) {
+    // Retrieving source parameters
+    var req_cmd = source.attr("req_cmd");
+    var req_val = source.attr("req_val");
+    var req_ope = source.attr("req_ope")
+    // Forcing operational status reset
+    if (!req_ope){
+        if (req_cmd) {
+            req_cmd = req_cmd + ',"STA OPE 0"';
+        }
+    }
+    input_disable(req_val, extra_disable);
+    laserServer(req_cmd, req_val, 0,
+        function() {
+            input_enable(req_val, extra_disable);
+        }
+    );
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+// Plot ///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 
 function draw_plot() {
     let minX = Math.ceil(Math.min(...temp_times)/60/60)*60*60;
@@ -328,432 +510,246 @@ function draw_plot() {
     });
 }
 
-/////////////////////////////////////////////////////////////////////////////////
-// Form management //////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+// Main laserServer interaction tool //////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 
-
-function tmp_push(object) {
-    tmp_value = object.value;
-    object.value = "";
+function update_plot() {
+    if (temperature_plot) {
+        temperature_plot.data.datasets[0].data = temp_diode;
+        temperature_plot.data.datasets[1].data = temp_crystal;
+        temperature_plot.data.datasets[2].data = temp_electronicsink;
+        temperature_plot.data.datasets[3].data = temp_heatsink;
+        minX = Math.ceil(Math.min(...temp_times)/60/60)*60*60;
+        temperature_plot.options.scales.xAxes[0].ticks.max = 0;
+        temperature_plot.options.scales.xAxes[0].ticks.min = minX;
+        temperature_plot.options.scales.xAxes[0].ticks.stepSize = Math.abs(minX)/6;
+        temperature_plot.update();
+    }
 }
 
-function tmp_pop(object) {
-    if (object.value == "") {
-        object.value = tmp_value;
+function update_temperatures(data) {
+    if (data) {
+        temp_diode          = [];
+        temp_crystal        = [];
+        temp_electronicsink = [];
+        temp_heatsink       = [];
+        var i;
+        for (i = 0; i < data["times"].length; i++) { 
+            temp_diode.push({x: data["times"][i], y: data["diode"][i]});
+            temp_crystal.push({x: data["times"][i], y: data["crystal"][i]});
+            temp_electronicsink.push({x: data["times"][i], y: data["electronicsink"][i]});
+            temp_heatsink.push({x: data["times"][i], y: data["heatsink"][i]});
+        }
+        temp_times = data["times"];
+    }
+}
+
+function update_diagram () {
+    elements = ["L_CAN_DIA_AB", "L_CAN_DIA_BC", "L_CAN_DIA_CD", "L_CAN_DIA_DE", "L_CAN_DIA_DF", "F_CAN_DIA_SCRAMBLER", "F_CAN_DIA_SPLITER", "F_CAN_DIA_GENERATOR", "F_CAN_DIA_LASER", "F_CAN_DIA_ATTENUATOR", "F_CAN_DIA_DIODE"];
+    // Cleaning previous settings
+    elements.forEach(
+        function (element) {
+            $('[id="' + element +'"]').removeClass("on");
+            $('[id="' + element +'"]').removeClass("warning");
+            $('[id="' + element +'"]').removeClass("active");
+        }
+    );
+    // Coloring diagram
+    laser_on = $('[id="I_LAS_D"]').val()=="ON"?true:false;
+    generator_on = $('[id="I_GE1_OUT"]').val()=="ON"?true:false;
+    if (laser_on && !generator_on) {
+        $('[id="F_CAN_DIA_LASER"]').addClass("on");
+    } else if (!laser_on && generator_on) {
+        $('[id="F_CAN_DIA_GENERATOR"]').addClass("on");
+        $('[id="F_CAN_DIA_LASER"]').addClass("warning");
+        $('[id="L_CAN_DIA_AB"]').addClass("warning");
+        alert("WARNING: Please check your Laser status, the Laser it's expected ON when the Signal Generator starts emitting signal")
+    } else if (laser_on && generator_on) {
+        $('[id="F_CAN_DIA_GENERATOR"]').addClass("on");
+        $('[id="F_CAN_DIA_LASER"]').addClass("on");
+        $('[id="F_CAN_DIA_SCRAMBLER"]').addClass("on");
+        $('[id="F_CAN_DIA_SPLITER"]').addClass("on");
+        $('[id="F_CAN_DIA_ATTENUATOR"]').addClass("on");
+        $('[id="F_CAN_DIA_DIODE"]').addClass("on");
+        $('[id="L_CAN_DIA_AB"]').addClass("active");
+        $('[id="L_CAN_DIA_BC"]').addClass("active");
+        $('[id="L_CAN_DIA_CD"]').addClass("active");
+        $('[id="L_CAN_DIA_DE"]').addClass("active");
+        $('[id="L_CAN_DIA_DF"]').addClass("active");
+    } 
+}
+
+function update_attenuator(){
+    // Managing attenuator special blockings
+    if ($('[id="I_ATT_LAST"]').val() == "STEP") {
+        // Inputs
+        $('[id="I_ATT_DB"]').val("");
+        $('[id="I_ATT_DB"]').prop("readonly", true);
+        $('[id="I_ATT_PERCENT"]').val("");
+        $('[id="I_ATT_PERCENT"]').prop("readonly", true);
+        // Buttons
+        $('[id="B_ATT_DB"]').prop('disabled', true);
+        $('[id^="B_ATT_DB"]').prop('disabled', true);
+        $('[id="B_ATT_PERCENT"]').prop('disabled', true);
+        $('[id^="B_ATT_PERCENT"]').prop('disabled', true);
+    } else if ($('[id="ATT_LAST"]').val() == "DB") {
+        $('[id="I_ATT_DB"]').prop("readonly", false);
+        $('[id="I_ATT_PERCENT"]').prop("readonly", false);
+        $('[id^="B_ATT_DB"]').prop('disabled', false);
+        $('[id^="B_ATT_PERCENT"]').prop('disabled', false);
+    }
+}
+
+function update_operational(ope) {
+    operational = ope;
+    $('[id="S_OPE_STA_OPERATIONAL"]').text((ope > 4)?"Done":(ope == 0)?"Ready":(ope < 0)?"Error":ope);
+    $('[id^="B_OPE_STEP"]').attr('disabled', true);
+    $('[id^="I_OPE_STEP"]').attr('disabled', true);
+    $('[id^="I_OPE_STEP"]').attr('disabled', true);
+    $('[id^="B_OPE_STEP"]').removeClass('completed');
+    $('[id^="I_OPE_STEP"]').removeClass('completed');
+    $('[id^="I_OPE_STEP"]').addClass('uncompleted');
+    $('[id^="I_OPE_STEP2"]').val("");
+    $('[id^="I_OPE_STEP3"]').val("");
+    $('[id="B_OPE_STEP5"]').attr('disabled', false);
+    if (ope == 0) {
+        $('[id^="B_OPE_STEP0"]').attr('disabled', false);
+    }
+    if (ope == 1) {
+        $('[id^="B_OPE_STEP0"]').attr('disabled', true);
+        $('[id^="B_OPE_STEP1"]').attr('disabled', false);
+    }
+    if (ope == 2) {
+        $('[id^="B_OPE_STEP1"]').attr('disabled', true);
+        $('[id^="B_OPE_STEP2"]').attr('disabled', false);
+        $('[id^="I_OPE_STEP2"]').attr('disabled', false);
+        $('[id="I_OPE_STEP2_GE1_FRQ"]').val($('[id="I_GE1_FRQ"]').val());
+        $('[id="I_OPE_STEP2_GE1_PWD"]').val($('[id="I_GE1_WIDTH"]').val());
+        $('[id="I_OPE_STEP2_ATT_DB"]').val($('[id="I_ATT_DB"]').val());
+    }
+    if (ope == 3) {
+        $('[id^="B_OPE_STEP2"]').attr('disabled', true);
+        $('[id^="I_OPE_STEP2"]').attr('disabled', true);
+        $('[id^="B_OPE_STEP3"]').attr('disabled', false);
+        $('[id^="I_OPE_STEP3"]').attr('disabled', false);
+        $('[id="I_OPE_STEP2_GE1_PWD"]').val("");
+        $('[id="I_OPE_STEP2_GE1_FRQ"]').val("");
+        $('[id="I_OPE_STEP2_ATT_DB"]').val("");
+        $('[id="I_OPE_STEP3_GE1_FRQ"]').val($('[id="I_GE1_FRQ"]').val());
+        $('[id="I_OPE_STEP3_ATT_DB"]').val($('[id="I_ATT_DB"]').val());
+    }
+    if (ope == 4) {
+        $('[id^="B_OPE_STEP3"]').attr('disabled', true);
+        $('[id^="I_OPE_STEP3"]').attr('disabled', true);
+        $('[id^="B_OPE_STEP4"]').attr('disabled', false);
+        $('[id="I_OPE_STEP3_GE1_FRQ"]').val("");
+        $('[id="I_OPE_STEP3_ATT_DB"]').val("");
+    }
+    if (ope > 0) {
+        $('[id^="B_OPE_STEP0"]').addClass('completed');
+    }
+    if (ope > 1) {
+        $('[id^="B_OPE_STEP1"]').addClass('completed');
+    }
+    if (ope > 2) {
+        $('[id^="B_OPE_STEP2"]').addClass('completed');
+        $('[id^="I_OPE_STEP2"]').removeClass('uncompleted');
+        $('[id^="I_OPE_STEP2"]').addClass('completed');
+    }
+    if (ope > 3) {
+        $('[id^="B_OPE_STEP3"]').addClass('completed');
+        $('[id^="I_OPE_STEP3"]').removeClass('uncompleted');
+        $('[id^="I_OPE_STEP3"]').addClass('completed');
+    }
+    if (ope > 4) {
+        $('[id^="B_OPE_STEP4"]').addClass('completed');
+    }
+}
+
+function format_unit(point) {
+    if (point in parameter_units) {
+        return " " + parameter_units[point];
     } else {
-        object.value = object.value + tmp_value.substr(tmp_value.lastIndexOf(" "));
-        if (!value_hook(object.id)) {
-            object.value = tmp_value;
-        }
-    }
-    if (object.id == "ATT_DB") {
-        if (object.value == "") {
-            $('[id="ATT_DB"]').prop('readonly', true);
-        } else {
-            if (tmp_value == "") {
-                object.value = object.value + " [dB]";
-            }
-            $('[id="ATT_DB"]').prop('readonly', false);
-            $('[id="ATT_PERCENT"]').prop('readonly', false);
-            $('[id="X_AT_SET_DB"]').prop('disabled', false);
-            $('[id="X_AT_SET_PERCENT"]').prop('disabled', false);
-        }
-    } else if (object.id == "ATT_PERCENT") {
-        if (object.value == "") {
-            $('[id="ATT_PERCENT"]').prop('readonly', true);
-        } else {
-            if (tmp_value == "") {
-                object.value = object.value;
-            }
-            $('[id="ATT_DB"]').prop('readonly', false);
-            $('[id="ATT_PERCENT"]').prop('readonly', false);
-            $('[id="X_AT_SET_DB"]').prop('disabled', false);
-            $('[id="X_AT_SET_PERCENT"]').prop('disabled', false);
-        }
+        return "";
     }
 }
 
-function value_hook(id) {
-    switch (id) {
-        case "GEN_C1_DUTY":
-            freq = parseFloat($("#GEN_C1_FRQ").val());
-            duty = parseFloat($("#GEN_C1_DUTY").val());
-            if (duty <= 0 || duty >= 100) {
-                alert("Error: The duty should be over 0[%] and under 100[%]")
-                return false;
+function update_points(points){
+    if (points) {
+        $.each(points,
+            function(i, point) {
+                if (point["value"] != "" && point["value"] != undefined) {
+                    var unit = format_unit(point["name"]);
+                    var to_write = point["value"] + unit;
+                    $('[id="I_' + point["name"] + '"]').val(to_write);
+                    $('[id="S_' + point["name"] + '"]').text(to_write);
+                    $('[id="T_CAN_DIA_' + point["name"] + '"]').text(to_write);
+                    if (to_write == "ON") {
+                        $('[id="I_' + point["name"] + '"]').removeClass("info_off");
+                        $('[id="I_' + point["name"] + '"]').addClass("info_on");
+                    } else if ((to_write == "OFF")) {
+                        $('[id="I_' + point["name"] + '"]').removeClass("info_on");
+                        $('[id="I_' + point["name"] + '"]').addClass("info_off");
+                    }
+                }
             }
-            $("#GEN_C1_WIDTH").val(duty/freq/100 + " [S]");
-            break;
-        case "GEN_C1_FRQ":
-            freq = parseFloat($("#GEN_C1_FRQ").val());
-            duty = parseFloat($("#GEN_C1_DUTY").val());
-            if (freq <= 0 ) {
-                alert("Error: The frequency should be greater than 0[S]")
-                return false;
-            }
-            $("#GEN_C1_WIDTH").val(duty/freq/100 + " [S]");
-            break;
-        case "GEN_C1_WIDTH":
-            freq = parseFloat($("#GEN_C1_FRQ").val());
-            width = parseFloat($("#GEN_C1_WIDTH").val());
-            duty = width*freq*100;
-            if (width <= 0){
-                alert("Error: The pulse should be greater than 0[S]")
-                return false;
-            }
-            if (duty>=100) {
-                alert("Error: The calculated duty cycle is greater or equal to 100[%]")
-                return false;
-            }
-            $("#GEN_C1_DUTY").val(duty + " [%]");
-            break;
-        case "GEN_C2_DUTY":
-            freq = parseFloat($("#GEN_C2_FRQ").val());
-            duty = parseFloat($("#GEN_C2_DUTY").val());
-            if (duty <= 0 || duty >= 100) {
-                alert("Error: The duty should be over 0[%] and under 100[%]")
-                return false;
-            }
-            $("#GEN_C2_WIDTH").val(duty/freq/100 + " [S]");
-            break;
-        case "GEN_C2_FRQ":
-            freq = parseFloat($("#GEN_C2_FRQ").val());
-            duty = parseFloat($("#GEN_C2_DUTY").val());
-            if (freq <= 0 ) {
-                alert("Error: The frequency should be greater than 0[Hz]")
-                return false;
-            }
-            $("#GEN_C2_WIDTH").val(duty/freq/100 + " [S]");
-            break;
-        case "GEN_C2_WIDTH":
-            freq = parseFloat($("#GEN_C2_FRQ").val());
-            width = parseFloat($("#GEN_C2_WIDTH").val());
-            duty = width*freq*100;
-            if (width <= 0){
-                alert("Error: The pulse should be greater than 0[S]")
-                return false;
-            }
-            if (duty>=100) {
-                alert("Error: The calculated duty cycle is greater or equal to 100[%]")
-                return false;
-            }
-            $("#GEN_C2_DUTY").val(duty + " [%]");
-            break;
-        case "ATT_DB":
-            db = parseFloat($("#ATT_DB").val());
-            if (db < 0 || db > 40) {
-                alert("Error: Attenuation out of range [0, 40]")
-                return false
-            }
-            db = Math.round(db*100)/100
-            $("#ATT_PERCENT").val(Math.round(Math.exp(-db/4.3425121307373)*100*10000)/10000 + " [%]")
-            break;
-        case "ATT_PERCENT":
-            percent = parseFloat($("#ATT_PERCENT").val());
-            if (percent < 0.01 || percent > 100) {
-                alert("Error: Transference out of range [100, 0.01]")
-                return false
-            }
-            percent = Math.round(percent*10000)/10000
-            $("#ATT_DB").val(-Math.round(Math.log(percent/100)*4.3425121307373*100)/100 + " [dB]")
-            // Back to DB
-            db = Math.round(parseFloat($("#ATT_DB").val())*100)/100
-            $("#ATT_PERCENT").val(Math.round(Math.exp(-db/4.3425121307373)*100*10000)/10000 + " [%]")
-            // Back to %
-            //percent = Math.round(percent*10000)/10000
-            $("#ATT_DB").val(-Math.round(Math.log(parseFloat($("#ATT_PERCENT").val())/100)*4.3425121307373*100)/100 + " [dB]")
-            break;
-        default:
-            break;
+        );
+        update_operational(parseInt(points[0]["value"]));
+        update_attenuator();
+        update_diagram();
     }
-    return true
 }
 
-var channel_defaults = {
-    1: {
-        GEN_C1_AMP:   "5 [V]",
-        GEN_C1_OFST:  "2.5 [V]",
-        GEN_C1_FRQ:   "1000 [Hz]",
-        GEN_C1_DUTY:  "10 [%]",
-        GEN_C1_WIDTH: "0.0001 [S]",
-        GEN_C1_RISE:  "1.68e-08 [S]",
-        GEN_C1_FALL:  "1.68e-08 [S]",
+function update_info(data, status){
+    var data = data.split("\n");
+    var response = JSON.parse(data[data.length - 1]);
+    update_points(response["values"]);
+    update_temperatures(response["temperatures"]);
+}
+
+function laserServer(req_cmd, req_val, req_tim, callback) {
+    update_times = false;
+    req = "{";
+    req = req + '"values":["STA_OPERATIONAL"'
+    if (req_val != "" && req_val != undefined) {
+        req = req + ',' + req_val;
+    }
+    req = req + ']';
+    if (req_cmd != "" && req_cmd != undefined) {
+        req = req + ',"commands":[' + req_cmd + ']';
+    }
+    if (req_tim != 0 && req_tim != undefined) {
+        req = req + ',"temps":' + req_tim;
+        update_times = true;
+    }
+    req = req + "}";
+    $.post("lib/laserServer.php", {
+        random:  Math.random(),
+        request: req
     },
-    2: {
-        GEN_C2_AMP:   "5 [V]",
-        GEN_C2_OFST:  "2.5 [V]",
-        GEN_C2_FRQ:   "1000 [Hz]",
-        GEN_C2_DUTY:  "10 [%]",
-        GEN_C2_WIDTH: "0.0001 [S]",
-        GEN_C2_RISE:  "1.68e-08 [S]",
-        GEN_C2_FALL:  "1.68e-08 [S]",
-    }
-};
-
-function load_default(channel) {
-    values = channel_defaults[channel];
-    for (var key in values) {
-        $('#' + key).val(values[key]);
-    }
-}
-
-function set_parameters(channel) {
-    values = channel_defaults[channel];
-    to_refresh = "";
-    commands = "";
-    for (var key in values) {
-        value = $('#' + key).val();
-        value = value.substr(0, value.lastIndexOf(" "));
-        if (to_refresh != "") {
-            to_refresh = to_refresh + ",";
-            commands = commands + ",";
-        }
-        to_refresh = to_refresh + "\"" + key + '"';
-        commands = commands + "\"GEN C" + channel + ":BSWV " + key.substr(key.lastIndexOf("_")+1) + "," + value + "\"";
-    }
-    commands = commands + ',"GEN C' + channel + ':BSWV?"';
-    commands = commands + ',"GEN C' + channel + ':OUTP?"';
-    input_disable(to_refresh + ',"GEN_C' + channel + '_OUT"');
-    laserServer(commands, to_refresh, 0,
-        function() {
-            input_enable(to_refresh + ',"GEN_C' + channel + '_OUT"');
+        function(data, status) {
+            update_info(data, status);
+            if(update_times) {
+                update_plot();
+            }
+            if (callback) {
+                callback();
+            }
         }
     );
 }
 
-function set_db(value) {
-    commands = "";
-    if (value == "field") {
-        if ($('#ATT_DB').val() == "") {
-            alert("Error: Empty dB value");
-            return;
-        }
-        value = $('#ATT_DB').val();
-        commands = '"STA OPE 0",'
-    }
-    commands = commands + '"ATT A' + Math.round(parseFloat(value)*100)/100 + '","ATT D"';
-    to_refresh = '"ATT_LAST","ATT_DB","ATT_PERCENT","ATT_POS"'
-    input_disable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
-    laserServer(commands, to_refresh, 0,
-        function() {
-            input_enable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
-        }
-    );
-}
-
-function set_pos() {
-    value = parseInt($('#ATT_POS').val());
-    commands = '"STA OPE 0","ATT S' + value + '","ATT D"';
-    to_refresh = '"ATT_LAST","ATT_POS"'
-    input_disable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
-    laserServer(commands, to_refresh, 0,
-        function() {
-            input_enable(to_refresh + ',"X_AT_SET_STEP","N_AT_STEP"');
-        }
-    );
-    $('#ATT_DB').val("");
-    $('#ATT_PERCENT').val("");
-}
-
-function step_db(step) {
-    value = parseFloat($('#ATT_DB').val());
-    step = parseFloat(step);
-    newvalue = parseFloat(Math.round((value + step)+'e2')+'e-2');
-    if (newvalue < 0 || newvalue > 40) {
-        alert("Error: Applied step gets the dB out of range [0, 40]");
-        return;
-    }
-    commands = '"STA OPE 0","ATT A' + newvalue + '","ATT D"';
-    to_refresh = '"ATT_LAST","ATT_POS","ATT_DB","ATT_PERCENT"'
-    input_disable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
-    laserServer(commands, to_refresh, 0,
-        function() {
-            input_enable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
-        }
-    );
-    $('#ATT_DB').prop('readonly', false);
-    $('#ATT_PERCENT').prop('readonly', true);
-}
-
-function step_percent(step) {
-    value = parseFloat($('#ATT_PERCENT').val());
-    step = parseFloat(step);
-    newvalue = value + step;
-    $('#ATT_PERCENT').val(newvalue);
-    if (!value_hook("ATT_PERCENT")){
-        $('#ATT_PERCENT').val(value + " [%]");
-        return false
-    }
-    dbvalue = parseFloat($('#ATT_DB').val());
-    commands = '"STA OPE 0","ATT A' + dbvalue + '","ATT D"';
-    to_refresh = '"ATT_LAST","ATT_POS","ATT_DB","ATT_PERCENT"'
-    input_disable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
-    laserServer(commands, to_refresh, 0,
-        function() {
-            input_enable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
-        }
-    );
-    $('#ATT_DB').prop('readonly', false);
-    $('#ATT_PERCENT').prop('readonly', true);
-}
-
-function set_pwd(value) {
-    commands = "";
-    commands = '"GEN C1:BSWV WIDTH,' + parseFloat(value) + '","GEN C1:OUTP?","GEN C1:BSWV?"';
-    to_refresh = '"GEN_C1_WVTP","GEN_C1_AMP","GEN_C1_OFST","GEN_C1_FRQ","GEN_C1_DUTY","GEN_C1_WIDTH","GEN_C1_RISE","GEN_C1_FALL","GEN_C1_OUT"'
-    input_disable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
-    laserServer(commands, to_refresh, 0,
-        function() {
-            input_enable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
-        }
-    );
-}
-
-function step_step(step) {
-    value = parseInt($('#ATT_POS').val());
-    step = parseInt(step);
-    newvalue = value + step;
-    commands = '"STA OPE 0","ATT S' + newvalue + '","ATT D"';
-    to_refresh = '"ATT_LAST","ATT_POS","ATT_DB","ATT_PERCENT"'
-    input_disable(to_refresh + ',"X_AT_SET_STEP","X_AT_SET_DB","X_AT_SET_PERCENT","N_AT_STEP","N_AT_PERCENT","N_AT_DB"');
-    laserServer(commands, to_refresh, 0,
-        function() {
-            input_enable(to_refresh + ',"X_AT_SET_STEP","N_AT_STEP"');
-        }
-    );
-}
-
-function set_frq(value) {
-    commands = "";
-    commands = '"GEN C1:BSWV FRQ,' + parseInt(value) + '","GEN C1:OUTP?","GEN C1:BSWV?"';
-    to_refresh = '"GEN_C1_WVTP","GEN_C1_AMP","GEN_C1_OFST","GEN_C1_FRQ","GEN_C1_DUTY","GEN_C1_WIDTH","GEN_C1_RISE","GEN_C1_FALL","GEN_C1_OUT"'
-    input_disable(to_refresh);
-    laserServer(commands, to_refresh, 0,
-        function() {
-            input_enable(to_refresh);
-        }
-    );
-}
-
-function input_disable(values) {
-    if (values == "" || values == undefined) {
-        return;
-    }
-    values = values.split(",");
-    var arrayLength = values.length;
-    if (operational == 2) {
-        $('[id="O_OP_STEP2_PWD"]').prop('disabled', true);
-        $('[id="O_OP_STEP2_FRQ"]').prop('disabled', true);
-        $('[id="O_OP_STEP2_ATT"]').prop('disabled', true);
-    } else if (operational == 3) {
-        $('[id="O_OP_STEP3_FRQ"]').prop('disabled', true);
-        $('[id="O_OP_STEP3_ATT"]').prop('disabled', true);
-    }
-    for (var i = 0; i < arrayLength; i++) {
-        if(values[i].substr(0,1)=="X") {
-            alert(values[i]);
-        }
-        $('[id=' + values[i] + ']').prop('disabled', true);
-    }
-}
-
-function input_enable(values) {
-    if (values == "" || values == undefined) {
-        return;
-    }
-    values = values.split(",");
-    var arrayLength = values.length;
-    if (operational == 2) {
-        $('[id="O_OP_STEP2_PWD"]').prop('disabled', false);
-        $('[id="O_OP_STEP2_FRQ"]').prop('disabled', false);
-        $('[id="O_OP_STEP2_ATT"]').prop('disabled', false);
-    } else if (operational == 3) {
-        $('[id="O_OP_STEP3_FRQ"]').prop('disabled', false);
-        $('[id="O_OP_STEP3_ATT"]').prop('disabled', false);
-    }        
-    for (var i = 0; i < arrayLength; i++) {
-        $('[id=' + values[i] + ']').prop('disabled', false);
-    }
-}
-
-function input_readable(values) {
-    if (values == "" || values == undefined) {
-        return;
-    }
-    values = values.split(",");
-    var arrayLength = values.length;
-    for (var i = 0; i < arrayLength; i++) {
-        if ($('[id=' + values[i] + ']').val() != "") {
-            $('[id=' + values[i] + ']').prop('readonly', false);
-        }
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////////////
-// Running on load //////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+// Running on load ////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 
 $(document).ready(
     function() {
-        // Start listening to action buttons
-        $('[id^="A_"]').click(
-            function() {
-                commands = $(this).attr("req_cmd");
-                to_refresh = $(this).attr("req_val");
-                if ($(this).attr("req_ope") == undefined){
-                    if (commands != undefined) {
-                        commands = commands + ',';
-                    }
-                    commands = commands + '"STA OPE 0"';
-                } else {
-                    if (to_refresh == undefined) {
-                        to_refresh = startup_values;
-                    }
-                }
-                input_disable(to_refresh);
-                laserServer(commands, to_refresh, 0,
-                    function() {
-                        input_enable(to_refresh);
-                        input_readable(to_refresh);
-                    }
-                );
-            }
-        );
-        // Start listening to plot buttons
-        $('[id^="T_"]').click(
-            function() {
-                update_plot_time(tem[erature_plot], $(this).attr("req_tim")*60*60+60);
-            }
-        );
-        $('[id="H_diagram"]').click(
-            function() {
-                $('#canvas_plot').hide();
-                $('#canvas_diagram').show();
-                $('#canvas_diagram').find('[id="H_diagram"]').focus();
-            }
-        )
-        $('[id="H_plot"').click(
-            function() {
-                $('#canvas_diagram').hide();
-                $('#canvas_plot').show();
-                $('#canvas_plot').find('[id="H_plot"]').focus();
-            }
-        )
-        $('[id="H_C1"]').click(
-            function() {
-                $('#generator_ch2').hide();
-                $('#generator_ch1').show();
-                $('#generator_ch1').find('[id="H_C1"]').focus();
-            }
-        )
-        $('[id="H_C2"]').click(
-            function() {
-                $('#generator_ch1').hide();
-                $('#generator_ch2').show();
-                $('#generator_ch2').find('[id="H_C2"]').focus();
-            }
-        )
+        ///////////////////////////////////////////////////////////////////////////
+        // Setting up elements ////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////
+        // Catch enter for data input
         $('input, select').keypress(
             function(key) {
                 if (key.which == 13) {
@@ -761,7 +757,14 @@ $(document).ready(
                 }
             }
         );
-        $('[id="H_advanced"').click(
+        // Refresh all fields
+        $('[id^="B_GLO_REFRESH_ALL"]').click(
+            function() {
+                button_action($(this))
+            }
+        );
+        // Toggle advandec options panel
+        $('[id="B_GLO_ADVANCED"').click(
             function() {
                 if (advanced) {
                     $('#panel_advanced').fadeOut(420,
@@ -785,62 +788,139 @@ $(document).ready(
                 }
             }
         )
-        $('[id="ATT_DB"], [id="ATT_PERCENT"]').focus(
+        // Canvas /////////////////////////////////////////////////////////////////
+        // Go to Diagram
+        $('[id="B_CAN_TEM_D"]').click(
             function() {
-                if ($(this).val() == "") {
-                    $(this).prop('readonly', false);
-                }
+                $('#canvas_temperature').hide();
+                $('#canvas_diagram').show();
+                $('#canvas_diagram').find('[id="B_CAN_DIA_D"]').focus();
+            }
+        )
+        // Go to Temperature
+        $('[id="B_CAN_DIA_T"]').click(
+            function() {
+                $('#canvas_diagram').hide();
+                $('#canvas_temperature').show();
+                $('#canvas_temperature').find('[id="B_CAN_TEM_T"]').focus();
+            }
+        )
+        // Canvas - Temperature Plot //////////////////////////////////////////////
+        // Change time period
+        $('[id^="B_CAN_TEM_U_"]').click(
+            function() {
+                laserServer("", "",  $(this).attr("req_tim")*60*60+60);
             }
         );
-        $('[id^="N_AT_DB"]').click(
+        // Operational ////////////////////////////////////////////////////////////
+        // Operational advancement
+        $('[id="B_OPE_STEP0"],[id="B_OPE_STEP1"],[id="B_OPE_STEP2"],[id="B_OPE_STEP3"],[id="B_OPE_STEP4"],[id="B_OPE_STEP5"]').click(
+            function() {
+                button_action($(this))
+            }
+        );
+        // STEP2 Frequency
+        $('[id="B_OPE_STEP2_GE1_FRQ"]').click(
+            function() {
+                set_frq($('[id="I_OPE_STEP2_GE1_FRQ"]').val())
+            }
+        )
+        // STEP2 Pulse width
+        $('[id="B_OPE_STEP2_GE1_PWD"]').click(
+            function() {
+                set_pwd($('[id="I_OPE_STEP2_GE1_PWD"]').val())
+            }
+        )
+        // STEP2 Attenuation
+        $('[id="O_OP_STEP2_ATT_DB"]').click(
+            function() {
+                set_db($('[id="I_OPE_STEP2_ATT"]').val())
+            }
+        )
+        // STEP3 Frequency
+        $('[id="O_OP_STEP3_GE1_FRQ"]').click(
+            function() {
+                set_frq($('[id="I_OPE_STEP3_FRQ"]').val())
+            }
+        )
+        // STEP3 Attenuation
+        $('[id="O_OP_STEP3_ATT"]').click(
+            function() {
+                set_db($('[id="I_OPE_STEP3_ATT"]').val())
+            }
+        )
+        // Queue //////////////////////////////////////////////////////////////////
+        // Laser //////////////////////////////////////////////////////////////////
+        // On, Off and Update
+        $('[id^="B_LAS_"]').click(
+            function() {
+                button_action($(this), laser_buttons);
+            }
+        );
+        // Generator //////////////////////////////////////////////////////////////
+        // Go to channel 1
+        $('[id="B_GE2_GE1"]').click(
+            function() {
+                $('#generator_ch2').hide();
+                $('#generator_ch1').show();
+                $('[id="B_GE1_GE1"]').focus();
+            }
+        )
+        // Go to channel 2
+        $('[id="B_GE1_GE2"]').click(
+            function() {
+                $('#generator_ch1').hide();
+                $('#generator_ch2').show();
+                $('[id="B_GE2_GE2"]').focus();
+            }
+        )
+        // Current, set, on and off channel 1
+        $('[id="B_GE1_UPDATE"],[id="B_GE1_ON"],[id="B_GE1_OFF"]').click(
+            function() {
+                button_action($(this), generator_ch1_buttons)
+            }
+        );
+        // Current, set, on and off channel 2
+        $('[id="B_GE2_UPDATE"],[id="B_GE2_ON"],[id="B_GE2_OFF"]').click(
+            function() {
+                button_action($(this), generator_ch2_buttons)
+            }
+        );
+        // Attenuator /////////////////////////////////////////////////////////////
+        // Update all action
+        $('[id="B_ATT_UPDATE"]').click(
+            function() {
+                button_action($(this), attenuator_buttons)
+            }
+        );
+        // Step db
+        $('[id^="B_ATT_DB_"]').click(
             function() {
                 step_db($(this).attr('step'));
             }
         );
-        $('[id^="N_AT_PERCENT"]').click(
+        // Step percent
+        $('[id^="B_ATT_PERCENT_"]').click(
             function() {
                 step_percent($(this).attr('step'));
             }
         );
-        $('[id^="N_AT_STEP"]').click(
+        // Step pos
+        $('[id^="B_ATT_POS_"]').click(
             function() {
-                step_step($(this).attr('step'));
+                step_pos($(this).attr('step'));
             }
         );
-        $('[id="O_OP_STEP2_PWD"]').click(
-            function() {
-                set_pwd($('[id="F_OP_STEP2_PWD"]').val())
-            }
-        )
-        $('[id="O_OP_STEP2_FRQ"]').click(
-            function() {
-                set_frq($('[id="F_OP_STEP2_FRQ"]').val())
-            }
-        )
-        $('[id="O_OP_STEP3_FRQ"]').click(
-            function() {
-                set_frq($('[id="F_OP_STEP3_FRQ"]').val())
-            }
-        )
-        $('[id="O_OP_STEP2_ATT"]').click(
-            function() {
-                set_db($('[id="F_OP_STEP2_ATT"]').val())
-            }
-        )
-        $('[id="O_OP_STEP3_ATT"]').click(
-            function() {
-                set_db($('[id="F_OP_STEP3_ATT"]').val())
-            }
-        )
-        // Load default values and remove loading page
-        laserServer(startup_commands, startup_values, temps_seconds_default,
+
+        ///////////////////////////////////////////////////////////////////////////
+        // Starting up and enabling system ////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////
+        laserServer(startup_commands, startup_values, startup_seconds,
             function() {
                 draw_plot();
                 input_enable(startup_values);
-                $("#H_advanced").fadeIn(500);
                 $("#panel_loading").fadeOut(500);
             }
         );
-        system_diagram = $('[id="system_diagram"]');
     }
 );
