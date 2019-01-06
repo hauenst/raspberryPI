@@ -6,8 +6,7 @@ import sys
 # Verbosing management ==========================================================
 # ===============================================================================
 
-verbosity = 3
-#verbosity = 0
+verbosity = 0
 
 def verbose(message, terminator="\n", level=1):
     if (level > verbosity):
