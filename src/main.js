@@ -731,6 +731,17 @@ function draw_plot() {
 // Main laserServer interaction tool //////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 
+function log_access() {
+    $.getJSON('http://gd.geobytes.com/GetCityDetails?callback=?',
+        function(data) {
+            $.post("lib/laserAccess.php", {
+                random:  Math.random(),
+                request: JSON.stringify(data, null, 2)
+            }, /* Callback */ );
+        }
+    );
+}
+
 function update_plot() {
     if (temperature_plot) {
         temperature_plot.data.datasets[0].data = temp_diode;
@@ -1205,7 +1216,11 @@ $(document).ready(
             function() {
                 draw_plot();
                 input_enable(startup_values);
-                $("#panel_loading").fadeOut(500);
+                $("#panel_loading").fadeOut(500,
+                    function() {
+                        log_access();
+                    }
+                );
             }
         );
     }

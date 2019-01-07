@@ -1,6 +1,7 @@
 
 <html>
     <head>
+        <link rel="icon" href="">
         <!--- Styles --->
         <link rel="stylesheet" href="css/bootstrap.v4.1.3.min.css"/>
         <link rel="stylesheet" href="css/style.css"/>
