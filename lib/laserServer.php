@@ -20,7 +20,7 @@
     }
 
     function temps_query($window) {
-        return "SELECT TIMESTAMPDIFF(SECOND, NOW(), `timestamp`) as `timestamp_diff`, `diode`, `crystal`, `electronicsink`, `heatsink` FROM `temperatures`  WHERE  TIMESTAMPDIFF(SECOND, NOW(), `timestamp`) >= -${window};";
+        return "SELECT TIMESTAMPDIFF(SECOND, NOW(), `timestamp`) as `timestamp_diff`, `diode`, `crystal`, `electronicsink`, `heatsink` FROM `temperatures`  WHERE  TIMESTAMPDIFF(SECOND, NOW(), `timestamp`) >= -${window}  ORDER BY `timestamp`;";
     }
 
     function values_query($point) {
