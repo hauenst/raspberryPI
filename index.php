@@ -199,12 +199,12 @@
                                         <!---
                                     ---><button id="" class="align-top quarter"></button><!---
                                     ---><button id="" class="align-top quarter"></button><!---
-                                    ---><button id="" class="align-top quarter">Enable</button><!---
-                                    ---><button id="" class="align-top quarter">Disable</button><!---
+                                    ---><button id="" class="align-top quarter"></button><!---
+                                    ---><button id="" class="align-top quarter"></button><!---
                                     </li>
                                     <li>
                                     ---><button id="B_QUE_UPDATE" class="align-top quarter">Update</button><!---
-                                    ---><button id=""             class="align-top quarter"></button><!---
+                                    ---><button id="B_QUE_CLEAR"  class="align-top quarter">Clear</button><!---
                                     ---><label for="I_QUE_UPLOAD" class="align-bottom inputfile">Select</label><input id="I_QUE_UPLOAD" name="I_QUE_UPLOAD" type="file" class="inputfile"></button><!---
                                     ---><button id="B_QUE_UPLOAD" class="align-top quarter">Upload</button>
                                     </li>

@@ -763,6 +763,14 @@ function update_temperatures(data) {
     }
 }
 
+function update_queue_write(response) {
+    if(response["error"]) {
+        alert(response["log"][response["log"].length-1]);
+    } else {
+        $('[id="script"]').html(response["table"]);
+    }
+}
+
 function update_queue(data, callback) {
     response = {};
     if (data && data["file"]) {
@@ -779,19 +787,19 @@ function update_queue(data, callback) {
             data:        form_data,
             success:
                 function(response) {
-                    response = JSON.parse(response)
-                    $('[id="script"]').html(response["table"])
+                    update_queue_write(JSON.parse(response));
+                    if (callback) {
+                        callback();
+                    }
                 }
          });
     } else {
         $.post("lib/laserQueue.php", {
             random:  Math.random(),
-            //file:    file
-            //request: req
+            request: JSON.stringify(data)
         },
-            function(data, status) {
-                data = JSON.parse(data);
-                $('[id="script"]').html(data["table"])
+            function(response) {
+                update_queue_write(JSON.parse(response));
                 if (callback) {
                     callback();
                 }
@@ -1109,6 +1117,12 @@ $(document).ready(
         $('[id="B_QUE_UPDATE"]').click(
             function() {
                 update_queue();
+            }
+        );
+        // Clear queue content
+        $('[id="B_QUE_CLEAR"]').click(
+            function() {
+                update_queue({clear: true});
             }
         );
         // Selecting file
