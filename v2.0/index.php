@@ -190,42 +190,22 @@
                             </div>
                             <div class="content">
                                 <div id="script_container">
-                                    <table id="script" cellpadding="0px" cellspacing="2px">
-                                        <tr class="script_row">
-                                            <td class="number">000</td>
-                                            <td class="time">00:00</td>
-                                            <td class="device">LAS</td>
-                                            <td class="action">Start pulsing</td>
-                                            <td class="icon">E</td>
-                                            <td class="icon">D</td>
-                                        </tr>
-                                        <tr class="script_row">
-                                            <td class="number">001</td>
-                                            <td class="time">00:00</td>
-                                            <td class="device">ATT</td>
-                                            <td class="action">Set to 20</td>
-                                            <td class="icon">E</td>
-                                            <td class="icon">D</td>
-                                        </tr>
-                                        <tr class="script_row">
-                                            <td class="number">002</td>
-                                            <td class="time">00:00</td>
-                                            <td class="device">GEN</td>
-                                            <td class="action">Start signal ch1</td>
-                                            <td class="icon">E</td>
-                                            <td class="icon">D</td>
-                                        </tr>
+                                    <table id="script">
                                     </table>
                                 </div>
                                 <ul class="device">
                                     <li>
-                                        <button id="">Load Script</button><!---
-                                    ---><button id="">Add Action</button>
+                                        <!---
+                                    ---><button id="" class="align-top quarter"></button><!---
+                                    ---><button id="" class="align-top quarter"></button><!---
+                                    ---><button id="" class="align-top quarter">Enable</button><!---
+                                    ---><button id="" class="align-top quarter">Disable</button><!---
                                     </li>
                                     <li>
-                                        <button id="" class="align-top">Download</button><!---
-                                    ---><button id="" class="align-top quarter">Enable</button><!---
-                                    ---><button id="" class="align-top quarter">Disable</button>
+                                    ---><button id="B_QUE_UPDATE" class="align-top quarter">Update</button><!---
+                                    ---><button id=""             class="align-top quarter"></button><!---
+                                    ---><label for="I_QUE_UPLOAD" class="align-bottom inputfile">Select</label><input id="I_QUE_UPLOAD" name="I_QUE_UPLOAD" type="file" class="inputfile"></button><!---
+                                    ---><button id="B_QUE_UPLOAD" class="align-top quarter">Upload</button>
                                     </li>
                             </div>
                         </div>

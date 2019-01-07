@@ -355,7 +355,6 @@ button {
     background:  silver;
     border:      1px solid silver;
     margin:      2px 1px 0px 1px;
-
 }
 
 button.advanced {
@@ -438,6 +437,29 @@ input.uncompleted:disabled {
     background: silver;
 }
 
+input.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+label.inputfile {
+    display:     inline-block;
+    box-sizing:  border-box;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size:   11px;
+    padding:     1px;
+    height:      21px;
+    width:       64px;
+    text-align:  center;
+    background:  silver;
+    border:      1px solid silver;
+    margin:      2px 1px 0px 1px;
+}
+
 /* List ------------------------------ */
 
 ul {
@@ -508,32 +530,61 @@ span.center {
 
 /* Table ----------------------------- */
 
-td.number {
-    width:      25px;
-    text-align: center;
+table {
+    border-collapse: collapse;
+    cursor:          default;
 }
 
-tr.script_row {
-    height: 13px;
+table, tr, td {
+    border:      none;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size:   9px;
+}
+
+tr {
+    height:        17px;
+    padding-top:   2px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid silver;
+}
+
+tr:first-child {
+    text-align:  center;
+    background:  silver;
+    font-weight: bold;
+}
+
+tr:first-child:hover {
+    background: silver;
+}
+
+tr:hover {
+    background: darkseagreen;
+}
+
+td {
+    border-left:  1px solid silver;
+    border-right: 1px solid silver;
+}
+
+td.number {
+    width:       32px;
+    text-align:  center;
+    padding:     0px 2px 0px 4px;
+    border-left: none;
 }
 
 td.time {
-    width:      36px;
+    width:      110px;
     text-align: center;
-}
-
-td.device {
-    width:      28px;
-    text-align: center;
+    padding:    0px 2px 0px 2px;
 }
 
 td.action {
-    text-align: Left;
-}
-
-td.icon {
-    width:      13px;
-    text-align: center;
+    width:        118px;
+    text-align:   left;
+    padding:      0px 4px 0px 5px;
+    border-right: none;
 }
 
 /* Canvas ---------------------------- */

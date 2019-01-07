@@ -211,3 +211,6 @@ var tmp_value = "";
 
 // Operational
 var operational = 0;
+
+// Queue last selected file
+var script_file = null;

@@ -545,6 +545,43 @@ function update_temperatures(data) {
     }
 }
 
+function update_queue(data, callback) {
+    response = {};
+    if (data && data["file"]) {
+        var file_data = data["file"];
+        var form_data = new FormData();
+        form_data.append('script', file_data);
+        $.ajax({
+            url:         'lib/laserQueue.php',
+            type:        'post',
+            dataType:    'text',
+            cache:       false,
+            contentType: false,
+            processData: false,
+            data:        form_data,
+            success:
+                function(response) {
+                    response = JSON.parse(response)
+                    $('[id="script"]').html(response["table"])
+                }
+         });
+    } else {
+        $.post("lib/laserQueue.php", {
+            random:  Math.random(),
+            //file:    file
+            //request: req
+        },
+            function(data, status) {
+                data = JSON.parse(data);
+                $('[id="script"]').html(data["table"])
+                if (callback) {
+                    callback();
+                }
+            }
+        );
+    }
+}
+
 function update_diagram () {
     elements = ["L_CAN_DIA_AB", "L_CAN_DIA_BC", "L_CAN_DIA_CD", "L_CAN_DIA_DE", "L_CAN_DIA_DF", "F_CAN_DIA_SCRAMBLER", "F_CAN_DIA_SPLITER", "F_CAN_DIA_GENERATOR", "F_CAN_DIA_LASER", "F_CAN_DIA_ATTENUATOR", "F_CAN_DIA_DIODE"];
     // Cleaning previous settings
@@ -698,12 +735,12 @@ function update_points(points){
         update_operational(parseInt(points[0]["value"]));
         update_attenuator();
         update_diagram();
+        update_queue();
     }
 }
 
 function update_info(data, status){
-    var data = data.split("\n");
-    var response = JSON.parse(data[data.length - 1]);
+    var response = JSON.parse(data);
     update_points(response["values"]);
     update_temperatures(response["temperatures"]);
 }
@@ -850,6 +887,24 @@ $(document).ready(
             }
         )
         // Queue //////////////////////////////////////////////////////////////////
+        // Refreshing queue
+        $('[id="B_QUE_UPDATE"]').click(
+            function() {
+                update_queue();
+            }
+        );
+        // Selecting file
+        $('[id="I_QUE_UPLOAD"]').on('change',
+            function(event) {
+                script_file = event.target.files[0];
+            }
+        );
+        // Uploading file
+        $('[id="B_QUE_UPLOAD"]').click(
+            function() {
+                update_queue({file: script_file});
+            }
+        );
         // Laser //////////////////////////////////////////////////////////////////
         // On, Off and Update
         $('[id^="B_LAS_"]').click(

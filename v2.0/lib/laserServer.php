@@ -148,6 +148,6 @@
     ///////////////////////////////////////////////////////////////////////////////
     
     $return["info"] = $info;
-    print(json_encode($return));
+    print(json_encode($return, JSON_PRETTY_PRINT));
 
 ?>
