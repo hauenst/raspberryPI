@@ -68,7 +68,7 @@
                                                 <rect x="82%" y="5%"  width="16%" height="10%"/>
                                             </g>
                                             <!--- Texts --->
-                                            <g style="text-anchor:middle;dominant-baseline:middle;fill:black;">
+                                            <g>
                                                 <text x="10%" y="60%"                           >Generator</text>
                                                 <text x="10%" y="70%" id="T_CAN_DIA_GE1_WIDTH"  ></text>
                                                 <text x="10%" y="80%" id="T_CAN_DIA_GE1_FRQ"    ></text>
@@ -101,8 +101,8 @@
                                     ---><button id="B_CAN_TEM_U_24" req_tim="24" class="canvas_menu"              >24H</button><!---
                                     ---><button id="B_CAN_TEM_U_48" req_tim="48" class="canvas_menu"              >48H</button><!---
                                     ---><button id="B_CAN_TEM_U_96" req_tim="96" class="canvas_menu"              >96H</button><!---
-                                    ---><button id="B_CAN_TEM_D"  req_tim="1"  class="canvas_menu canvas_single">D</button><!---
-                                    ---><button id="B_CAN_TEM_T"  req_tim="1"  class="canvas_menu canvas_single">T</button>
+                                    ---><button id="B_CAN_TEM_D"    req_tim="1"  class="canvas_menu canvas_single">D</button><!---
+                                    ---><button id="B_CAN_TEM_T"    req_tim="1"  class="canvas_menu canvas_single">T</button>
                                     </div>
                                 </div>
                             </div>
