@@ -13,7 +13,6 @@ var startup_commands = '"LAS GEMT",' +
                        '"GEN C2:OUTP?",' +
                        '"GEN C2:BSWV?",' +
                        '"ATT D"';
-var startup_commands = ''
 
 // Default list of values at startup
 var startup_values = '"LAS_GEMT_SUPPLY",' +
