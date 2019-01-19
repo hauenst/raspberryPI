@@ -33,7 +33,7 @@
             $new_script = array();
             $fh = fopen($_FILES["script"]["tmp_name"], 'r');
             while ($line = fgets($fh)) {
-                if ($line[0:1] != "#") :
+                if (substr($line, 0, 1) != "#") {
                   array_push($new_script, str_getcsv($line));
                 }
             }
