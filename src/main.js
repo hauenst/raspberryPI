@@ -1105,21 +1105,21 @@ $(document).ready(
             }
         )
         // STEP2 Attenuation
-        $('[id="O_OP_STEP2_ATT_DB"]').click(
+        $('[id="B_OPE_STEP2_ATT_DB"]').click(
             function() {
-                set_db($('[id="I_OPE_STEP2_ATT"]').val())
+                set_db($('[id="I_OPE_STEP2_ATT_DB"]').val())
             }
         )
         // STEP3 Frequency
-        $('[id="O_OP_STEP3_GE1_FRQ"]').click(
+        $('[id="B_OPE_STEP3_GE1_FRQ"]').click(
             function() {
-                set_frq($('[id="I_OPE_STEP3_FRQ"]').val())
+                set_frq($('[id="I_OPE_STEP3_GE1_FRQ"]').val())
             }
         )
         // STEP3 Attenuation
-        $('[id="O_OP_STEP3_ATT"]').click(
+        $('[id="B_OPE_STEP3_ATT_DB"]').click(
             function() {
-                set_db($('[id="I_OPE_STEP3_ATT"]').val())
+                set_db($('[id="I_OPE_STEP3_ATT_DB"]').val())
             }
         )
         // Queue //////////////////////////////////////////////////////////////////

@@ -157,7 +157,7 @@
                                     </li>
                                     <li>
                                         <input disabled id="I_OPE_STEP3_GE1_FRQ" onfocusin="tmp_push(this)" onfocusout="tmp_pop(this)"><!---
-                                    ---><button id="B_OPE_STEP3_G1_FRQ" req_ope="set">Adjust Frequency</button>
+                                    ---><button id="B_OPE_STEP3_GE1_FRQ" req_ope="set">Adjust Frequency</button>
                                     </li>
                                     <li>
                                         <input disabled id="I_OPE_STEP3_ATT_DB" onfocusin="tmp_push(this)" onfocusout="tmp_pop(this)"><!---
