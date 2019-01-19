@@ -9,7 +9,7 @@
     }
 
     function queue_query($entry) {
-        return("INSERT INTO `queue` (`id`, `timestamp`, `device`, `action`, `parameter`, `completed`) VALUES (NULL, '{$entry[0]}', '{$entry[2]}', '{$entry[3]}', '{$entry[4]}', '0');");
+        return("INSERT INTO `queue` (`id`, `timestamp`, `device`, `action`, `parameter`, `completed`) VALUES (NULL, '{$entry[0]}', '{$entry[1]}', '{$entry[2]}', '{$entry[3]}', '0');");
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -33,7 +33,9 @@
             $new_script = array();
             $fh = fopen($_FILES["script"]["tmp_name"], 'r');
             while ($line = fgets($fh)) {
-                array_push($new_script, str_getcsv($line));
+                if ($line[0:1] != "#") :
+                  array_push($new_script, str_getcsv($line));
+                }
             }
             fclose($fh);
             // Deleting temporal file
