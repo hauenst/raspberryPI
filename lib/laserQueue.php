@@ -42,19 +42,20 @@
             unlink($_FILES["script"]["tmp_name"]);
             // Calculating timestamps
             // If starting point in the pass, set to zero
-            if ($new_script[0][1] < time() && $new_script[0][1] != 0) {
-                $new_script[0][0] = time(); // Fix, should be 0 to start without date
+            if ($new_script[0][0] < time() && $new_script[0][0] != 0) {
+                $new_script[0][0] = 0; // Fix, should be 0 to start without date
                 array_push($to_return["log"], "WARNING: First script line in the past, queue will be disabled and the script will start when enabling queue");
             } else {
-                $new_script[0][0] = $new_script[0][1];
+                $new_script[0][0] = $new_script[0][0];
             }
             // Inserting following lines
             for ($i=1; $i<sizeof($new_script); $i++) {
-                if($new_script[$i][1] < 35880960){
-                    $new_script[$i][0] = $new_script[$i-1][0]+ $new_script[$i][1];
-                } else if($new_script[$i][1] > time()){
-                    $new_script[$i][0] = $new_script[$i][1];
-                } else {
+                if($new_script[$i-1][1] < $new_script[$i][1]) {
+                    array_push($to_return["log"], "ERROR: There is a middle instruction dated before the previous instruction. This is nor supported");
+                    $to_return["error"] = TRUE;
+                    break;
+                    $new_script[$i][0] = $new_script[$i][0];
+                } else if ($new_script[$i][0] < time()) {
                     array_push($to_return["log"], "ERROR: There is a middle instruction dated on the past. This is nor supported");
                     $to_return["error"] = TRUE;
                     break;
